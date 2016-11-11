@@ -19,6 +19,8 @@ public class DataCollector implements SensorEventListener {
 
     private static final String TAG = DataCollector.class.getName();
 
+    private Detector gestureDetector;
+
     private SensorManager mSensorManager;
     private Sensor mSensor;
 
@@ -30,10 +32,17 @@ public class DataCollector implements SensorEventListener {
     public CircularFifoQueue<Double> z = new CircularFifoQueue<Double>(QUEUE_SIZE);
     public CircularFifoQueue<Double> m = new CircularFifoQueue<Double>(QUEUE_SIZE);
 
-    // in seconds
-    private double UPDATE_FREQUENCY = 0.01;
+    public Double[] ax = new Double[QUEUE_SIZE];
+    public Double[] ay = new Double[QUEUE_SIZE];
+    public Double[] az = new Double[QUEUE_SIZE];
+    public Double[] am = new Double[QUEUE_SIZE];
 
-    public DataCollector(Context context) {
+    // in seconds
+    private double UPDATE_FREQUENCY = 1;
+
+    public DataCollector(Context context, Detector gestureDetector) {
+
+        this.gestureDetector = gestureDetector;
 
         // list all accelerometers and use the last one
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -58,6 +67,15 @@ public class DataCollector implements SensorEventListener {
         y.add((double) event.values[1]);
         z.add((double) event.values[2]);
         m.add(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2)));
+
+        // Log.i(TAG, Float.toString(event.values[0]));
+
+        x.toArray(ax);
+        y.toArray(ay);
+        z.toArray(az);
+        m.toArray(am);
+
+        gestureDetector.dataUpdated(ax, ay, az, am);
     }
 
     @Override
