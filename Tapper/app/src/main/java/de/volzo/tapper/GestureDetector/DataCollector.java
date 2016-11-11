@@ -5,7 +5,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
@@ -75,7 +74,14 @@ public class DataCollector implements SensorEventListener {
         z.toArray(az);
         m.toArray(am);
 
-        gestureDetector.dataUpdated(ax, ay, az, am);
+        gestureDetector.dataUpdated(this, ax, ay, az, am);
+    }
+
+    public void discardAllData() {
+        x.clear();
+        y.clear();
+        z.clear();
+        m.clear();
     }
 
     @Override

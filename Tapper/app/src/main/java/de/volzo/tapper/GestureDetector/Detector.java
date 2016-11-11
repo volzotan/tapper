@@ -15,9 +15,10 @@ public class Detector {
         this.context = context;
     }
 
-    public void dataUpdated(Double[] ax, Double[] ay, Double[] az, Double[] am) {
+    public void dataUpdated(DataCollector dataCollector, Double[] ax, Double[] ay, Double[] az, Double[] am) {
         // TODO
-        // detect gesture
+        // check if a gesture can be detected. If yes, call dataCollector.discardAllData()
+        // to avoid multiple detections of the same gesture on the same data
 
         Intent intent = new Intent("GESTURE_DETECTED");
         intent.putExtra("GESTURE_TYPE", GestureType.DOUBLETAP.name());
