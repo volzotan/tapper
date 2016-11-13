@@ -17,8 +17,11 @@ class ViewController: UIViewController, CPTPlotDataSource {
 
 	let averageSize = 5
 
-	let tapSize = 5
+	//tap detection parameters
+	let tapWindowSize = 6
+	let doubleTapWindows = 6
 	let tapThreshold = 0.05
+	var doubleTapMarker = -1
 
 	var index = 0
 	let torch = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)!
@@ -40,7 +43,7 @@ class ViewController: UIViewController, CPTPlotDataSource {
 
 		do { try torch.lockForConfiguration() } catch {}
 
-		graphViews = [graphView1, graphView2, graphView3, graphView4, graphView5]
+		graphViews = [graphView1, graphView2, graphView3, graphView4, graphView5, graphView6]
 		let graphViewNames = ["x","y","z","α","β","γ"]
 
 		for graphView in graphViews {
@@ -70,15 +73,26 @@ class ViewController: UIViewController, CPTPlotDataSource {
 	}
 
 	func detectTap(motion: CMDeviceMotion) {
-		if index % tapSize == 0 {
-			guard movementValues.count >= tapSize else { return }
+
+		if index % tapWindowSize == 0 {
+
+			//double tap was detected
+			guard doubleTapMarker == -1 else {
+				if ((index + numRecords - doubleTapMarker) % numRecords) >= tapWindowSize * doubleTapWindows {
+					//reset tap marker
+					doubleTapMarker = -1
+				}
+				return
+			}
+
+			guard movementValues.count >= tapWindowSize else { return }
 			guard index > 0 || movementValues.count == numRecords else { return	}
 
 			let slice : ArraySlice<CMDeviceMotion.MotionTuple>
 			if index == 0 {
-				slice = movementValues[(numRecords - tapSize - 1) ... (numRecords - 1)]
+				slice = movementValues[(numRecords - tapWindowSize - 1) ... (numRecords - 1)]
 			} else {
-				slice = movementValues[(index - tapSize) ... index]
+				slice = movementValues[(index - tapWindowSize) ... index]
 			}
 
 			let tapDetected = containsTap(slice)
@@ -96,15 +110,17 @@ class ViewController: UIViewController, CPTPlotDataSource {
 
 	func detectDoubleTap() {
 
-		var sliceEnds = [index == tapSize ? (numRecords - 1) : ((index + numRecords - tapSize) % numRecords)]
-		for i in 1...5 {
-			sliceEnds.append(sliceEnds[i-1] == tapSize
-				? (numRecords - 1) : ((sliceEnds[i-1] + numRecords - tapSize) % numRecords))
+		guard movementValues.count == numRecords else { return }
+
+		var sliceEnds = [index == tapWindowSize ? (numRecords - 1) : ((index + numRecords - tapWindowSize) % numRecords)]
+		for i in 1...doubleTapWindows {
+			sliceEnds.append(sliceEnds[i-1] == tapWindowSize
+				? (numRecords - 1) : ((sliceEnds[i-1] + numRecords - tapWindowSize) % numRecords))
 		}
 
 		//TODO: slices have overlap of 1 I think
 		let slices = sliceEnds.map { (sliceEnd) -> ArraySlice<CMDeviceMotion.MotionTuple> in
-			return movementValues[(sliceEnd - tapSize) ... sliceEnd]
+			return movementValues[(sliceEnd - tapWindowSize) ... sliceEnd]
 		}
 		let tapsDetected = slices.map(containsTap)
 
@@ -115,6 +131,7 @@ class ViewController: UIViewController, CPTPlotDataSource {
 			} else if noTap == true && foundTap == true {
 				//tap, then no tap then tap --> double tap
 				NSLog("double tap")
+				doubleTapMarker = index
 				self.view.backgroundColor = UIColor.red
 				if torch.torchMode == AVCaptureTorchMode.on {
 					torch.torchMode = AVCaptureTorchMode.off
