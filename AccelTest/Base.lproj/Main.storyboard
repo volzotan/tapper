@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="AccelTest" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gak-ry-m8G" customClass="CPTGraphHostingView">
+                                <rect key="frame" x="0.0" y="64" width="375" height="100.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Kd-5g-07y" customClass="CPTGraphHostingView">
+                                <rect key="frame" x="0.0" y="164.5" width="375" height="100.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nVc-8f-e21" customClass="CPTGraphHostingView">
+                                <rect key="frame" x="0.0" y="265" width="375" height="100.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Jv-Iq-fP6" customClass="CPTGraphHostingView">
+                                <rect key="frame" x="0.0" y="365.5" width="375" height="100.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="846-BW-gg4" customClass="CPTGraphHostingView">
+                                <rect key="frame" x="0.0" y="466" width="375" height="100.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bgj-GD-90w" customClass="CPTGraphHostingView">
+                                <rect key="frame" x="0.0" y="566.5" width="375" height="100.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="3Kd-5g-07y" firstAttribute="height" secondItem="gak-ry-m8G" secondAttribute="height" id="4Ol-iQ-dIm"/>
+                            <constraint firstItem="nVc-8f-e21" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="528-xN-K2u"/>
+                            <constraint firstItem="846-BW-gg4" firstAttribute="height" secondItem="gak-ry-m8G" secondAttribute="height" id="9HY-N3-Rgt"/>
+                            <constraint firstItem="846-BW-gg4" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="B6J-Za-FJ8"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="bgj-GD-90w" secondAttribute="bottom" id="Cta-fW-0PI"/>
+                            <constraint firstItem="bgj-GD-90w" firstAttribute="top" secondItem="846-BW-gg4" secondAttribute="bottom" id="Jxf-TF-SI8"/>
+                            <constraint firstItem="846-BW-gg4" firstAttribute="top" secondItem="2Jv-Iq-fP6" secondAttribute="bottom" id="MsZ-zt-zmv"/>
+                            <constraint firstItem="2Jv-Iq-fP6" firstAttribute="height" secondItem="gak-ry-m8G" secondAttribute="height" id="R1u-AW-gDt"/>
+                            <constraint firstAttribute="trailing" secondItem="2Jv-Iq-fP6" secondAttribute="trailing" id="SXq-rc-EEx"/>
+                            <constraint firstAttribute="trailing" secondItem="3Kd-5g-07y" secondAttribute="trailing" id="SbF-7W-igl"/>
+                            <constraint firstItem="bgj-GD-90w" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="TJ5-aA-Buk"/>
+                            <constraint firstAttribute="trailing" secondItem="gak-ry-m8G" secondAttribute="trailing" id="UUX-Bj-tdh"/>
+                            <constraint firstAttribute="trailing" secondItem="nVc-8f-e21" secondAttribute="trailing" id="X1j-5z-8TB"/>
+                            <constraint firstItem="gak-ry-m8G" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Yi4-W1-2IL"/>
+                            <constraint firstAttribute="trailing" secondItem="846-BW-gg4" secondAttribute="trailing" id="ZpI-RU-9cJ"/>
+                            <constraint firstItem="gak-ry-m8G" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="aDe-1f-y5u"/>
+                            <constraint firstAttribute="trailing" secondItem="bgj-GD-90w" secondAttribute="trailing" id="b0c-SC-Vt0"/>
+                            <constraint firstItem="2Jv-Iq-fP6" firstAttribute="top" secondItem="nVc-8f-e21" secondAttribute="bottom" id="l0k-Bo-C9z"/>
+                            <constraint firstItem="3Kd-5g-07y" firstAttribute="top" secondItem="gak-ry-m8G" secondAttribute="bottom" id="l9C-1Q-zLS"/>
+                            <constraint firstItem="3Kd-5g-07y" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="p6I-75-A0O"/>
+                            <constraint firstItem="2Jv-Iq-fP6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="tIX-Jd-euk"/>
+                            <constraint firstItem="bgj-GD-90w" firstAttribute="height" secondItem="gak-ry-m8G" secondAttribute="height" id="tuf-1c-Dgx"/>
+                            <constraint firstItem="nVc-8f-e21" firstAttribute="top" secondItem="3Kd-5g-07y" secondAttribute="bottom" id="vab-p9-BlL"/>
+                            <constraint firstItem="nVc-8f-e21" firstAttribute="height" secondItem="gak-ry-m8G" secondAttribute="height" id="zbP-2I-m8a"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="WDQ-JD-cyE" appends="YES" id="FXN-Hj-ztt"/>
+                        </connections>
+                    </view>
+                    <navigationItem key="navigationItem" id="zje-2T-IoO"/>
+                    <connections>
+                        <outlet property="GraphView1" destination="gak-ry-m8G" id="WfD-RB-WEc"/>
+                        <outlet property="graphView1" destination="gak-ry-m8G" id="Cue-xs-9t8"/>
+                        <outlet property="graphView2" destination="3Kd-5g-07y" id="hc9-FV-n09"/>
+                        <outlet property="graphView3" destination="nVc-8f-e21" id="apc-aq-5yW"/>
+                        <outlet property="graphView4" destination="2Jv-Iq-fP6" id="bAQ-fh-QaC"/>
+                        <outlet property="graphView5" destination="846-BW-gg4" id="qYO-q8-hLN"/>
+                        <outlet property="graphView6" destination="bgj-GD-90w" id="gO1-su-ZL3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="WDQ-JD-cyE"/>
+            </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="138.98050974512745"/>
+        </scene>
+    </scenes>
+</document>

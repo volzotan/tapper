@@ -1,0 +1,12 @@
+PODS:
+  - CorePlot (2.0)
+
+DEPENDENCIES:
+  - CorePlot
+
+SPEC CHECKSUMS:
+  CorePlot: b7f422ad363f2b0e48152471d6da45ce232eb8c6
+
+PODFILE CHECKSUM: 02372b1aa025fcadd6fff62b39008ef3e6de5cde
+
+COCOAPODS: 1.1.1
