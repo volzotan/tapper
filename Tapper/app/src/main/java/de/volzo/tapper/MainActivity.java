@@ -12,14 +12,15 @@ import android.widget.Toast;
 
 import de.volzo.tapper.GestureDetector.DataCollector;
 import de.volzo.tapper.GestureDetector.Detector;
+import de.volzo.tapper.GestureDetector.Displayer;
 import de.volzo.tapper.GestureDetector.GestureType;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = DataCollector.class.getName();
 
-    Detector gestureDetector;
-    DataCollector dataCollector;
+    public Detector gestureDetector;
+    public DataCollector dataCollector;
 
     MainActivity activity = this;
 
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         gestureDetector = new Detector(this);
-        dataCollector = new DataCollector(this, gestureDetector);
+        dataCollector   = new DataCollector(this, gestureDetector);
 
         registerUpdateReceiver();
     }

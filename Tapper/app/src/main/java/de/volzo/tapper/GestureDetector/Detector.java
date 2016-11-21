@@ -16,14 +16,20 @@ public class Detector {
     }
 
     public void dataUpdated(DataCollector dataCollector, Double[] ax, Double[] ay, Double[] az, Double[] am) {
+
         // TODO
         // check if a gesture can be detected. If yes, call dataCollector.discardAllData()
         // to avoid multiple detections of the same gesture on the same data
 
-        Intent intent = new Intent("GESTURE_DETECTED");
-        intent.putExtra("GESTURE_TYPE", GestureType.DOUBLETAP.name());
-        intent.putExtra("GESTURE_INTENSITY", 1023);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        // run a low pass filter
+
+
+
+//        Intent intent = new Intent("GESTURE_DETECTED");
+//        intent.putExtra("GESTURE_TYPE", GestureType.DOUBLETAP.name());
+//        intent.putExtra("GESTURE_INTENSITY", 1023);
+//        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
+
 }
 
