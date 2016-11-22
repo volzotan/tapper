@@ -21,9 +21,6 @@ public class Detector {
         // check if a gesture can be detected. If yes, call dataCollector.discardAllData()
         // to avoid multiple detections of the same gesture on the same data
 
-        // run a low pass filter
-
-
 
 //        Intent intent = new Intent("GESTURE_DETECTED");
 //        intent.putExtra("GESTURE_TYPE", GestureType.DOUBLETAP.name());

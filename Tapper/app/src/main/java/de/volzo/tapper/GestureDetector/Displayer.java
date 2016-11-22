@@ -24,7 +24,7 @@ public class Displayer extends View {
     private Paint paint = new Paint();
 
     private float global_min = 0;
-    private float global_max = 0;
+    private float global_max = 0; // enter value and comment lines 63-71 for fixed magnitude
 
     public Displayer(Context context, AttributeSet attrs) {
         super(context, attrs);

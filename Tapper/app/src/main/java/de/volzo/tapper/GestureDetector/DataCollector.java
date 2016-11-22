@@ -67,9 +67,9 @@ public class DataCollector implements SensorEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        x.add(filter(event.values[0], x.size() == 0 ? null : x.get(x.size()-1))); // ( new value, previous value or null)
-        y.add(filter(event.values[1], y.size() == 0 ? null : y.get(y.size()-1)));
-        z.add(filter(event.values[2], z.size() == 0 ? null : z.get(z.size()-1)));
+        x.add(filter(event.values[0], x.size() == 0 ? null : x.get(x.size()-1), 0.5d, 0.1d)); // ( new value, previous value or null, lowpass, cutoff)
+        y.add(filter(event.values[1], y.size() == 0 ? null : y.get(y.size()-1), 0.5d, 0.1d));
+        z.add(filter(event.values[2], z.size() == 0 ? null : z.get(z.size()-1), 0.4d, 0.3d));
         m.add(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2)));
 
         x.toArray(ax);
@@ -89,17 +89,15 @@ public class DataCollector implements SensorEventListener {
      * 0 ≤ alpha ≤ 1 ; a smaller value basically means more smoothing
      * See: http://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization
      */
-    static final double LOWPASS_ALPHA = 0.5d;
-    static final double CUTOFF_THRESHOLD = 0.1d;
-    protected double filter(double input, Double previousInput) {
+    protected double filter(double input, Double previousInput, double lowpass, double cutoff) {
 
         // lowpass
         if (previousInput != null) {
-            input = previousInput + LOWPASS_ALPHA * (input - previousInput);
+            input = previousInput + lowpass * (input - previousInput);
         }
 
         // cutoff
-        if (Math.abs(input) < CUTOFF_THRESHOLD) {
+        if (Math.abs(input) < cutoff) {
             input = 0d;
         }
 
