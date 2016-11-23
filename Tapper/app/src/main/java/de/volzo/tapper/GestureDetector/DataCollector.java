@@ -41,6 +41,12 @@ public class DataCollector implements SensorEventListener {
     public Double[] az = new Double[QUEUE_SIZE];
     public Double[] am = new Double[QUEUE_SIZE];
 
+    private Filter fx = new Filter();
+    private Filter fy = new Filter();
+    private Filter fz = new Filter();
+    private Filter fm = new Filter();
+
+
     // in seconds
     private double UPDATE_FREQUENCY = 0.01;
 
@@ -63,14 +69,21 @@ public class DataCollector implements SensorEventListener {
 
         // register Listener and set update rate
         mSensorManager.registerListener(this, mSensor, (int) Math.round(this.UPDATE_FREQUENCY * 1000 * 1000));
+
+        // configure the filter objects
+        fz.lowpass_alpha    = 0.4;
+        fz.cutoff_threshold = 0.3;
+
+        fm.lowpass = false;
+        fm.cutoff = false;
     }
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        x.add(filter(event.values[0], x.size() == 0 ? null : x.get(x.size()-1), 0.5d, 0.1d)); // ( new value, previous value or null, lowpass, cutoff)
-        y.add(filter(event.values[1], y.size() == 0 ? null : y.get(y.size()-1), 0.5d, 0.1d));
-        z.add(filter(event.values[2], z.size() == 0 ? null : z.get(z.size()-1), 0.4d, 0.3d));
-        m.add(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2)));
+        x.add(fx.work((double) event.values[0], x.size() == 0 ? null : x.get(x.size()-1))); // ( new value, previous value or null)
+        y.add(fy.work((double) event.values[1], y.size() == 0 ? null : y.get(y.size()-1)));
+        z.add(fz.work((double) event.values[2], z.size() == 0 ? null : z.get(z.size()-1)));
+        m.add(fm.work(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
 
         x.toArray(ax);
         y.toArray(ay);
