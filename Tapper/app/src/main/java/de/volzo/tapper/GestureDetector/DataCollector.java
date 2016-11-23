@@ -77,7 +77,7 @@ public class DataCollector implements SensorEventListener {
         z.toArray(az);
         m.toArray(am);
 
-        gestureDetector.dataUpdated(this, ax, ay, az, am);
+        //gestureDetector.dataUpdated(this, ax, ay, az, am);
 
         // redraw the graph with new data by invalidating the View (Displayer)
         Displayer view = (Displayer) main.findViewById(R.id.displayView);

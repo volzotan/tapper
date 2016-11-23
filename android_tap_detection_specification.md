@@ -37,15 +37,15 @@ Collection of 128 samples in circular fifo queue
 
 ### Gesture detection
 
-* State machine for each gesture
+State machine for each gesture
 
 * Tap
     1. nothing
-    2. nothing in X/Y axis and peak or strong peak (< 20ms) in Z axis
+    2. nothing in X/Y axis and peak (<= 15ms) in Z axis
     3. nothing
 * Doubletap
     1. Tap
-    2. nothing (> 20ms, <100ms)
+    2. nothing (<100ms)
     3. Tap
 * Sidetap
     1. nothing
@@ -53,7 +53,7 @@ Collection of 128 samples in circular fifo queue
     3. nothing
 * Pick up and drop
     1. nothing
-    2. strong peak on Z axis (> 20ms)
+    2. strong peak on Z axis (> 15ms)
     3. very strong peak on Z axis (< 10ms)
     4. nothing
 
