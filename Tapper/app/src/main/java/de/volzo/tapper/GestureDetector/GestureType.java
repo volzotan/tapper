@@ -5,6 +5,6 @@ package de.volzo.tapper.GestureDetector;
  */
 public enum GestureType {
     DOUBLETAP,
-    TRIPLETAP,
-    ROTATION_CLOCKWISE;
+    SIDETAP,
+    PICKUPDROP;
 }
