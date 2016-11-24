@@ -1,6 +1,8 @@
 package de.volzo.tapper.GestureDetector;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 import static de.volzo.tapper.GestureDetector.Detector.Shift.TAP;
 import static de.volzo.tapper.GestureDetector.Detector.Shift.X;
@@ -26,10 +28,6 @@ public class Detector {
         }
     }
 
-    enum DoubleTapState {
-        INIT, TAP1, TAP2
-    }
-
     enum SideTapState {
         INIT, SIDETAP, END
     }
@@ -39,11 +37,15 @@ public class Detector {
     }
 
     Context context;
+
     final TapFSM tapFSM = new TapFSM();
+    final DoubleTapFSM doubleTapFSM = new DoubleTapFSM();
+
+    public Detector() {}
 
     public Detector(Context context) {
+        this();
         this.context = context;
-
     }
 
     public void dataUpdated(Quantile newX, Quantile newY, Quantile newZ) {
@@ -53,14 +55,21 @@ public class Detector {
                 & (newZ.getMask() << Z.getShift());
 
         boolean tapRecognized = tapFSM.stateTransition(event);
-        if (tapRecognized) {
-            event &= 1 << TAP.getShift();
-        }
-        //boolean doubleTapRecognized = doubleTapFSM.stateTransition(event);
-        //boolean sideTapRecognized = sideTapFSM.stateTransition(event);
-        //boolean pickUpDropRecognized = pickUpDropFSM.stateTransition(event);
+        boolean doubleTapRecognized;
 
-        /*
+        if (tapRecognized) {
+            doubleTapRecognized = doubleTapFSM.stateTransition(1 << TAP.getShift());
+        } else {
+            doubleTapRecognized = doubleTapFSM.stateTransition(event);
+        }
+
+        boolean sideTapRecognized = false;// sideTapFSM.stateTransition(event);
+        boolean pickUpDropRecognized = false;// pickUpDropFSM.stateTransition(event);
+
+        handleRecognizedGestures(doubleTapRecognized, sideTapRecognized, pickUpDropRecognized);
+    }
+
+    public void handleRecognizedGestures(boolean doubleTapRecognized, boolean sideTapRecognized, boolean pickUpDropRecognized) {
         if (doubleTapRecognized || sideTapRecognized || pickUpDropRecognized) {
             Intent intent = new Intent("GESTURE_DETECTED");
             if (doubleTapRecognized) {
@@ -72,7 +81,10 @@ public class Detector {
             }
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         }
-        */
+    }
+
+    public Context getContext() {
+        return context;
     }
 }
 

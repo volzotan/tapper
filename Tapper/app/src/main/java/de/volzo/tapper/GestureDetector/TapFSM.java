@@ -12,11 +12,12 @@ public class TapFSM {
 
     ScheduledExecutorService tapTimer;
 
-    TapState currentTapState;
+    private TapState currentTapState;
 
     //transition event matrix
-    //transition if (event ^ transition == 0)
+    //transition if exact mask (event ^ transition == 0)
     //1 = nothing, 2 = peak, 4 = strong peak, 8 = very strong peak
+    //in hightest digit: 1 = timeout
     int[][] tapTransitionXNOR = new int[][]{
             /*INIT */{0x0000, 0x0111, 0x0000, 0x0000},
             /*START*/{0x0000, 0x0111, 0x0112, 0x0000},
@@ -24,7 +25,7 @@ public class TapFSM {
             /*END  */{0x0000, 0x0000, 0x0000, 0x0000}};
 
     //transition event matrix
-    //transition if (event & transition != 0)
+    //transition if any overlap (event & transition != 0)
     //F = everything, E = more than nothing, C = more than peak, 8 = more than strong peak
     int[][] tapTransitionAND = new int[][]{
             /*INIT */{0xFEEE, 0x0000, 0x0000, 0x0000},
