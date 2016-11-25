@@ -63,7 +63,7 @@ public class SideTapFSM {
             () -> {}};
 
     public enum SideTapState {
-        INIT(0), START(1), SIDETAP(2), END(3);
+        INIT(0), START(1), PEAK(2), END(3);
 
         private int state;
 
@@ -83,7 +83,7 @@ public class SideTapFSM {
                     case 1:
                         return START;
                     case 2:
-                        return SIDETAP;
+                        return PEAK;
                     default:
                         return END;
                 }

@@ -102,7 +102,7 @@ public class DoubleTapFSMUnitTest extends FSMUnitTest {
     private void toInitByXYShake() {
         Assert.assertFalse("FSM should not go to end state when shaking in X/Y axis",
                 fsm.stateTransition(
-                        EVENT_XY_SHAKE
+                        EVENT_PEAK_XY
                 ));
         Assert.assertEquals("Machine should now be in INIT state",
                 DoubleTapFSM.DoubleTapState.INIT, fsm.getCurrentDoubleTapState());
@@ -111,7 +111,7 @@ public class DoubleTapFSMUnitTest extends FSMUnitTest {
     private void toInitByStrongZMovement() {
         Assert.assertFalse("FSM should not go to end state when shaking in X/Y axis",
                 fsm.stateTransition(
-                        EVENT_STRONG_Z_PEAK
+                        EVENT_STRONG_PEAK_Z
                 ));
         Assert.assertEquals("Machine should now be in INIT state",
                 DoubleTapFSM.DoubleTapState.INIT, fsm.getCurrentDoubleTapState());
