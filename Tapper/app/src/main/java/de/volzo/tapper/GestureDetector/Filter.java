@@ -23,6 +23,13 @@ public class Filter {
 
     public Double work(Double input, Double previousInput) {
 
+        /*
+         * time smoothing constant for low-pass filter
+         * 0 ≤ alpha ≤ 1 ; a smaller value basically means more smoothing
+         * See: http://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization
+        */
+
+
         // lowpass
         if (lowpass) {
             if (previousInput != null) {
@@ -39,12 +46,13 @@ public class Filter {
 
         // quantization
         if (quantization) {
-            if (input > quantization_steps[quantization_steps.length - 1]) {
-                input = (double) quantization_steps.length * (input/input);
+            int sign = input > 0 ? 1 : -1;
+            if (Math.abs(input) > quantization_steps[quantization_steps.length - 1]) {
+                input = (double) quantization_steps.length * sign;
             } else {
                 for (int i = 0; i < quantization_steps.length - 1; i++) {
                     if (Math.abs(input) >= quantization_steps[i] && Math.abs(input) < quantization_steps[i + 1]) {
-                        input = (double) i * (input/input);
+                        input = (double) i * sign;
                         break;
                     }
                 }

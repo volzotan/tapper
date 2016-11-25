@@ -97,26 +97,6 @@ public class DataCollector implements SensorEventListener {
         view.invalidate();
     }
 
-    /*
-     * time smoothing constant for low-pass filter
-     * 0 ≤ alpha ≤ 1 ; a smaller value basically means more smoothing
-     * See: http://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization
-     */
-    protected double filter(double input, Double previousInput, double lowpass, double cutoff) {
-
-        // lowpass
-        if (previousInput != null) {
-            input = previousInput + lowpass * (input - previousInput);
-        }
-
-        // cutoff
-        if (Math.abs(input) < cutoff) {
-            input = 0d;
-        }
-
-        return input;
-    }
-
     public void discardAllData() {
         x.clear();
         y.clear();
