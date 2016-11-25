@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import de.volzo.tapper.GestureDetector.FSM.DoubleTapFSM;
+import de.volzo.tapper.GestureDetector.FSM.SideTapFSM;
 import de.volzo.tapper.GestureDetector.FSM.TapFSM;
 
 import static de.volzo.tapper.GestureDetector.Detector.Shift.TAP;
@@ -39,6 +40,7 @@ public class Detector {
 
     final TapFSM tapFSM = new TapFSM();
     final DoubleTapFSM doubleTapFSM = new DoubleTapFSM();
+    private SideTapFSM sideTapFSM = new SideTapFSM();
 
     public Detector() {}
 
@@ -63,7 +65,11 @@ public class Detector {
             doubleTapRecognized = doubleTapFSM.stateTransition(event);
         }
 
-        boolean sideTapRecognized = false;// sideTapFSM.stateTransition(event);
+        boolean sideTapRecognized = sideTapFSM.stateTransition(event);
+        if (sideTapRecognized) {
+            sideTapFSM.reset();
+        }
+
         boolean pickUpDropRecognized = false;// pickUpDropFSM.stateTransition(event);
 
         handleRecognizedGestures(doubleTapRecognized, sideTapRecognized, pickUpDropRecognized);
@@ -93,6 +99,10 @@ public class Detector {
 
     public DoubleTapFSM getDoubleTapFSM() {
         return doubleTapFSM;
+    }
+
+    public SideTapFSM getSideTapFSM() {
+        return sideTapFSM;
     }
 }
 
