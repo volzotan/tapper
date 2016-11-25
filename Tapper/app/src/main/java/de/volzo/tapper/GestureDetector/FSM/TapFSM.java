@@ -1,10 +1,13 @@
-package de.volzo.tapper.GestureDetector;
+package de.volzo.tapper.GestureDetector.FSM;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static de.volzo.tapper.GestureDetector.TapFSM.TapState.END;
+import de.volzo.tapper.GestureDetector.Detector;
+
+import static de.volzo.tapper.GestureDetector.FSM.TapFSM.TapState.END;
+import static de.volzo.tapper.GestureDetector.FSM.TapFSM.TapState.INIT;
 
 public class TapFSM {
 
@@ -69,15 +72,17 @@ public class TapFSM {
         }
 
         public static TapState fromValue(int value) {
-            switch (value) {
-                case 0:
-                    return INIT;
-                case 1:
-                    return START;
-                case 2:
-                    return PEAK;
-                default:
-                    return END;
+            {
+                switch (value) {
+                    case 0:
+                        return TapFSM.TapState.INIT;
+                    case 1:
+                        return TapFSM.TapState.START;
+                    case 2:
+                        return TapFSM.TapState.PEAK;
+                    default:
+                        return END;
+                }
             }
         }
     }
@@ -86,6 +91,13 @@ public class TapFSM {
 
     public TapFSM() {
         this.currentTapState = TapState.INIT;
+    }
+
+    public void reset() {
+        if (currentTapState != INIT) {
+            stateExitAction[currentTapState.getState()].run();
+        }
+        this.currentTapState = INIT;
     }
 
     public boolean stateTransition(int event) {
