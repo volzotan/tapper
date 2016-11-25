@@ -11,7 +11,7 @@ public class Filter {
 
     public double lowpass_alpha         = 0.5d;
     public double cutoff_threshold      = 0.3d;
-    public double[] quantization_steps  = {0, 1, 2};
+    public double[] quantization_steps  = {0, 1, 2, 3};
 
     public Filter() {
 

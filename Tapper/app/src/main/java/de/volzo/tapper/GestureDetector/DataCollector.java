@@ -80,9 +80,13 @@ public class DataCollector implements SensorEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        x.add(fx.work((double) event.values[0], x.size() == 0 ? null : x.get(x.size()-1))); // ( new value, previous value or null)
-        y.add(fy.work((double) event.values[1], y.size() == 0 ? null : y.get(y.size()-1)));
-        z.add(fz.work((double) event.values[2], z.size() == 0 ? null : z.get(z.size()-1)));
+        int filtered_x = fx.work((double) event.values[0], x.size() == 0 ? null : x.get(x.size()-1)); // ( new value, previous value or null)
+        int filtered_y = fy.work((double) event.values[1], y.size() == 0 ? null : y.get(y.size()-1));
+        int filtered_z = fz.work((double) event.values[2], z.size() == 0 ? null : z.get(z.size()-1));
+
+        x.add(filtered_x);
+        y.add(filtered_y);
+        z.add(filtered_z);
         m.add(fm.work(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
 
         x.toArray(ax);
@@ -91,6 +95,8 @@ public class DataCollector implements SensorEventListener {
         m.toArray(am);
 
         //gestureDetector.dataUpdated(this, ax, ay, az, am);
+
+        gestureDetector.dataUpdated(Quantile.values()[Math.abs(filtered_x)], Quantile.values()[Math.abs(filtered_y)], Quantile.values()[Math.abs(filtered_z)]);
 
         // redraw the graph with new data by invalidating the View (Displayer)
         Displayer view = (Displayer) main.findViewById(R.id.displayView);
