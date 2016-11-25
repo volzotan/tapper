@@ -1,8 +1,12 @@
-package de.volzo.tapper.GestureDetector;
+package de.volzo.tapper.GestureDetector.FSM;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import de.volzo.tapper.GestureDetector.Detector;
+
+import static de.volzo.tapper.GestureDetector.FSM.DoubleTapFSM.DoubleTapState.INIT;
 
 public class DoubleTapFSM {
 
@@ -80,7 +84,14 @@ public class DoubleTapFSM {
     public final DoubleTapState finalState = DoubleTapState.TAP2;
 
     public DoubleTapFSM() {
-        this.currentDoubleTapState = DoubleTapState.INIT;
+        this.currentDoubleTapState = INIT;
+    }
+
+    public void reset() {
+        if (currentDoubleTapState != INIT) {
+            stateExitAction[currentDoubleTapState.getState()].run();
+        }
+        this.currentDoubleTapState = INIT;
     }
 
     public boolean stateTransition(int event) {

@@ -6,9 +6,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.volzo.tapper.GestureDetector.TapFSM;
+import de.volzo.tapper.GestureDetector.FSM.TapFSM;
 
-import static de.volzo.tapper.GestureDetector.TapFSM.tapTimeout;
+import static de.volzo.tapper.GestureDetector.FSM.TapFSM.tapTimeout;
 
 /**
  * Created by tassilokarge on 23.11.16.

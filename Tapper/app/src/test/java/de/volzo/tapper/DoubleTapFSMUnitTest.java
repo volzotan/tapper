@@ -5,9 +5,9 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.volzo.tapper.GestureDetector.DoubleTapFSM;
+import de.volzo.tapper.GestureDetector.FSM.DoubleTapFSM;
 
-import static de.volzo.tapper.GestureDetector.DoubleTapFSM.doubleTapTimeout;
+import static de.volzo.tapper.GestureDetector.FSM.DoubleTapFSM.doubleTapTimeout;
 
 /**
  * Created by tassilokarge on 24.11.16.

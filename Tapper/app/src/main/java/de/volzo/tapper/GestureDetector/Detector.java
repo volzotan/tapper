@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import de.volzo.tapper.GestureDetector.FSM.DoubleTapFSM;
+import de.volzo.tapper.GestureDetector.FSM.TapFSM;
+
 import static de.volzo.tapper.GestureDetector.Detector.Shift.TAP;
 import static de.volzo.tapper.GestureDetector.Detector.Shift.X;
 import static de.volzo.tapper.GestureDetector.Detector.Shift.Y;
@@ -51,13 +54,14 @@ public class Detector {
     public void dataUpdated(Quantile newX, Quantile newY, Quantile newZ) {
 
         int event = (newX.getMask() << X.getShift())
-                & (newY.getMask() << Y.getShift())
-                & (newZ.getMask() << Z.getShift());
+                | (newY.getMask() << Y.getShift())
+                | (newZ.getMask() << Z.getShift());
 
         boolean tapRecognized = tapFSM.stateTransition(event);
         boolean doubleTapRecognized;
 
         if (tapRecognized) {
+            tapFSM.reset();
             doubleTapRecognized = doubleTapFSM.stateTransition(1 << TAP.getShift());
         } else {
             doubleTapRecognized = doubleTapFSM.stateTransition(event);
@@ -85,6 +89,14 @@ public class Detector {
 
     public Context getContext() {
         return context;
+    }
+
+    public TapFSM getTapFSM() {
+        return tapFSM;
+    }
+
+    public DoubleTapFSM getDoubleTapFSM() {
+        return doubleTapFSM;
     }
 }
 
