@@ -31,10 +31,6 @@ public class Detector {
         }
     }
 
-    enum SideTapState {
-        INIT, SIDETAP, END
-    }
-
     enum PickUpDropState {
         INIT, MOVING, DROP, END
     }

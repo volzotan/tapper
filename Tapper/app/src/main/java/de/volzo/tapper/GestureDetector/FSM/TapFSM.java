@@ -75,11 +75,11 @@ public class TapFSM {
             {
                 switch (value) {
                     case 0:
-                        return TapFSM.TapState.INIT;
+                        return INIT;
                     case 1:
-                        return TapFSM.TapState.START;
+                        return START;
                     case 2:
-                        return TapFSM.TapState.PEAK;
+                        return PEAK;
                     default:
                         return END;
                 }
