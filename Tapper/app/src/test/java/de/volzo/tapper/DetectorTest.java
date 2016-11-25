@@ -34,7 +34,48 @@ public class DetectorTest extends Detector {
 
     @Test
     public void sideTapDetection() {
-        //TODO: input double tap sequence(s) to dataUpdated and check if sideTapRecognized is set
+        //input double tap sequence(s) to dataUpdated and check if sideTapRecognized is set
+        // first tap
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+        this.dataUpdated(Quantile.NOTHING, Quantile.PEAK, Quantile.NOTHING);
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+
+        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+
+        // second tap
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+        this.dataUpdated(Quantile.NOTHING, Quantile.STRONG_PEAK, Quantile.NOTHING);
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+
+        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+
+        // third tap
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+        this.dataUpdated(Quantile.PEAK, Quantile.NOTHING, Quantile.NOTHING);
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+
+        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+
+        // fourth tap
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+        this.dataUpdated(Quantile.STRONG_PEAK, Quantile.NOTHING, Quantile.NOTHING);
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+
+        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+
+        // fifth tap
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+        this.dataUpdated(Quantile.PEAK, Quantile.PEAK, Quantile.NOTHING);
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+
+        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+
+        // sixth tap
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+        this.dataUpdated(Quantile.STRONG_PEAK, Quantile.STRONG_PEAK, Quantile.NOTHING);
+        this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
+
+        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
     }
 
     @Test
