@@ -6,8 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.volzo.tapper.GestureDetector.Detector;
-import de.volzo.tapper.GestureDetector.Quantile;
 import de.volzo.tapper.GestureDetector.TapFSM;
 
 import static de.volzo.tapper.GestureDetector.TapFSM.tapTimeout;
@@ -16,7 +14,7 @@ import static de.volzo.tapper.GestureDetector.TapFSM.tapTimeout;
  * Created by tassilokarge on 23.11.16.
  */
 
-public class TapFSMUnitTest {
+public class TapFSMUnitTest extends FSMUnitTest {
 
     private TapFSM fsm;
 
@@ -117,9 +115,7 @@ public class TapFSMUnitTest {
     private void peakToEndByNothing() {
         Assert.assertTrue("FSM should now be in end state",
                 fsm.stateTransition(
-                        Quantile.NOTHING.getMask() << Detector.Shift.X.getShift()
-                                | Quantile.NOTHING.getMask() << Detector.Shift.Y.getShift()
-                                | Quantile.NOTHING.getMask() << Detector.Shift.Z.getShift()
+                        EVENT_NOTHING
                 ));
         Assert.assertEquals("Machine should now be in END state",
                 TapFSM.TapState.END, fsm.getCurrentTapState());
@@ -129,9 +125,7 @@ public class TapFSMUnitTest {
         //Start -> Peak or Peak -> Peak
         Assert.assertFalse("FSM should not be in end state yet",
                 fsm.stateTransition(
-                        Quantile.NOTHING.getMask() << Detector.Shift.X.getShift()
-                                | Quantile.NOTHING.getMask() << Detector.Shift.Y.getShift()
-                                | Quantile.PEAK.getMask() << Detector.Shift.Z.getShift()
+                        EVENT_ONLY_Z_PEAK
                 ));
         Assert.assertEquals("Machine should now be in Peak state",
                 TapFSM.TapState.PEAK, fsm.getCurrentTapState());
@@ -141,9 +135,7 @@ public class TapFSMUnitTest {
         //Initial -> Start or Start -> Start
         Assert.assertFalse("FSM should not be in end state yet",
                 fsm.stateTransition(
-                        Quantile.NOTHING.getMask() << Detector.Shift.X.getShift()
-                                | Quantile.NOTHING.getMask() << Detector.Shift.Y.getShift()
-                                | Quantile.NOTHING.getMask() << Detector.Shift.Z.getShift()
+                        EVENT_NOTHING
                 ));
         Assert.assertEquals("Machine should now be in Start state",
                 TapFSM.TapState.START, fsm.getCurrentTapState());
@@ -153,9 +145,7 @@ public class TapFSMUnitTest {
         //Start -> Initial or Peak -> Initial
         Assert.assertFalse("FSM should not go to end state when shaking in X/Y axis",
                 fsm.stateTransition(
-                        Quantile.PEAK.getMask() << Detector.Shift.X.getShift()
-                                | Quantile.PEAK.getMask() << Detector.Shift.Y.getShift()
-                                | Quantile.NOTHING.getMask() << Detector.Shift.Z.getShift()
+                        EVENT_XY_SHAKE
                 ));
         Assert.assertEquals("Machine should now be in INIT state",
                 TapFSM.TapState.INIT, fsm.getCurrentTapState());
@@ -165,9 +155,7 @@ public class TapFSMUnitTest {
         //Start -> Initial or Peak -> Initial
         Assert.assertFalse("FSM should not go to end state when shaking in X/Y axis",
                 fsm.stateTransition(
-                        Quantile.NOTHING.getMask() << Detector.Shift.X.getShift()
-                                | Quantile.NOTHING.getMask() << Detector.Shift.Y.getShift()
-                                | Quantile.STRONG_PEAK.getMask() << Detector.Shift.Z.getShift()
+                        EVENT_STRONG_Z_PEAK
                 ));
         Assert.assertEquals("Machine should now be in INIT state",
                 TapFSM.TapState.INIT, fsm.getCurrentTapState());
