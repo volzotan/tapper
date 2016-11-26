@@ -6,11 +6,11 @@ package de.volzo.tapper.GestureDetector;
 public class Filter {
 
     public boolean lowpass      = true;
-    public boolean cutoff       = true;
+    public boolean cutoff       = false;
     public boolean quantization = true;
 
     public double lowpass_alpha         = 0.5d;
-    public double[] quantizationSteps  = {0, 1, 2, 3};
+    public double[] quantizationSteps  = {0, 1, 4, 5};
     public double cutoffThreshold = 0.2d;
 
     public Filter() {

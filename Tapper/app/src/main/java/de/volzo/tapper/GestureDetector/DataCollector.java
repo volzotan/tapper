@@ -84,10 +84,17 @@ public class DataCollector implements SensorEventListener {
         Double filtered_y = fy.work((double) event.values[1], y.size() == 0 ? null : y.get(y.size()-1));
         Double filtered_z = fz.work((double) event.values[2], z.size() == 0 ? null : z.get(z.size()-1));
 
+        //System.out.println(event.values[2]);
+
         x.add(filtered_x);
         y.add(filtered_y);
         z.add(filtered_z);
         m.add(fm.work(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
+
+        x.toArray(ax);
+        y.toArray(ay);
+        z.toArray(az);
+        m.toArray(am);
 
         gestureDetector.dataUpdated(
                 Quantile.values()[Math.abs(filtered_x.intValue())],
