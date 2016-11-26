@@ -31,10 +31,10 @@ public class DataCollector implements SensorEventListener {
     // Number of available samples
     private static final int QUEUE_SIZE = 128;
 
-    public CircularFifoQueue<Double> x = new CircularFifoQueue<Double>(QUEUE_SIZE);
-    public CircularFifoQueue<Double> y = new CircularFifoQueue<Double>(QUEUE_SIZE);
-    public CircularFifoQueue<Double> z = new CircularFifoQueue<Double>(QUEUE_SIZE);
-    public CircularFifoQueue<Double> m = new CircularFifoQueue<Double>(QUEUE_SIZE);
+    public CircularFifoQueue<Double> x = new CircularFifoQueue<>(QUEUE_SIZE);
+    public CircularFifoQueue<Double> y = new CircularFifoQueue<>(QUEUE_SIZE);
+    public CircularFifoQueue<Double> z = new CircularFifoQueue<>(QUEUE_SIZE);
+    public CircularFifoQueue<Double> m = new CircularFifoQueue<>(QUEUE_SIZE);
 
     public Double[] ax = new Double[QUEUE_SIZE];
     public Double[] ay = new Double[QUEUE_SIZE];
@@ -80,23 +80,19 @@ public class DataCollector implements SensorEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        int filtered_x = fx.work((double) event.values[0], x.size() == 0 ? null : x.get(x.size()-1)); // ( new value, previous value or null)
-        int filtered_y = fy.work((double) event.values[1], y.size() == 0 ? null : y.get(y.size()-1));
-        int filtered_z = fz.work((double) event.values[2], z.size() == 0 ? null : z.get(z.size()-1));
+        Double filtered_x = fx.work((double) event.values[0], x.size() == 0 ? null : x.get(x.size()-1)); // ( new value, previous value or null)
+        Double filtered_y = fy.work((double) event.values[1], y.size() == 0 ? null : y.get(y.size()-1));
+        Double filtered_z = fz.work((double) event.values[2], z.size() == 0 ? null : z.get(z.size()-1));
 
         x.add(filtered_x);
         y.add(filtered_y);
         z.add(filtered_z);
         m.add(fm.work(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
 
-        x.toArray(ax);
-        y.toArray(ay);
-        z.toArray(az);
-        m.toArray(am);
-
-        //gestureDetector.dataUpdated(this, ax, ay, az, am);
-
-        gestureDetector.dataUpdated(Quantile.values()[Math.abs(filtered_x)], Quantile.values()[Math.abs(filtered_y)], Quantile.values()[Math.abs(filtered_z)]);
+        gestureDetector.dataUpdated(
+                Quantile.values()[Math.abs(filtered_x.intValue())],
+                Quantile.values()[Math.abs(filtered_y.intValue())],
+                Quantile.values()[Math.abs(filtered_z.intValue())]);
 
         // redraw the graph with new data by invalidating the View (Displayer)
         Displayer view = (Displayer) main.findViewById(R.id.displayView);

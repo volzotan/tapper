@@ -10,8 +10,8 @@ public class Filter {
     public boolean quantization = true;
 
     public double lowpass_alpha         = 0.5d;
-    public double cutoff_threshold      = 0.3d;
     public double[] quantization_steps  = {0, 1, 2, 3};
+    public double cutoff_threshold      = 0.2d;
 
     public Filter() {
 
