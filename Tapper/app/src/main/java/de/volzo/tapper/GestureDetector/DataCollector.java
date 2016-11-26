@@ -72,7 +72,7 @@ public class DataCollector implements SensorEventListener {
 
         // configure the filter objects
         fz.lowpass_alpha    = 0.4;
-        fz.cutoff_threshold = 0.3;
+        fz.cutoffThreshold = 0.3;
 
         fm.lowpass = false;
         fm.cutoff = false;

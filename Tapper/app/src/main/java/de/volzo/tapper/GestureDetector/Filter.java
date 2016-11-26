@@ -10,8 +10,8 @@ public class Filter {
     public boolean quantization = true;
 
     public double lowpass_alpha         = 0.5d;
-    public double[] quantization_steps  = {0, 1, 2, 3};
-    public double cutoff_threshold      = 0.2d;
+    public double[] quantizationSteps  = {0, 1, 2, 3};
+    public double cutoffThreshold = 0.2d;
 
     public Filter() {
 
@@ -23,42 +23,61 @@ public class Filter {
 
     public Double work(Double input, Double previousInput) {
 
-        /*
-         * time smoothing constant for low-pass filter
-         * 0 ≤ alpha ≤ 1 ; a smaller value basically means more smoothing
-         * See: http://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization
-        */
+        input = lowpass ? lowpass(input, previousInput) : input;
 
+        //for what? Quantization should do this already
+        input = cutoff ? cutoff(input) : input;
 
-        // lowpass
-        if (lowpass) {
-            if (previousInput != null) {
-                input = previousInput + this.lowpass_alpha * (input - previousInput);
-            }
-        }
-
-        // cutoff
-        if (cutoff) {
-            if (Math.abs(input) < cutoff_threshold) {
-                input = 0d;
-            }
-        }
-
-        // quantization
-        if (quantization) {
-            int sign = input > 0 ? 1 : -1;
-            if (Math.abs(input) > quantization_steps[quantization_steps.length - 1]) {
-                input = (double) quantization_steps.length * sign;
-            } else {
-                for (int i = 0; i < quantization_steps.length - 1; i++) {
-                    if (Math.abs(input) >= quantization_steps[i] && Math.abs(input) < quantization_steps[i + 1]) {
-                        input = (double) i * sign;
-                        break;
-                    }
-                }
-            }
-        }
+        input = quantization ?  quantize(input) : input;
 
         return input;
+    }
+
+    /**
+     * time smoothing constant for low-pass filter
+     * 0 ≤ alpha ≤ 1 ; a smaller value basically means more smoothing
+     * See: http://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization
+     *
+     * @param input the unsmoothed input
+     * @param previousInput the previous smoothed output
+     * @return the smoothed input
+     */
+    public Double lowpass(Double input, Double previousInput) {
+        // lowpass
+        if (previousInput != null) {
+            input = previousInput + this.lowpass_alpha * (input - previousInput);
+        }
+        return input;
+    }
+
+    /**
+     * cuts off when certain threshold is not surpassed
+     *
+     * @param input the uncut input
+     * @return the cut input
+     */
+    public Double cutoff(Double input) {
+        // cutoff
+        if (Math.abs(input) < cutoffThreshold) {
+            input = 0d;
+        }
+        return input;
+    }
+
+    /**
+     * quantizes input into major steps (nothing, peak, strong peak, very strong peak)
+     * according to thresholds in quantizationSteps (lower or equal quantizationStep[i] yields i)
+     *
+     * @param input the unquantized input
+     * @return the numerical value of the quantization step (i.e. 0 for nothing, 1 for peak etc.)
+     */
+    public Double quantize(Double input) {
+        // quantization
+        double sign = input > 0 ? 1 : -1;
+        double i = 0;
+        while (i < quantizationSteps.length - 1 && quantizationSteps[(int)i+1] <= Math.abs(input)) {
+            i++;
+        }
+        return i * sign;
     }
 }
