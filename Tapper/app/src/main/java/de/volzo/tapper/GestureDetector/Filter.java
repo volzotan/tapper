@@ -73,7 +73,7 @@ public class Filter {
      */
     public Double quantize(Double input) {
         // quantization
-        double sign = input > 0 ? 1 : -1;
+        double sign = 1; //input > 0 ? 1 : -1;
         double i = 0;
         while (i < quantizationSteps.length - 1 && quantizationSteps[(int)i+1] <= Math.abs(input)) {
             i++;

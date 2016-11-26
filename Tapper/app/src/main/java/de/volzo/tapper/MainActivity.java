@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 msg += " [" + Integer.toString(gestureIntensity) + "]";
             }
 
-            Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
         }
     };
 

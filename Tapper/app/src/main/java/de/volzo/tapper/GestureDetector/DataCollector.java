@@ -36,6 +36,13 @@ public class DataCollector implements SensorEventListener {
     public CircularFifoQueue<Double> z = new CircularFifoQueue<>(QUEUE_SIZE);
     public CircularFifoQueue<Double> m = new CircularFifoQueue<>(QUEUE_SIZE);
 
+    public CircularFifoQueue<Double> rawx = new CircularFifoQueue<>(QUEUE_SIZE);
+    public CircularFifoQueue<Double> rawy = new CircularFifoQueue<>(QUEUE_SIZE);
+    public CircularFifoQueue<Double> rawz = new CircularFifoQueue<>(QUEUE_SIZE);
+    public Double[] rawax = new Double[QUEUE_SIZE];
+    public Double[] raway = new Double[QUEUE_SIZE];
+    public Double[] rawaz = new Double[QUEUE_SIZE];
+
     public Double[] ax = new Double[QUEUE_SIZE];
     public Double[] ay = new Double[QUEUE_SIZE];
     public Double[] az = new Double[QUEUE_SIZE];
@@ -84,12 +91,17 @@ public class DataCollector implements SensorEventListener {
         Double filtered_y = fy.work((double) event.values[1], y.size() == 0 ? null : y.get(y.size()-1));
         Double filtered_z = fz.work((double) event.values[2], z.size() == 0 ? null : z.get(z.size()-1));
 
-        //System.out.println(event.values[2]);
-
         x.add(filtered_x);
         y.add(filtered_y);
         z.add(filtered_z);
         m.add(fm.work(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
+
+        rawx.add((double) event.values[0]);
+        rawy.add((double) event.values[1]);
+        rawz.add((double) event.values[2]);
+        rawx.toArray(rawax);
+        rawy.toArray(raway);
+        rawz.toArray(rawaz);
 
         x.toArray(ax);
         y.toArray(ay);

@@ -24,7 +24,7 @@ public class Displayer extends View {
     private Paint paint = new Paint();
 
     private float global_min = 0;
-    private float global_max = 0; // enter value and comment lines 63-71 for fixed magnitude
+    private float global_max = 7; // enter value and comment lines 63-71 for fixed magnitude
 
     public Displayer(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -58,22 +58,31 @@ public class Displayer extends View {
             return;
         }
 
-        int fractionHeight = height / 4;
+        int fractionHeight = height / 6;
 
-        global_min = (float) (double) Collections.min(collector.x);
-        if (global_min > Collections.min(collector.y)) { global_min = (float) (double) Collections.min(collector.y); }
-        if (global_min > Collections.min(collector.z)) { global_min = (float) (double) Collections.min(collector.z); }
-        if (global_min > Collections.min(collector.m)) { global_min = (float) (double) Collections.min(collector.m); }
-
-        global_max = (float) (double) Collections.max(collector.x);
-        if (global_max < Collections.max(collector.y)) { global_max = (float) (double) Collections.max(collector.y); }
-        if (global_max < Collections.max(collector.z)) { global_max = (float) (double) Collections.max(collector.z); }
-        if (global_max < Collections.max(collector.m)) { global_max = (float) (double) Collections.max(collector.m); }
+//        global_min = (float) (double) Collections.min(collector.x);
+//        if (global_min > Collections.min(collector.y)) { global_min = (float) (double) Collections.min(collector.y); }
+//        if (global_min > Collections.min(collector.z)) { global_min = (float) (double) Collections.min(collector.z); }
+//        if (global_min > Collections.min(collector.m)) { global_min = (float) (double) Collections.min(collector.m); }
+//        if (global_min > Collections.min(collector.rawx)) { global_min = (float) (double) Collections.min(collector.rawx); }
+//        if (global_min > Collections.min(collector.rawy)) { global_min = (float) (double) Collections.min(collector.rawy); }
+//        if (global_min > Collections.min(collector.rawz)) { global_min = (float) (double) Collections.min(collector.rawz); }
+//
+//        global_max = (float) (double) Collections.max(collector.x);
+//        if (global_max < Collections.max(collector.y)) { global_max = (float) (double) Collections.max(collector.y); }
+//        if (global_max < Collections.max(collector.z)) { global_max = (float) (double) Collections.max(collector.z); }
+//        if (global_max < Collections.max(collector.m)) { global_max = (float) (double) Collections.max(collector.m); }
+//        if (global_max < Collections.max(collector.rawx)) { global_max = (float) (double) Collections.max(collector.rawx); }
+//        if (global_max < Collections.max(collector.rawy)) { global_max = (float) (double) Collections.max(collector.rawy); }
+//        if (global_max < Collections.max(collector.rawz)) { global_max = (float) (double) Collections.max(collector.rawz); }
 
         drawLine(canvas, 0, width, fractionHeight * 0, fractionHeight * 1, collector.ax, Color.RED);
-        drawLine(canvas, 0, width, fractionHeight * 1, fractionHeight * 2, collector.ay, Color.BLUE);
-        drawLine(canvas, 0, width, fractionHeight * 2, fractionHeight * 3, collector.az, Color.GREEN);
-        drawLine(canvas, 0, width, fractionHeight * 3, fractionHeight * 4, collector.am, Color.BLACK);
+        drawLine(canvas, 0, width, fractionHeight * 1, fractionHeight * 2, collector.rawax, Color.RED);
+        drawLine(canvas, 0, width, fractionHeight * 2, fractionHeight * 3, collector.ay, Color.BLUE);
+        drawLine(canvas, 0, width, fractionHeight * 3, fractionHeight * 4, collector.raway, Color.BLUE);
+        drawLine(canvas, 0, width, fractionHeight * 4, fractionHeight * 5, collector.az, Color.BLACK);
+        drawLine(canvas, 0, width, fractionHeight * 5, fractionHeight * 6, collector.rawaz, Color.BLACK);
+        //drawLine(canvas, 0, width, fractionHeight * 3, fractionHeight * 4, collector.am, Color.BLACK);
 
     }
 
