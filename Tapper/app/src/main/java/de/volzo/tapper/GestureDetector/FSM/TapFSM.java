@@ -11,7 +11,7 @@ import static de.volzo.tapper.GestureDetector.FSM.TapFSM.TapState.INIT;
 
 public class TapFSM {
 
-    public static long tapTimeout = 50;
+    public static long tapTimeout = 20;
 
     ScheduledExecutorService tapTimer;
 
