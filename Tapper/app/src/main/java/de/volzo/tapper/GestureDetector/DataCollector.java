@@ -79,7 +79,7 @@ public class DataCollector implements SensorEventListener {
 
         // configure the filter objects
         fz.lowpass_alpha    = 0.4;
-        fz.cutoffThreshold = 0.3;
+        fz.cutoffThreshold  = 0.3;
 
         fm.lowpass = false;
         fm.cutoff = false;
@@ -87,14 +87,6 @@ public class DataCollector implements SensorEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        Double filtered_x = fx.work((double) event.values[0], x.size() == 0 ? null : x.get(x.size()-1)); // ( new value, previous value or null)
-        Double filtered_y = fy.work((double) event.values[1], y.size() == 0 ? null : y.get(y.size()-1));
-        Double filtered_z = fz.work((double) event.values[2], z.size() == 0 ? null : z.get(z.size()-1));
-
-        x.add(filtered_x);
-        y.add(filtered_y);
-        z.add(filtered_z);
-        m.add(fm.work(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
 
         rawx.add((double) event.values[0]);
         rawy.add((double) event.values[1]);
@@ -102,6 +94,15 @@ public class DataCollector implements SensorEventListener {
         rawx.toArray(rawax);
         rawy.toArray(raway);
         rawz.toArray(rawaz);
+
+        Double filtered_x = fx.work((double) event.values[0], rawax); // ( new value, previous values or null)
+        Double filtered_y = fy.work((double) event.values[1], raway);
+        Double filtered_z = fz.work((double) event.values[2], rawaz);
+
+        x.add(filtered_x);
+        y.add(filtered_y);
+        z.add(filtered_z);
+        m.add(fm.work(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
 
         x.toArray(ax);
         y.toArray(ay);
