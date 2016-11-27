@@ -33,11 +33,11 @@ public class SideTapFSM {
 
     //transition event matrix
     //transition if any overlap (event & transition != 0)
-    //F = everything, E = more than nothing, C = more than peak, 8 = more than strong peak 6 = peak or strong peak
+    //F = everything, E = more than nothing, C = more than peak, 8 = more than strong peak 6 = peak or strong peak 4 = strong peak
     int[][] tapTransitionAND = new int[][]{
             /*INIT */{0xFEEE, 0x0000, 0x0000, 0x0000},
-            /*START*/{0xF88C, 0x0000, 0x0660, 0x0000},
-            /*PEAK */{0xF88C, 0x0000, 0x0660, 0x0000},
+            /*START*/{0xF88C, 0x0000, 0x0440, 0x0000},
+            /*PEAK */{0xF88C, 0x0000, 0x0440, 0x0000},
             /*END  */{0xFFFF, 0x0000, 0x0000, 0x0000}};
 
     //Tasks executed on entering some state
