@@ -1,4 +1,4 @@
-package de.volzo.tapper;
+package de.volzo.tapper.GestureDetector.FSM;
 
 import de.volzo.tapper.GestureDetector.Detector;
 import de.volzo.tapper.GestureDetector.Quantile;

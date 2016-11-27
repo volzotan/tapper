@@ -1,4 +1,4 @@
-package de.volzo.tapper;
+package de.volzo.tapper.GestureDetector;
 
 import junit.framework.Assert;
 

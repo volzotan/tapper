@@ -10,7 +10,7 @@ import static de.volzo.tapper.GestureDetector.FSM.DoubleTapFSM.DoubleTapState.IN
 
 public class DoubleTapFSM {
 
-    public static long doubleTapTimeout = 500;
+    public static long doubleTapTimeout = 1000;
 
     ScheduledExecutorService doubleTapTimer;
 
