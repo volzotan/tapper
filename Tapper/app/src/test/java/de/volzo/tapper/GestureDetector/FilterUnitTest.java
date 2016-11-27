@@ -23,9 +23,12 @@ public class FilterUnitTest {
 
     @Test
     public void lowpass() throws Exception {
-        Assert.assertTrue("lowpass should smoothen curve", filter.lowpass(10d, 9d) < 10d);
-        Assert.assertTrue("lowpass should smoothen curve", filter.lowpass(9d, 10d) > 9d);
-        Assert.assertTrue("lowpass should not change plateaus", filter.lowpass(10d, 10d) == 10d);
+        Double[] foo = {9d};
+        Double[] foo2 = {10d};
+
+        Assert.assertTrue("lowpass should smoothen curve", filter.lowpass(10d, foo) < 10d);
+        Assert.assertTrue("lowpass should smoothen curve", filter.lowpass(9d, foo2) > 9d);
+        Assert.assertTrue("lowpass should not change plateaus", filter.lowpass(10d, foo2) == 10d);
     }
 
     @Test
