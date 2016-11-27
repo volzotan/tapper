@@ -93,7 +93,7 @@ public class FilterUnitTest {
                             "and higher -(current threshold) should yield previous quantile index",
                     -quantile + 1, filter.quantize(-testValueBorder).intValue());
 
-            previousQuantileThreshold = quantile;
+            previousQuantileThreshold = quantizationSteps[quantile];
         }
 
         Assert.assertEquals(

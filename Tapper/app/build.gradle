@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0'
 
     defaultConfig {
         applicationId "de.volzo.tapper"
         minSdkVersion 22
-        targetSdkVersion 25
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
         jackOptions {
@@ -31,5 +31,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'org.apache.commons:commons-collections4:4.0'
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:appcompat-v7:24.0.0'
 }

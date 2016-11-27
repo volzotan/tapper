@@ -119,8 +119,8 @@ public class DoubleTapFSMUnitTest extends FSMUnitTest {
         //timeout can only occur on Tap1 state
         Assert.assertEquals("FSM has to be in Tap1 state for timeout",
                 DoubleTapFSM.DoubleTapState.TAP1, fsm.getCurrentDoubleTapState());
-        //timeout should occur after 500ms, additional 5ms account for threading delays
-        Thread.sleep(doubleTapTimeout + 5);
+        //timeout should occur after 1000ms, additional 10ms account for threading delays
+        Thread.sleep(doubleTapTimeout + 10);
         Assert.assertEquals("Machine should now be in INIT state",
                 DoubleTapFSM.DoubleTapState.INIT, fsm.getCurrentDoubleTapState());
     }
