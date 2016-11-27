@@ -105,7 +105,7 @@ public class TapFSM {
         TapState formerTapState = null;
         TapState newTapState = null;
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < tapTransitionAND.length; i++) {
             if ((event ^ tapTransitionXNOR[currentTapState.getState()][i]) == 0) {
                 formerTapState = currentTapState;
                 newTapState = TapState.fromValue(i);

@@ -4,9 +4,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import de.volzo.tapper.GestureDetector.Detector;
-import de.volzo.tapper.GestureDetector.Quantile;
-
 /**
  * Created by tassilokarge on 24.11.16.
  */
@@ -37,7 +34,7 @@ public class DetectorTest extends Detector {
         //input double tap sequence(s) to dataUpdated and check if sideTapRecognized is set
         // first tap
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
-        this.dataUpdated(Quantile.NOTHING, Quantile.PEAK, Quantile.NOTHING);
+        this.dataUpdated(Quantile.NOTHING, Quantile.STRONG_PEAK, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
         Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
@@ -51,7 +48,7 @@ public class DetectorTest extends Detector {
 
         // third tap
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
-        this.dataUpdated(Quantile.PEAK, Quantile.NOTHING, Quantile.NOTHING);
+        this.dataUpdated(Quantile.STRONG_PEAK, Quantile.NOTHING, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
         Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
@@ -65,7 +62,7 @@ public class DetectorTest extends Detector {
 
         // fifth tap
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
-        this.dataUpdated(Quantile.PEAK, Quantile.PEAK, Quantile.NOTHING);
+        this.dataUpdated(Quantile.STRONG_PEAK, Quantile.STRONG_PEAK, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
         Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);

@@ -99,7 +99,7 @@ public class DoubleTapFSM {
         DoubleTapState formerDoubleTapState = null;
         DoubleTapState newDoubleTapState = null;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < tapTransitionAND.length; i++) {
             if ((event ^ tapTransitionXNOR[currentDoubleTapState.getState()][i]) == 0) {
                 formerDoubleTapState = currentDoubleTapState;
                 newDoubleTapState = DoubleTapState.fromValue(i);

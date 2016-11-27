@@ -123,7 +123,7 @@ public class SideTapFSMUnitTest extends FSMUnitTest {
         //Start -> Peak or Peak -> Peak
         Assert.assertFalse("FSM should not be in end state yet",
                 fsm.stateTransition(
-                        EVENT_PEAK_XY
+                        EVENT_STRONG_PEAK_XY
                 ));
         Assert.assertEquals("Machine should now be in Peak state",
                 SideTapFSM.SideTapState.PEAK, fsm.getCurrentSideTapState());

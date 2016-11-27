@@ -123,7 +123,7 @@ public class PickUpDropFSM {
         PickUpDropState formerTapState = null;
         PickUpDropState newTapState = null;
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < tapTransitionAND.length; i++) {
             if ((event ^ tapTransitionXNOR[currentPickUpDropState.getState()][i]) == 0) {
                 formerTapState = currentPickUpDropState;
                 newTapState = PickUpDropState.fromValue(i);

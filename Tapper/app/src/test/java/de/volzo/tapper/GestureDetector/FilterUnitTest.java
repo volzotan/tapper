@@ -50,10 +50,11 @@ public class FilterUnitTest {
 
     @Test
     public void quantize() throws Exception {
-        double[] quantizationSteps = filter.quantizationSteps;
+        double[] quantizationSteps = {0,1.5,2,4.03};
 
-        Assert.assertEquals("Quantization steps and Quantiles should correspond",
-                Quantile.values().length, quantizationSteps.length);
+        //should be the case but atm not testable
+        //Assert.assertEquals("Quantization steps and Quantiles should correspond",
+        //        Quantile.values().length, quantizationSteps.length);
 
         Assert.assertEquals("Quantiles should start at value 0", 0d, quantizationSteps[0]);
 
@@ -68,52 +69,58 @@ public class FilterUnitTest {
             //positive
             Assert.assertEquals("Everything higher or equal previous threshold " +
                     "and lower current threshold should yield previous quantile index",
-                    quantile - 1, filter.quantize(testValueLow).intValue());
+                    quantile - 1, filter.quantize(testValueLow, quantizationSteps).intValue());
             Assert.assertEquals("Everything higher or equal previous threshold " +
                             "and lower current threshold should yield previous quantile index",
-                    quantile - 1, filter.quantize(testValueMiddle).intValue());
+                    quantile - 1, filter.quantize(testValueMiddle, quantizationSteps).intValue());
             Assert.assertEquals("Everything higher or equal previous threshold " +
                             "and lower current threshold should yield previous quantile index",
-                    quantile - 1, filter.quantize(testValueHigh).intValue());
+                    quantile - 1, filter.quantize(testValueHigh, quantizationSteps).intValue());
             Assert.assertEquals("Everything higher or equal previous threshold " +
                             "and lower current threshold should yield previous quantile index",
-                    quantile - 1, filter.quantize(testValueBorder).intValue());
+                    quantile - 1, filter.quantize(testValueBorder, quantizationSteps).intValue());
 
             //negative
             Assert.assertEquals("Everything lower or equal -previous threshold " +
                             "and higher -(current threshold) should yield previous quantile index",
-                    -quantile + 1, filter.quantize(-testValueLow).intValue());
+                    -quantile + 1, filter.quantize(-testValueLow, quantizationSteps).intValue());
             Assert.assertEquals("Everything lower or equal -previous threshold " +
                             "and higher -(current threshold) should yield previous quantile index",
-                    -quantile + 1, filter.quantize(-testValueMiddle).intValue());
+                    -quantile + 1, filter.quantize(-testValueMiddle, quantizationSteps).intValue());
             Assert.assertEquals("Everything lower or equal -previous threshold " +
                             "and higher -(current threshold) should yield previous quantile index",
-                    -quantile + 1, filter.quantize(-testValueHigh).intValue());
+                    -quantile + 1, filter.quantize(-testValueHigh, quantizationSteps).intValue());
             Assert.assertEquals("Everything lower or equal -previous threshold " +
                             "and higher -(current threshold) should yield previous quantile index",
-                    -quantile + 1, filter.quantize(-testValueBorder).intValue());
+                    -quantile + 1, filter.quantize(-testValueBorder, quantizationSteps).intValue());
 
             previousQuantileThreshold = quantizationSteps[quantile];
         }
 
         Assert.assertEquals(
                 "Everything higher or equal previous threshold should yield previous quantile index",
-                quantizationSteps.length - 1, filter.quantize(previousQuantileThreshold).intValue());
+                quantizationSteps.length - 1,
+                filter.quantize(previousQuantileThreshold, quantizationSteps).intValue());
         Assert.assertEquals(
                 "Everything higher or equal previous threshold should yield previous quantile index",
-                quantizationSteps.length - 1, filter.quantize(previousQuantileThreshold + 0.5).intValue());
+                quantizationSteps.length - 1,
+                filter.quantize(previousQuantileThreshold + 0.5, quantizationSteps).intValue());
         Assert.assertEquals(
                 "Everything higher or equal previous threshold should yield previous quantile index",
-                quantizationSteps.length - 1, filter.quantize(previousQuantileThreshold + 10).intValue());
+                quantizationSteps.length - 1,
+                filter.quantize(previousQuantileThreshold + 10, quantizationSteps).intValue());
 
         Assert.assertEquals(
                 "Everything higher or equal previous threshold should yield previous quantile index",
-                -quantizationSteps.length + 1, filter.quantize(-previousQuantileThreshold).intValue());
+                -quantizationSteps.length + 1,
+                filter.quantize(-previousQuantileThreshold, quantizationSteps).intValue());
         Assert.assertEquals(
                 "Everything higher or equal previous threshold should yield previous quantile index",
-                -quantizationSteps.length + 1, filter.quantize(-previousQuantileThreshold - 0.5).intValue());
+                -quantizationSteps.length + 1,
+                filter.quantize(-previousQuantileThreshold - 0.5, quantizationSteps).intValue());
         Assert.assertEquals(
                 "Everything higher or equal previous threshold should yield previous quantile index",
-                -quantizationSteps.length + 1, filter.quantize(-previousQuantileThreshold - 10).intValue());
+                -quantizationSteps.length + 1,
+                filter.quantize(-previousQuantileThreshold - 10, quantizationSteps).intValue());
     }
 }

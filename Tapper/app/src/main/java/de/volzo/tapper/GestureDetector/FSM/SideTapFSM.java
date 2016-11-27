@@ -109,7 +109,7 @@ public class SideTapFSM {
         SideTapState formerTapState = null;
         SideTapState newTapState = null;
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < tapTransitionAND.length; i++) {
             if ((event ^ tapTransitionXNOR[currentSideTapState.getState()][i]) == 0) {
                 formerTapState = currentSideTapState;
                 newTapState = SideTapState.fromValue(i);
