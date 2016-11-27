@@ -13,16 +13,19 @@ public class Filter {
     public double lowpass_alpha         = 0.5d;
     public double[] averaging_kernel    = {0.3, 0.3, 0.5, 0.8, 0.8, 0.5};
     public double averaging_divider     = 3.2;
-    public double[] quantizationSteps   = {0, 0.8, 4, 5};
     public double cutoffThreshold       = 0.2d;
 
     public Filter() {}
 
-    public Double work(Double input) {
-        return work(input, null);
+    public double workZ(Double input, Double[] previousInputs) {
+        return this.work(input, previousInputs, new double[]{0, 0.3, 1, 2});
     }
 
-    public Double work(Double input, Double[] previousInputs) {
+    public double workXY(Double input, Double[] previousInputs) {
+        return this.work(input, previousInputs, new double[]{0, 1, 2, 3});
+    }
+
+    public double work(Double input, Double[] previousInputs, double[] quantizationSteps) {
 
         Double[] absPreviousInputs = new Double[previousInputs.length];
 
@@ -41,7 +44,7 @@ public class Filter {
 
         input = cutoff ? cutoff(input) : input;
 
-        input = quantization ? quantize(input) : input;
+        input = quantization ? quantize(input, quantizationSteps) : input;
 
         return input;
     }
@@ -101,9 +104,10 @@ public class Filter {
      * according to thresholds in quantizationSteps (lower or equal quantizationStep[i] yields i)
      *
      * @param input the unquantized input
+     * @param quantizationSteps
      * @return the numerical value of the quantization step (i.e. 0 for nothing, 1 for peak etc.)
      */
-    public Double quantize(Double input) {
+    public Double quantize(Double input, double[] quantizationSteps) {
         // quantization
         double sign = input > 0 ? 1 : -1;
         double i = 0;

@@ -89,9 +89,9 @@ public class DataCollector implements SensorEventListener {
         rawy.toArray(raway);
         rawz.toArray(rawaz);
 
-        Double filtered_x = fx.work((double) event.values[0], rawax); // ( new value, previous values or null)
-        Double filtered_y = fy.work((double) event.values[1], raway);
-        Double filtered_z = fz.work((double) event.values[2], rawaz);
+        Double filtered_x = fx.workXY((double) event.values[0], rawax); // ( new value, previous values or null)
+        Double filtered_y = fy.workXY((double) event.values[1], raway);
+        Double filtered_z = fz.workZ((double) event.values[2], rawaz);
 
         x.add(filtered_x);
         y.add(filtered_y);
