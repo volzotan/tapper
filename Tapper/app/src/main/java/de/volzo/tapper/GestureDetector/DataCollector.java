@@ -34,7 +34,6 @@ public class DataCollector implements SensorEventListener {
     public CircularFifoQueue<Double> x = new CircularFifoQueue<>(QUEUE_SIZE);
     public CircularFifoQueue<Double> y = new CircularFifoQueue<>(QUEUE_SIZE);
     public CircularFifoQueue<Double> z = new CircularFifoQueue<>(QUEUE_SIZE);
-    public CircularFifoQueue<Double> m = new CircularFifoQueue<>(QUEUE_SIZE);
 
     public CircularFifoQueue<Double> rawx = new CircularFifoQueue<>(QUEUE_SIZE);
     public CircularFifoQueue<Double> rawy = new CircularFifoQueue<>(QUEUE_SIZE);
@@ -46,12 +45,10 @@ public class DataCollector implements SensorEventListener {
     public Double[] ax = new Double[QUEUE_SIZE];
     public Double[] ay = new Double[QUEUE_SIZE];
     public Double[] az = new Double[QUEUE_SIZE];
-    public Double[] am = new Double[QUEUE_SIZE];
 
     private Filter fx = new Filter();
     private Filter fy = new Filter();
     private Filter fz = new Filter();
-    private Filter fm = new Filter();
 
 
     // in seconds
@@ -80,9 +77,6 @@ public class DataCollector implements SensorEventListener {
         // configure the filter objects
         fz.lowpass_alpha    = 0.4;
         fz.cutoffThreshold  = 0.3;
-
-        fm.lowpass = false;
-        fm.cutoff = false;
     }
 
     @Override
@@ -102,12 +96,10 @@ public class DataCollector implements SensorEventListener {
         x.add(filtered_x);
         y.add(filtered_y);
         z.add(filtered_z);
-        m.add(fm.work(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
 
         x.toArray(ax);
         y.toArray(ay);
         z.toArray(az);
-        m.toArray(am);
 
         gestureDetector.dataUpdated(
                 Quantile.values()[Math.abs(filtered_x.intValue())],
@@ -123,7 +115,6 @@ public class DataCollector implements SensorEventListener {
         x.clear();
         y.clear();
         z.clear();
-        m.clear();
     }
 
     @Override

@@ -5,16 +5,15 @@ package de.volzo.tapper.GestureDetector;
  */
 public class Filter {
 
-    public boolean lowpass      = false;
+    public boolean lowpass      = false; // averaging is more effective than lowpass
     public boolean averaging    = true;
     public boolean cutoff       = false;
     public boolean quantization = true;
-    public boolean filler = true;
 
     public double lowpass_alpha         = 0.5d;
-    public double[] averaging_kernel    = {0.3, 0.5, 0.8};
-    public double averaging_divider     = 1.6;
-    public double[] quantizationSteps   = {0, 1, 4, 5};
+    public double[] averaging_kernel    = {0.3, 0.3, 0.5, 0.8, 0.8, 0.5};
+    public double averaging_divider     = 3.2;
+    public double[] quantizationSteps   = {0, 0.8, 4, 5};
     public double cutoffThreshold       = 0.2d;
 
     public Filter() {}
@@ -25,23 +24,24 @@ public class Filter {
 
     public Double work(Double input, Double[] previousInputs) {
 
+        Double[] absPreviousInputs = new Double[previousInputs.length];
+
         input = Math.abs(input);
-        if (previousInputs != null){
-            for (Double val : previousInputs) {
-                if (val == null) break;
-                val = Math.abs(val);
+        // use new array for absolute values (old one is used for drawing on the canvas)
+        if (previousInputs != null) {
+            for (int i=0; i < previousInputs.length; i++) {
+                if (previousInputs[i] == null) break;
+                absPreviousInputs[i] = Math.abs(previousInputs[i]);
             }
         }
 
         input = lowpass ? lowpass(input, previousInputs) : input;
 
-        input = averaging ? averaging(input, previousInputs) : input;
+        input = averaging ? averaging(input, absPreviousInputs) : input;
 
         input = cutoff ? cutoff(input) : input;
 
         input = quantization ? quantize(input) : input;
-
-        if (filler) filler(input, previousInputs);
 
         return input;
     }
@@ -73,7 +73,7 @@ public class Filter {
         double output = 0;
         if (previousInputs != null && previousInputs.length > averaging_kernel.length) {
             for (int i=0; i<this.averaging_kernel.length-2; i++) {
-                Double prev = previousInputs[previousInputs.length-(i+1)];
+                Double prev = previousInputs[previousInputs.length-((averaging_kernel.length-i)+1)];
                 output += averaging_kernel[i] * (prev != null ? prev : 0);
             }
             output += input * averaging_kernel[averaging_kernel.length-1];
@@ -113,25 +113,4 @@ public class Filter {
         return i * sign;
     }
 
-    /**
-     * fills in gaps if the previous 2 inputs are high, the new input is high and the last
-     * input is not. Works directly on previous values and does not alter the input variable.
-     *
-     * @param input the input
-     */
-    public void filler(Double input, Double[] previousInputs) {
-
-        if (previousInputs != null && previousInputs.length > 3) {
-            int len = previousInputs.length;
-            if (previousInputs[len - 1] != null) {
-                if (previousInputs[len - 1] < previousInputs[len - 3]) {
-                    if (previousInputs[len - 1] < previousInputs[len - 2]) {
-                        if (previousInputs[len - 1] < previousInputs[len - 2]) {
-                            previousInputs[len - 1] = input;
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
