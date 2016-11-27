@@ -30,18 +30,18 @@ public class PickUpDropFSM {
     int[][] tapTransitionXNOR = new int[][]{
             /*INIT */{0x0000, 0x0111, 0x0000, 0x0000, 0x0000},
             /*START*/{0x0000, 0x0111, 0x0114, 0x0000, 0x0000},
-            /*PEAK */{0x1000, 0x0000, 0x0118, 0x0000, 0x0000},
-            /*PEAK */{0x1000, 0x0000, 0x0118, 0x0111, 0x0111},
+            /*PEAK */{0x1000, 0x0000, 0x0114, 0x0118, 0x0000},
+            /*PEAK2*/{0x1000, 0x0000, 0x0000, 0x0118, 0x0111},
             /*END  */{0x0000, 0x0000, 0x0000, 0x0000, 0x0000}};
 
     //transition event matrix
     //transition if any overlap (event & transition != 0)
-    //F = everything, E = more than nothing, C = more than peak, 8 = more than strong peak, 6 = peak or strong peak, 4 = strong peak
+    //F = everything, E = more than nothing, C = more than peak, 8 = very strong peak, 6 = peak or strong peak, 4 = strong peak
     int[][] tapTransitionAND = new int[][]{
             /*INIT */{0xFEEE, 0x0000, 0x0000, 0x0000, 0x0000},
             /*START*/{0xFCC8, 0x0000, 0x0006, 0x0000, 0x0000},
-            /*PEAK */{0xFCC8, 0x0000, 0x0006, 0x0008, 0x0000},
-            /*PEAK2*/{0xF880, 0x0000, 0x0000, 0x0008, 0x0000},
+            /*PEAK */{0xFCC0, 0x0000, 0x0006, 0x0008, 0x0000},
+            /*PEAK2*/{0xFCC0, 0x0000, 0x0000, 0x000E, 0x0000},
             /*END  */{0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000}};
 
     //Tasks executed on entering some state
@@ -77,7 +77,7 @@ public class PickUpDropFSM {
             () -> {}};
 
     public enum PickUpDropState {
-        INIT(0), START(1), PEAK(2), END(3);
+        INIT(0), START(1), PEAK(2), PEAK2(3), END(4);
 
         private int state;
 
@@ -98,6 +98,8 @@ public class PickUpDropFSM {
                         return START;
                     case 2:
                         return PEAK;
+                    case 3:
+                        return PEAK2;
                     default:
                         return END;
                 }
