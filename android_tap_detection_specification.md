@@ -9,22 +9,26 @@
 
 ## Recognition
 
-Pipeline: Accelerometer -> Smoothing -> Collector -> Envelope curve -> Quantization -> Detector
-
-### Smoothing
-
-Smoothing with low-pass filter
-
-Values on Z-Axis:
-Values on X/Y-Axis:
+Pipeline: Accelerometer -> Collector -> Low pass filtering / Averaging -> Envelope Detector -> Quantization -> Detector
 
 ### Collection
 
-Collection of 128 samples in circular fifo queue
+Collection of 128 samples in circular queue
+
+### Low pass filtering
+
+Smoothing with low-pass filter
+
+### Averaging
+
+Moving average filter with non-linear kernel 
+[0.3, 0.3, 0.5, 0.8, 0.8, 0.5]
+
+Removes high frequencies and zero points for envelope detection
 
 ### Envelope curve
 
-... (specifics about the algorithm)
+Detects the envelope of the signal
 
 ### Quantization
 
