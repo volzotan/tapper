@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
 
             //TODO: comment in as a signal for which gesture was recognized
-            /*
+
             Ringtone r1 = RingtoneManager.getRingtone(
                     getApplicationContext(),
                     RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             } catch (Exception E) {}
-            */
+
         }
     };
 

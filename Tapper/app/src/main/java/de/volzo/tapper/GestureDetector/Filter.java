@@ -18,11 +18,11 @@ public class Filter {
     public Filter() {}
 
     public double workZ(Double input, Double[] previousInputs) {
-        return this.work(input, previousInputs, new double[]{0, 0.3, 1, 3});
+        return this.work(input, previousInputs, new double[]{0, 0.3, 3, 5});
     }
 
     public double workXY(Double input, Double[] previousInputs) {
-        return this.work(input, previousInputs, new double[]{0, 0.8, 1, 5});
+        return this.work(input, previousInputs, new double[]{0, 0.5, 3, 7});
     }
 
     public double work(Double input, Double[] previousInputs, double[] quantizationSteps) {

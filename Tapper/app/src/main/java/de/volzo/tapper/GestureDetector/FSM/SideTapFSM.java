@@ -15,7 +15,7 @@ import static de.volzo.tapper.GestureDetector.FSM.SideTapFSM.SideTapState.INIT;
 
 public class SideTapFSM {
 
-    public static long sideTapTimeout = 200;
+    public static long sideTapTimeout = 500;
 
     ScheduledExecutorService sideTapTimer;
 
