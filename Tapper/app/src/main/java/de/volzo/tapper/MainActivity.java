@@ -4,15 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import de.volzo.tapper.GestureDetector.DataCollector;
 import de.volzo.tapper.GestureDetector.Detector;
-import de.volzo.tapper.GestureDetector.Displayer;
 import de.volzo.tapper.GestureDetector.GestureType;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,17 +37,44 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             GestureType gestureType = GestureType.valueOf(intent.getStringExtra("GESTURE_TYPE"));
-            int gestureIntensity    = intent.getIntExtra("GESTURE_INTENSITY", -1);
+            //int gestureIntensity    = intent.getIntExtra("GESTURE_INTENSITY", -1);
 
             // TODO: do what should be done (maybe user output), trigger action, etc...
 
             String msg = "Gesture detected: " + gestureType;
 
-            if (gestureIntensity > 0) {
-                msg += " [" + Integer.toString(gestureIntensity) + "]";
-            }
+            //if (gestureIntensity > 0) {
+            //    msg += " [" + Integer.toString(gestureIntensity) + "]";
+            //}
 
             Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+
+            //TODO: comment in as a signal for which gesture was recognized
+            /*
+            Ringtone r1 = RingtoneManager.getRingtone(
+                    getApplicationContext(),
+                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            Ringtone r2 = RingtoneManager.getRingtone(
+                    getApplicationContext(),
+                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            Ringtone r3 = RingtoneManager.getRingtone(
+                    getApplicationContext(),
+                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            try {
+                switch (gestureType) {
+                    case PICKUPDROP:
+                        r1.play();
+                        Thread.sleep(300);
+                    case SIDETAP:
+                        r2.play();
+                        Thread.sleep(300);
+                    case DOUBLETAP:
+                        r3.play();
+                    default:
+                        break;
+                }
+            } catch (Exception E) {}
+            */
         }
     };
 

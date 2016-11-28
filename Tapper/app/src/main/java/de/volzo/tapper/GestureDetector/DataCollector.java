@@ -28,6 +28,12 @@ public class DataCollector implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mSensor;
 
+
+    //training data
+    double maxXY = 0;
+    double maxZ = 0;
+    int dataCount = 0;
+
     // Number of available samples
     private static final int QUEUE_SIZE = 128;
 
@@ -82,6 +88,19 @@ public class DataCollector implements SensorEventListener {
     @Override
     public final void onSensorChanged(SensorEvent event) {
 
+        //TODO: implement calibration method and delete this hack
+        /*
+        if (dataCount == 1000) {
+            System.out.println("MaxXY: " + maxXY + ", MaxZ: " + maxZ);
+            maxXY = 0;
+            maxZ = 0;
+            dataCount = 0;
+        }
+
+        maxXY = Math.max(maxXY, Math.max((double) event.values[0], (double) event.values[1]));
+        maxZ = Math.max(maxZ, (double) event.values[2]);
+        dataCount++;
+        */
         rawx.add((double) event.values[0]);
         rawy.add((double) event.values[1]);
         rawz.add((double) event.values[2]);

@@ -15,7 +15,7 @@ import static de.volzo.tapper.GestureDetector.FSM.PickUpDropFSM.PickUpDropState.
 
 public class PickUpDropFSM {
 
-    public static long pickUpTimeout = 1000;
+    public static long pickUpTimeout = 1500;
     public static long dropTimeout = 500;
 
     ScheduledExecutorService pickUpTimer;
@@ -138,6 +138,8 @@ public class PickUpDropFSM {
         }
 
         if (formerTapState != null && newTapState != currentPickUpDropState) {
+            //debug message
+            //TODO: delete
             System.out.println("PickUpDropState: " + newTapState.name() + "(" + event + ")");
 
             stateExitAction[formerTapState.getState()].run();
