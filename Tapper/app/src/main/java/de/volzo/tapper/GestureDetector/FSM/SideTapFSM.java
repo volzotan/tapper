@@ -15,7 +15,7 @@ import static de.volzo.tapper.GestureDetector.FSM.SideTapFSM.SideTapState.INIT;
 
 public class SideTapFSM {
 
-    public static long sideTapTimeout = 50;
+    public static long sideTapTimeout = 200;
 
     ScheduledExecutorService sideTapTimer;
 
@@ -36,8 +36,8 @@ public class SideTapFSM {
     //F = everything, E = more than nothing, C = more than peak, 8 = more than strong peak 6 = peak or strong peak 4 = strong peak
     int[][] tapTransitionAND = new int[][]{
             /*INIT */{0xFEEE, 0x0000, 0x0000, 0x0000},
-            /*START*/{0xF88C, 0x0000, 0x0440, 0x0000},
-            /*PEAK */{0xF88C, 0x0000, 0x0440, 0x0000},
+            /*START*/{0xF00C, 0x0000, 0x0CC0, 0x0000},
+            /*PEAK */{0xF00C, 0x0000, 0x0CC0, 0x0000},
             /*END  */{0xFFFF, 0x0000, 0x0000, 0x0000}};
 
     //Tasks executed on entering some state

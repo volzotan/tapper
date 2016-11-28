@@ -15,8 +15,8 @@ import static de.volzo.tapper.GestureDetector.FSM.PickUpDropFSM.PickUpDropState.
 
 public class PickUpDropFSM {
 
-    public static long pickUpTimeout = 500;
-    public static long dropTimeout = 20;
+    public static long pickUpTimeout = 1000;
+    public static long dropTimeout = 500;
 
     ScheduledExecutorService pickUpTimer;
     ScheduledExecutorService dropTimer;
@@ -40,8 +40,8 @@ public class PickUpDropFSM {
     int[][] tapTransitionAND = new int[][]{
             /*INIT */{0xFEEE, 0x0000, 0x0000, 0x0000, 0x0000},
             /*START*/{0xFCC8, 0x0000, 0x0006, 0x0000, 0x0000},
-            /*PEAK */{0xFCC0, 0x0000, 0x0006, 0x0008, 0x0000},
-            /*PEAK2*/{0xFCC0, 0x0000, 0x0000, 0x000E, 0x0000},
+            /*PEAK */{0xF880, 0x0000, 0x0006, 0x0008, 0x0000},
+            /*PEAK2*/{0xF880, 0x0000, 0x0000, 0x000E, 0x0000},
             /*END  */{0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000}};
 
     //Tasks executed on entering some state
@@ -138,6 +138,8 @@ public class PickUpDropFSM {
         }
 
         if (formerTapState != null && newTapState != currentPickUpDropState) {
+            System.out.println("PickUpDropState: " + newTapState.name() + "(" + event + ")");
+
             stateExitAction[formerTapState.getState()].run();
             currentPickUpDropState = newTapState;
             stateEnterAction[newTapState.getState()].run();

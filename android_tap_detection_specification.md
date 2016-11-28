@@ -33,16 +33,24 @@ Detects the envelope of the signal
 ### Quantization
 
 3 categories:
+TODO: limits
 
-- nothing: <= a
-- peak: > a, <=b
-- strong peak: > b, <= c
-- very strong peak: > c
+- Z
+    + nothing: <= a
+    + peak: > a, <=b
+    + strong peak: > b, <= c
+    + very strong peak: > c
+
+- X/Y
+    + nothing: <= a
+    + peak: > a, <=b
+    + strong peak: > b, <= c
+    + very strong peak: > c
 
 ### Gesture detection
 
 State machine for each gesture
-
+TODO: change timeouts according to code
 * Tap
     1. nothing
     2. nothing in X/Y axis and peak (<= 15ms) in Z axis
@@ -53,11 +61,10 @@ State machine for each gesture
     3. Tap
 * Sidetap
     1. nothing
-    2. peak on X and Y axis (< 50ms)
+    2. peak or strong peak on X or Y axis or both (< 50ms)
     3. nothing
 * Pick up and drop
     1. nothing
     2. strong peak on Z axis (> 15ms)
     3. very strong peak on Z axis (< 10ms)
     4. nothing
-
