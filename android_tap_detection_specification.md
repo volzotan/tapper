@@ -50,21 +50,21 @@ TODO: limits
 ### Gesture detection
 
 State machine for each gesture
-TODO: change timeouts according to code
+
 * Tap
     1. nothing
-    2. nothing in X/Y axis and peak (<= 15ms) in Z axis
+    2. nothing in X/Y axis and peak (<= a ms) in Z axis
     3. nothing
 * Doubletap
     1. Tap
-    2. nothing (<100ms)
+    2. nothing (< b ms)
     3. Tap
 * Sidetap
     1. nothing
-    2. peak or strong peak on X or Y axis or both (< 50ms)
+    2. peak or strong peak on X or Y axis or both (< c ms)
     3. nothing
 * Pick up and drop
     1. nothing
-    2. strong peak on Z axis (> 15ms)
-    3. very strong peak on Z axis (< 10ms)
+    2. strong peak on Z axis (> d ms)
+    3. very strong peak on Z axis (< e ms)
     4. nothing

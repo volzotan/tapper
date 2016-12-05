@@ -67,7 +67,7 @@ public class Filter {
     }
 
     /**
-     * weighted averaging. averaging_divider should be the sum of all weights in the kernel
+     * weighted averaging. averagingDivider should be the sum of all weights in the kernel
      * @param input the input
      * @param previousInputs the previous inputs (raw)
      * @return the averaged output value
