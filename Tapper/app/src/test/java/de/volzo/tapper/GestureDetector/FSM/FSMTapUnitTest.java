@@ -6,19 +6,19 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static de.volzo.tapper.GestureDetector.FSM.SideTapFSM.sideTapTimeout;
+import static de.volzo.tapper.GestureDetector.FSM.FSMTap.tapTimeout;
 
 /**
  * Created by tassilokarge on 23.11.16.
  */
 
-public class SideTapFSMUnitTest extends FSMUnitTest {
+public class FSMTapUnitTest extends FSMUnitTest {
 
-    private SideTapFSM fsm;
+    private FSMTap fsm;
 
     @Before
     public void setupFSM() {
-        this.fsm = new SideTapFSM();
+        this.fsm = new FSMTap();
     }
 
     //success
@@ -26,7 +26,7 @@ public class SideTapFSMUnitTest extends FSMUnitTest {
     @Test
     public void tap() {
         Assert.assertEquals("fresh machine should be in INIT state",
-                SideTapFSM.SideTapState.INIT, fsm.getCurrentSideTapState());
+                FSMTap.TapState.INIT, fsm.getCurrentTapState());
 
         //Initial -> Start
         initialOrStartToStart();
@@ -49,25 +49,25 @@ public class SideTapFSMUnitTest extends FSMUnitTest {
         //any possible state transition should lead from END to INIT state
         Assert.assertFalse("FSM should go to INIT after first tap", fsm.stateTransition(1));
         Assert.assertEquals("FSM should go to INIT after first tap",
-                SideTapFSM.SideTapState.INIT, fsm.getCurrentSideTapState());
+                FSMTap.TapState.INIT, fsm.getCurrentTapState());
         tap();
     }
 
     //failures
 
     @Test
-    public void zShake() {
+    public void xyshake() {
         Assert.assertEquals("fresh machine should be in INIT state",
-                SideTapFSM.SideTapState.INIT, fsm.getCurrentSideTapState());
+                FSMTap.TapState.INIT, fsm.getCurrentTapState());
 
         //should stay in init on XY-Shake
-        toInitByVeryStrongZShake();
+        toInitByXYShake();
 
         //from START state
         //Initial -> Start
         initialOrStartToStart();
         //Interrupt with XY-Shake
-        toInitByVeryStrongZShake();
+        toInitByXYShake();
 
         //from PEAK state
         //Initial -> Start
@@ -75,11 +75,11 @@ public class SideTapFSMUnitTest extends FSMUnitTest {
         //Start -> Peak
         startOrPeakToPeak();
         //Interrupt with XY-Shake
-        toInitByVeryStrongZShake();
+        toInitByXYShake();
 
         //from END state
         tap();
-        toInitByVeryStrongZShake();
+        toInitByXYShake();
     }
 
     @Test
@@ -98,7 +98,7 @@ public class SideTapFSMUnitTest extends FSMUnitTest {
         //Initial -> Start
         initialOrStartToStart();
         //Start -> Peak
-        toInitByVeryStrongXYMovement();
+        toInitByStrongZMovement();
 
         //from Peak
         //Initial -> Start
@@ -106,7 +106,7 @@ public class SideTapFSMUnitTest extends FSMUnitTest {
         //Start -> Peak
         startOrPeakToPeak();
         //Peak -> Init
-        toInitByVeryStrongXYMovement();
+        toInitByStrongZMovement();
     }
 
 
@@ -116,17 +116,17 @@ public class SideTapFSMUnitTest extends FSMUnitTest {
                         EVENT_NOTHING
                 ));
         Assert.assertEquals("Machine should now be in END state",
-                SideTapFSM.SideTapState.END, fsm.getCurrentSideTapState());
+                FSMTap.TapState.END, fsm.getCurrentTapState());
     }
 
     private void startOrPeakToPeak() {
         //Start -> Peak or Peak -> Peak
         Assert.assertFalse("FSM should not be in end state yet",
                 fsm.stateTransition(
-                        EVENT_STRONG_PEAK_XY
+                        EVENT_PEAK_Z
                 ));
         Assert.assertEquals("Machine should now be in Peak state",
-                SideTapFSM.SideTapState.PEAK, fsm.getCurrentSideTapState());
+                FSMTap.TapState.PEAK, fsm.getCurrentTapState());
     }
 
     private void initialOrStartToStart() {
@@ -136,37 +136,37 @@ public class SideTapFSMUnitTest extends FSMUnitTest {
                         EVENT_NOTHING
                 ));
         Assert.assertEquals("Machine should now be in Start state",
-                SideTapFSM.SideTapState.START, fsm.getCurrentSideTapState());
+                FSMTap.TapState.START, fsm.getCurrentTapState());
     }
 
-    private void toInitByVeryStrongZShake() {
+    private void toInitByXYShake() {
         //Start -> Initial or Peak -> Initial
         Assert.assertFalse("FSM should not go to end state when shaking in X/Y axis",
                 fsm.stateTransition(
-                        EVENT_VERY_STRONG_PEAK_Z
+                        EVENT_PEAK_XY
                 ));
         Assert.assertEquals("Machine should now be in INIT state",
-                SideTapFSM.SideTapState.INIT, fsm.getCurrentSideTapState());
+                FSMTap.TapState.INIT, fsm.getCurrentTapState());
     }
 
-    private void toInitByVeryStrongXYMovement() {
+    private void toInitByStrongZMovement() {
         //Start -> Initial or Peak -> Initial
         Assert.assertFalse("FSM should not go to end state when shaking in X/Y axis",
                 fsm.stateTransition(
-                        EVENT_VERY_STRONG_PEAK_XY
+                        EVENT_STRONG_PEAK_Z
                 ));
         Assert.assertEquals("Machine should now be in INIT state",
-                SideTapFSM.SideTapState.INIT, fsm.getCurrentSideTapState());
+                FSMTap.TapState.INIT, fsm.getCurrentTapState());
     }
 
     private void toInitByTimeout() throws InterruptedException {
         //timeout can only occur on PEAK state
         Assert.assertEquals("FSM has to be in PEAK state for timeout",
-                SideTapFSM.SideTapState.PEAK, fsm.getCurrentSideTapState());
+                FSMTap.TapState.PEAK, fsm.getCurrentTapState());
         //timeout should occur after 15ms, additional 5ms account for threading delays
-        Thread.sleep(sideTapTimeout + 5);
+        Thread.sleep(tapTimeout + 5);
         Assert.assertEquals("Machine should now be in INIT state",
-                SideTapFSM.SideTapState.INIT, fsm.getCurrentSideTapState());
+                FSMTap.TapState.INIT, fsm.getCurrentTapState());
     }
 
     @After

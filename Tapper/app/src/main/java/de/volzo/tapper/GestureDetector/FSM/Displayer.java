@@ -1,14 +1,11 @@
-package de.volzo.tapper.GestureDetector;
+package de.volzo.tapper.GestureDetector.FSM;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.provider.ContactsContract;
 import android.util.AttributeSet;
 import android.view.View;
-
-import java.util.Collections;
 
 import de.volzo.tapper.MainActivity;
 

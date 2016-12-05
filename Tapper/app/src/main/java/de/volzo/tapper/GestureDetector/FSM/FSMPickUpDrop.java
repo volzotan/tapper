@@ -4,16 +4,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import de.volzo.tapper.GestureDetector.Detector;
-
-import static de.volzo.tapper.GestureDetector.FSM.PickUpDropFSM.PickUpDropState.END;
-import static de.volzo.tapper.GestureDetector.FSM.PickUpDropFSM.PickUpDropState.INIT;
+import static de.volzo.tapper.GestureDetector.FSM.FSMPickUpDrop.PickUpDropState.END;
+import static de.volzo.tapper.GestureDetector.FSM.FSMPickUpDrop.PickUpDropState.INIT;
 
 /**
  * Created by tassilokarge on 25.11.16.
  */
 
-public class PickUpDropFSM {
+public class FSMPickUpDrop {
 
     public static long pickUpTimeout = 1500;
     public static long dropTimeout = 1000;
@@ -109,7 +107,7 @@ public class PickUpDropFSM {
 
     public final PickUpDropState finalState = END;
 
-    public PickUpDropFSM() {
+    public FSMPickUpDrop() {
         this.currentPickUpDropState = INIT;
     }
 

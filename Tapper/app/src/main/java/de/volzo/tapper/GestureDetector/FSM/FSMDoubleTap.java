@@ -4,11 +4,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import de.volzo.tapper.GestureDetector.Detector;
+import static de.volzo.tapper.GestureDetector.FSM.FSMDoubleTap.DoubleTapState.INIT;
 
-import static de.volzo.tapper.GestureDetector.FSM.DoubleTapFSM.DoubleTapState.INIT;
-
-public class DoubleTapFSM {
+public class FSMDoubleTap {
 
     public static long doubleTapTimeout = 1000;
 
@@ -83,7 +81,7 @@ public class DoubleTapFSM {
 
     public final DoubleTapState finalState = DoubleTapState.TAP2;
 
-    public DoubleTapFSM() {
+    public FSMDoubleTap() {
         this.currentDoubleTapState = INIT;
     }
 

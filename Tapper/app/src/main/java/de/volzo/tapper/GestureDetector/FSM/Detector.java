@@ -1,18 +1,15 @@
-package de.volzo.tapper.GestureDetector;
+package de.volzo.tapper.GestureDetector.FSM;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import de.volzo.tapper.GestureDetector.FSM.DoubleTapFSM;
-import de.volzo.tapper.GestureDetector.FSM.PickUpDropFSM;
-import de.volzo.tapper.GestureDetector.FSM.SideTapFSM;
-import de.volzo.tapper.GestureDetector.FSM.TapFSM;
+import de.volzo.tapper.GestureDetector.GestureType;
 
-import static de.volzo.tapper.GestureDetector.Detector.Shift.TAP;
-import static de.volzo.tapper.GestureDetector.Detector.Shift.X;
-import static de.volzo.tapper.GestureDetector.Detector.Shift.Y;
-import static de.volzo.tapper.GestureDetector.Detector.Shift.Z;
+import static de.volzo.tapper.GestureDetector.FSM.Detector.Shift.TAP;
+import static de.volzo.tapper.GestureDetector.FSM.Detector.Shift.X;
+import static de.volzo.tapper.GestureDetector.FSM.Detector.Shift.Y;
+import static de.volzo.tapper.GestureDetector.FSM.Detector.Shift.Z;
 
 /**
  * Created by volzotan on 11.11.16.
@@ -39,10 +36,10 @@ public class Detector {
 
     Context context;
 
-    final TapFSM tapFSM = new TapFSM();
-    final DoubleTapFSM doubleTapFSM = new DoubleTapFSM();
-    final SideTapFSM sideTapFSM = new SideTapFSM();
-    final PickUpDropFSM pickUpDropFSM = new PickUpDropFSM();
+    final FSMTap tapFSM = new FSMTap();
+    final FSMDoubleTap fSMDoubleTap = new FSMDoubleTap();
+    final FSMSideTap sideTapFSM = new FSMSideTap();
+    final FSMPickUpDrop pickUpDropFSM = new FSMPickUpDrop();
 
     public Detector() {}
 
@@ -62,9 +59,9 @@ public class Detector {
 
         if (tapRecognized) {
             tapFSM.reset();
-            doubleTapRecognized = doubleTapFSM.stateTransition(1 << TAP.getShift());
+            doubleTapRecognized = fSMDoubleTap.stateTransition(1 << TAP.getShift());
         } else {
-            doubleTapRecognized = doubleTapFSM.stateTransition(event);
+            doubleTapRecognized = fSMDoubleTap.stateTransition(event);
         }
 
         boolean sideTapRecognized = sideTapFSM.stateTransition(event);
@@ -95,15 +92,15 @@ public class Detector {
         return context;
     }
 
-    public TapFSM getTapFSM() {
+    public FSMTap getTapFSM() {
         return tapFSM;
     }
 
-    public DoubleTapFSM getDoubleTapFSM() {
-        return doubleTapFSM;
+    public FSMDoubleTap getfSMDoubleTap() {
+        return fSMDoubleTap;
     }
 
-    public SideTapFSM getSideTapFSM() {
+    public FSMSideTap getSideTapFSM() {
         return sideTapFSM;
     }
 }

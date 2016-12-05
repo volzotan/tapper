@@ -4,12 +4,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import de.volzo.tapper.GestureDetector.Detector;
+import static de.volzo.tapper.GestureDetector.FSM.FSMTap.TapState.END;
+import static de.volzo.tapper.GestureDetector.FSM.FSMTap.TapState.INIT;
 
-import static de.volzo.tapper.GestureDetector.FSM.TapFSM.TapState.END;
-import static de.volzo.tapper.GestureDetector.FSM.TapFSM.TapState.INIT;
-
-public class TapFSM {
+public class FSMTap {
 
     public static long tapTimeout = 100;
 
@@ -89,7 +87,7 @@ public class TapFSM {
 
     public final TapState finalState = END;
 
-    public TapFSM() {
+    public FSMTap() {
         this.currentTapState = TapState.INIT;
     }
 

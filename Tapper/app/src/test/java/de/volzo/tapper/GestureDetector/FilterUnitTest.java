@@ -4,6 +4,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import de.volzo.tapper.GestureDetector.FSM.Filter;
+
 /**
  * Created by tassilokarge on 26.11.16.
  */

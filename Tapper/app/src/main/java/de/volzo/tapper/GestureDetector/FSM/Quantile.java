@@ -1,4 +1,4 @@
-package de.volzo.tapper.GestureDetector;
+package de.volzo.tapper.GestureDetector.FSM;
 
 /**
  * Created by tassilokarge on 23.11.16.

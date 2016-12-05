@@ -8,13 +8,13 @@ import org.junit.Test;
 /**
  * Created by tassilokarge on 27.11.16.
  */
-public class PickUpDropFSMTest extends FSMUnitTest {
+public class FSMPickUpDropTest extends FSMUnitTest {
 
-    private PickUpDropFSM fsm;
+    private FSMPickUpDrop fsm;
 
     @Before
     public void setupFSM() throws Exception {
-        this.fsm = new PickUpDropFSM();
+        this.fsm = new FSMPickUpDrop();
     }
 
     //success
@@ -65,7 +65,7 @@ public class PickUpDropFSMTest extends FSMUnitTest {
                         EVENT_NOTHING
                 ));
         Assert.assertEquals("Machine should now be in Start state",
-                PickUpDropFSM.PickUpDropState.START, fsm.getCurrentPickUpDropState());
+                FSMPickUpDrop.PickUpDropState.START, fsm.getCurrentPickUpDropState());
     }
 
     private void startOrPeakToPeak() {
@@ -75,7 +75,7 @@ public class PickUpDropFSMTest extends FSMUnitTest {
                         EVENT_STRONG_PEAK_Z
                 ));
         Assert.assertEquals("Machine should now be in Peak state",
-                PickUpDropFSM.PickUpDropState.PEAK, fsm.getCurrentPickUpDropState());
+                FSMPickUpDrop.PickUpDropState.PEAK, fsm.getCurrentPickUpDropState());
     }
 
     private void peakOrPeak2ToPeak2() {
@@ -85,7 +85,7 @@ public class PickUpDropFSMTest extends FSMUnitTest {
                         EVENT_VERY_STRONG_PEAK_Z
                 ));
         Assert.assertEquals("Machine should now be in Peak2 state",
-                PickUpDropFSM.PickUpDropState.PEAK2, fsm.getCurrentPickUpDropState());
+                FSMPickUpDrop.PickUpDropState.PEAK2, fsm.getCurrentPickUpDropState());
     }
 
 
@@ -95,6 +95,6 @@ public class PickUpDropFSMTest extends FSMUnitTest {
                         EVENT_NOTHING
                 ));
         Assert.assertEquals("Machine should now be in END state",
-                PickUpDropFSM.PickUpDropState.END, fsm.getCurrentPickUpDropState());
+                FSMPickUpDrop.PickUpDropState.END, fsm.getCurrentPickUpDropState());
     }
 }

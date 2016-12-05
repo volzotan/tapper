@@ -4,16 +4,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import de.volzo.tapper.GestureDetector.Detector;
-
-import static de.volzo.tapper.GestureDetector.FSM.SideTapFSM.SideTapState.END;
-import static de.volzo.tapper.GestureDetector.FSM.SideTapFSM.SideTapState.INIT;
+import static de.volzo.tapper.GestureDetector.FSM.FSMSideTap.SideTapState.END;
+import static de.volzo.tapper.GestureDetector.FSM.FSMSideTap.SideTapState.INIT;
 
 /**
  * Created by tassilokarge on 25.11.16.
  */
 
-public class SideTapFSM {
+public class FSMSideTap {
 
     public static long sideTapTimeout = 500;
 
@@ -93,7 +91,7 @@ public class SideTapFSM {
 
     public final SideTapState finalState = END;
 
-    public SideTapFSM() {
+    public FSMSideTap() {
         this.currentSideTapState = INIT;
     }
 

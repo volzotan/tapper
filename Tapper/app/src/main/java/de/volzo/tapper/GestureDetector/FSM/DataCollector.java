@@ -1,4 +1,4 @@
-package de.volzo.tapper.GestureDetector;
+package de.volzo.tapper.GestureDetector.FSM;
 
 import android.content.Context;
 import android.hardware.Sensor;

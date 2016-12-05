@@ -1,8 +1,5 @@
 package de.volzo.tapper.GestureDetector.FSM;
 
-import de.volzo.tapper.GestureDetector.Detector;
-import de.volzo.tapper.GestureDetector.Quantile;
-
 /**
  * Created by tassilokarge on 24.11.16.
  */
