@@ -6,7 +6,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
  * Created by tassilokarge on 04.12.16.
  */
 
-public class Windower {
+public class Windower extends StreamElement<Double[]> {
     /** window size in ms */
     public static final int WINDOW_SIZE = 2000;
     /** the shift of the sliding window in ms */
@@ -18,17 +18,15 @@ public class Windower {
 
     private int updateCountdown = (WINDOW_SIZE*SAMPLING_FREQUENCY)/1000;
 
-    private Consumer<Double[]> windowConsumer;
-
     public Windower(Consumer<Double[]> windowConsumer) {
-        this.windowConsumer = windowConsumer;
+        super(windowConsumer);
     }
 
     public void updateData(Double dataPoint) {
         data.add(dataPoint);
         updateCountdown--;
         if (updateCountdown == 0) {
-            windowConsumer.process((Double[]) data.toArray());
+            super.passProcessedElement((Double[]) data.toArray());
             updateCountdown = (WINDOW_SHIFT * SAMPLING_FREQUENCY)/1000;
         }
     }

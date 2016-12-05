@@ -11,18 +11,17 @@ import static com.chan.fastdtw.util.DistanceFunctionFactory.EUCLIDEAN_DIST_FN;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class GestureAnalyzer {
+public class GestureAnalyzer extends StreamElement<GestureType> {
 
     private TimeSeries[] templates = new TimeSeries[]{}; //TODO: create templates for this array
 
-    private Consumer<GestureType> gestureConsumer;
-
     public GestureAnalyzer(Consumer<GestureType> gestureConsumer) {
-        this.gestureConsumer = gestureConsumer;
+        super(gestureConsumer);
     }
 
-    public void updateData(Double[] windowX, Double[] windowY, Double[] windowZ) {
-        TimeSeries timeSeries = new TimeSeries(windowX, windowY, windowZ);
+    public void analyze(Double[]... windowArrays) {
+
+        TimeSeries timeSeries = new TimeSeries(windowArrays);
 
         int minDistIndex = -1;
         double minWarpDist = Double.MAX_VALUE;
@@ -38,7 +37,7 @@ public class GestureAnalyzer {
         //TODO: convert index to gesture
         switch (minDistIndex) {
             default:
-                gestureConsumer.process(GestureType.NOTHING);
+                super.passProcessedElement(GestureType.NOTHING);
                 break;
         }
     }

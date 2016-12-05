@@ -15,18 +15,17 @@ import static android.content.ContentValues.TAG;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class Accellerometer implements SensorEventListener {
+public class Accellerometer extends StreamElement<double[]> implements SensorEventListener {
 
     private static final double UPDATE_FREQUENCY = 0.1;
 
-    private final SensorManager mSensorManager;
-    private final Sensor mSensor;
-
-    private Consumer<double[]> accellerometerConsumer;
-
     public Accellerometer(Context context, Consumer<double[]> accellerometerConsumer) {
+
+        super(accellerometerConsumer);
+
         // list all accelerometers and use the last one
-        mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        SensorManager mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        Sensor mSensor;
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
             List<Sensor> accelSensors = mSensorManager.getSensorList(Sensor.TYPE_LINEAR_ACCELERATION);
             mSensor = accelSensors.get(accelSensors.size() - 1);
@@ -37,15 +36,13 @@ public class Accellerometer implements SensorEventListener {
         }
 
         // register Listener and set update rate
-        mSensorManager.registerListener(this, mSensor, (int) Math.round(this.UPDATE_FREQUENCY * 1000 * 1000));
-
-        this.accellerometerConsumer = accellerometerConsumer;
+        mSensorManager.registerListener(this, mSensor, (int) Math.round(UPDATE_FREQUENCY * 1000 * 1000));
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float[] data = event.values;
-        accellerometerConsumer.process(new double[]{data[0], data[1], data[2]});
+        super.passProcessedElement(new double[]{data[0], data[1], data[2]});
     }
 
     @Override

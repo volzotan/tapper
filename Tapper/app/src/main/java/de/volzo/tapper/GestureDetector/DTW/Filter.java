@@ -5,7 +5,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 /**
  * Created by volzotan on 23.11.16.
  */
-public class Filter {
+public class Filter extends StreamElement<Double> {
 
     private double lowpassAlpha      = 0.5d;
     private double[] averagingKernel = {0.3, 0.3, 0.5, 0.8, 0.8, 0.5};
@@ -15,10 +15,8 @@ public class Filter {
 
     private CircularFifoQueue<Double> previousInputs = new CircularFifoQueue<>(averagingKernel.length + 1);
 
-    private Consumer<Double> resultConsumer;
-
     public Filter(Consumer<Double> resultConsumer) {
-        this.resultConsumer = resultConsumer;
+        super(resultConsumer);
     }
 
     public void dataUpdate(Double input) {
@@ -31,22 +29,11 @@ public class Filter {
         input = averaging(input, (Double[]) previousInputs.toArray(), averagingKernel, averagingDivider);
         input = quantize(input, quantiles);
 
-        resultConsumer.process(input);
+        super.passProcessedElement(input);
     }
 
     private double absolute(double input) {
         return Math.abs(input);
-    }
-
-    private Double[] absolute(Double[] previousInputs) {
-        Double[] absPreviousInputs = new Double[previousInputs.length];
-
-        // use new array for absolute values (old one is used for drawing on the canvas)
-        for (int i=0; i < previousInputs.length; i++) {
-            if (previousInputs[i] == null) break;
-            absPreviousInputs[i] = absolute(previousInputs[i]);
-        }
-        return absPreviousInputs;
     }
 
     /**
