@@ -74,21 +74,22 @@ public class DTWDetector {
         AveragingFilter averagingFilterXY = new AveragingFilter((input) -> quantizerXY.quantize(input, quantiles));
         AveragingFilter averagingFilterZ = new AveragingFilter((input) -> quantizerZ.quantize(input, quantiles));
 
+        final Double[] d = new Double[0];
         AbsoluteFilter absoluteFilterX = new AbsoluteFilter((input) -> {
             //this.previousInputsX.add(input);
-            //averagingFilterX.averaging(input, (Double[]) previousInputsX.toArray(), averagingKernel, averagingDivider);
+            //averagingFilterX.averaging(input, previousInputsX.toArray(d), averagingKernel, averagingDivider);
             absX = input;
         });
         AbsoluteFilter absoluteFilterY = new AbsoluteFilter((input) -> {
             //this.previousInputsY.add(input);
-            //averagingFilterY.averaging(input, (Double[]) previousInputsY.toArray(), averagingKernel, averagingDivider);
+            //averagingFilterY.averaging(input, previousInputsY.toArray(d), averagingKernel, averagingDivider);
             Double xy = Math.sqrt(Math.pow(absX, 2) + Math.pow(input, 2));
             this.previousInputsXY.add(xy);
-            averagingFilterXY.averaging(xy, (Double[]) previousInputsXY.toArray(), averagingKernel, averagingDivider);
+            averagingFilterXY.averaging(xy, previousInputsXY.toArray(d), averagingKernel, averagingDivider);
         });
         AbsoluteFilter absoluteFilterZ = new AbsoluteFilter((input) -> {
             this.previousInputsZ.add(input);
-            averagingFilterZ.averaging(input, (Double[]) previousInputsZ.toArray(), averagingKernel, averagingDivider);
+            averagingFilterZ.averaging(input, previousInputsZ.toArray(d), averagingKernel, averagingDivider);
         });
 
         this.accel = new Accellerometer(context, (double[] reading) -> {

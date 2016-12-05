@@ -36,11 +36,14 @@ public class Displayer extends View {
         if (main == null) {
             try {
                 collector = ((MainActivity) context).dataCollector;
-
                 paint.setColor(Color.RED);
             } catch (Exception ce) {
                 return;
             }
+        }
+
+        if (collector == null) {
+            return;
         }
 
         int height = canvas.getHeight();
