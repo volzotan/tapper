@@ -18,13 +18,14 @@ public class Quantizer extends StreamElement<Double> {
      * @param quantizationSteps the steps for the quantiles
      * @return the numerical value of the quantization step (i.e. 0 for nothing, 1 for peak etc.)
      */
-    public Double quantize(Double input, double[] quantizationSteps) {
+    public void quantize(Double input, double[] quantizationSteps) {
         // quantization
         double sign = input > 0 ? 1 : -1;
         double i = 0;
         while (i < quantizationSteps.length - 1 && quantizationSteps[(int)i+1] <= input) {
             i++;
         }
-        return i * sign;
+
+        super.passProcessedElement(i * sign);
     }
 }

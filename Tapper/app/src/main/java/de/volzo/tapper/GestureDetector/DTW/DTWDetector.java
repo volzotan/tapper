@@ -6,6 +6,8 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
+import java.util.Arrays;
+
 import de.volzo.tapper.GestureDetector.GestureType;
 
 /**
@@ -61,6 +63,7 @@ public class DTWDetector {
         });
         Windower windowerZ = new Windower((Double[] values) -> {this.windowZ = values;
             //gestureAnalyzer.analyze(windowX, windowY, windowZ);
+            System.out.println("windowed Z: " + Arrays.toString(values));
             gestureAnalyzer.analyze(windowXY, windowZ);
         });
 

@@ -25,8 +25,9 @@ public class Windower extends StreamElement<Double[]> {
     public void updateData(Double dataPoint) {
         data.add(dataPoint);
         updateCountdown--;
+        final Double[] d = new Double[0];
         if (updateCountdown == 0) {
-            super.passProcessedElement((Double[]) data.toArray());
+            super.passProcessedElement(data.toArray(d));
             updateCountdown = (WINDOW_SHIFT * SAMPLING_FREQUENCY)/1000;
         }
     }
