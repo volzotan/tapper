@@ -34,11 +34,22 @@ public class DTWDetector {
 
     private Context context;
 
+
+
+    /**
+     * Pipeline:
+     * accelerometer -> absX -> square -> add -> sqrt -> avg -> quantile -> windower -> gestureAnalyzer -> foundGesture
+     *             |--> absY -> square ----'                                             |
+     *             '--> absZ --------------------------> avg -> quantile -> windower ----'
+     *
+     * Alternative pipeline:
+     * accelerometer -> absX -> avg -> quantile -> windower -> gestureAnalyzer -> foundGesture
+     *             |--> absY -> avg -> quantile -> windower ----|
+     *             '--> absZ -> avg -> quantile -> windower ----'
+     */
     public DTWDetector(Context context) {
 
         this.context = context;
-
-        //Pipeline: accelerometer -> abs -> avg -> quantile -> windower -> gestureAnalyzer -> foundGesture
 
         //init pipeline in reverse order
         GestureAnalyzer gestureAnalyzer = new GestureAnalyzer(this::foundGesture);
