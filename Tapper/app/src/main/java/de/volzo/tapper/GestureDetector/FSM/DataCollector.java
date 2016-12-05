@@ -23,7 +23,7 @@ public class DataCollector implements SensorEventListener {
 
     private MainActivity main;
 
-    private Detector gestureDetector;
+    private FSMDetector fSMDetector;
 
     private SensorManager mSensorManager;
     private Sensor mSensor;
@@ -60,9 +60,9 @@ public class DataCollector implements SensorEventListener {
     // in seconds
     private double UPDATE_FREQUENCY = 0.01;
 
-    public DataCollector(MainActivity main, Detector gestureDetector) {
+    public DataCollector(MainActivity main, FSMDetector fSMDetector) {
         this.main = main;
-        this.gestureDetector = gestureDetector;
+        this.fSMDetector = fSMDetector;
 
         // list all accelerometers and use the last one
         mSensorManager = (SensorManager) main.getSystemService(Context.SENSOR_SERVICE);
@@ -120,7 +120,7 @@ public class DataCollector implements SensorEventListener {
         y.toArray(ay);
         z.toArray(az);
 
-        gestureDetector.dataUpdated(
+        fSMDetector.dataUpdated(
                 Quantile.values()[Math.abs(filtered_x.intValue())],
                 Quantile.values()[Math.abs(filtered_y.intValue())],
                 Quantile.values()[Math.abs(filtered_z.intValue())]);

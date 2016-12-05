@@ -19,7 +19,7 @@ public class DTWDetector {
 
     private Context context;
 
-    DTWDetector(Context context) {
+    public DTWDetector(Context context) {
 
         this.context = context;
 

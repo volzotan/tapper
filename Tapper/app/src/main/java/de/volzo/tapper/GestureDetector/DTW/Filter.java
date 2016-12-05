@@ -2,8 +2,6 @@ package de.volzo.tapper.GestureDetector.DTW;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
-import java.util.function.Consumer;
-
 /**
  * Created by volzotan on 23.11.16.
  */
@@ -33,7 +31,7 @@ public class Filter {
         input = averaging(input, (Double[]) previousInputs.toArray(), averagingKernel, averagingDivider);
         input = quantize(input, quantiles);
 
-        resultConsumer.accept(input);
+        resultConsumer.process(input);
     }
 
     private double absolute(double input) {

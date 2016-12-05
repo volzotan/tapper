@@ -39,7 +39,7 @@ public class FSMDoubleTap {
             () -> {
                 doubleTapTimer = Executors.newSingleThreadScheduledExecutor();
                 doubleTapTimer.schedule(() -> this.stateTransition(
-                        1 << Detector.Shift.TIMEOUT.getShift()),
+                        1 << FSMDetector.Shift.TIMEOUT.getShift()),
                         doubleTapTimeout, TimeUnit.MILLISECONDS);
             },
             () -> {}};

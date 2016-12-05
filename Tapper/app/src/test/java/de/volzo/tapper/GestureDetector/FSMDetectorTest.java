@@ -4,14 +4,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import de.volzo.tapper.GestureDetector.FSM.Detector;
+import de.volzo.tapper.GestureDetector.FSM.FSMDetector;
 import de.volzo.tapper.GestureDetector.FSM.Quantile;
 
 /**
  * Created by tassilokarge on 24.11.16.
  */
 
-public class DetectorTest extends Detector {
+public class FSMDetectorTest extends FSMDetector {
 
     private boolean doubleTapRecognized, sideTapRecognized, pickUpDropRecognized;
 
@@ -29,7 +29,7 @@ public class DetectorTest extends Detector {
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.PEAK);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
-        Assert.assertTrue("Detector should detect double tap", this.doubleTapRecognized);
+        Assert.assertTrue("FSMDetector should detect double tap", this.doubleTapRecognized);
     }
 
     @Test
@@ -40,42 +40,42 @@ public class DetectorTest extends Detector {
         this.dataUpdated(Quantile.NOTHING, Quantile.STRONG_PEAK, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
-        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+        Assert.assertTrue("FSMDetector should detect sidetap", this.sideTapRecognized);
 
         // second tap
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.STRONG_PEAK, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
-        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+        Assert.assertTrue("FSMDetector should detect sidetap", this.sideTapRecognized);
 
         // third tap
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
         this.dataUpdated(Quantile.STRONG_PEAK, Quantile.NOTHING, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
-        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+        Assert.assertTrue("FSMDetector should detect sidetap", this.sideTapRecognized);
 
         // fourth tap
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
         this.dataUpdated(Quantile.STRONG_PEAK, Quantile.NOTHING, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
-        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+        Assert.assertTrue("FSMDetector should detect sidetap", this.sideTapRecognized);
 
         // fifth tap
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
         this.dataUpdated(Quantile.STRONG_PEAK, Quantile.STRONG_PEAK, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
-        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+        Assert.assertTrue("FSMDetector should detect sidetap", this.sideTapRecognized);
 
         // sixth tap
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
         this.dataUpdated(Quantile.STRONG_PEAK, Quantile.STRONG_PEAK, Quantile.NOTHING);
         this.dataUpdated(Quantile.NOTHING, Quantile.NOTHING, Quantile.NOTHING);
 
-        Assert.assertTrue("Detector should detect sidetap", this.sideTapRecognized);
+        Assert.assertTrue("FSMDetector should detect sidetap", this.sideTapRecognized);
     }
 
     @Test

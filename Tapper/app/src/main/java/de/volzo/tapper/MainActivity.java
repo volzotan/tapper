@@ -11,16 +11,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import de.volzo.tapper.GestureDetector.DTW.DTWDetector;
 import de.volzo.tapper.GestureDetector.FSM.DataCollector;
-import de.volzo.tapper.GestureDetector.FSM.Detector;
+import de.volzo.tapper.GestureDetector.FSM.FSMDetector;
 import de.volzo.tapper.GestureDetector.GestureType;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = DataCollector.class.getName();
 
-    public Detector gestureDetector;
+    public FSMDetector fSMDetector;
     public DataCollector dataCollector;
+
+    public DTWDetector dTWDetector;
 
     MainActivity activity = this;
 
@@ -29,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        gestureDetector = new Detector(this);
-        dataCollector   = new DataCollector(this, gestureDetector);
+        //fSMDetector = new FSMDetector(this);
+        //dataCollector   = new DataCollector(this, fSMDetector);
+
+        dTWDetector = new DTWDetector(this);
 
         registerUpdateReceiver();
     }

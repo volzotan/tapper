@@ -8,7 +8,6 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import static android.content.ContentValues.TAG;
 
@@ -46,7 +45,7 @@ public class Accellerometer implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         float[] data = event.values;
-        accellerometerConsumer.accept(new double[]{data[0], data[1], data[2]});
+        accellerometerConsumer.process(new double[]{data[0], data[1], data[2]});
     }
 
     @Override

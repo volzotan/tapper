@@ -6,15 +6,15 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import de.volzo.tapper.GestureDetector.GestureType;
 
-import static de.volzo.tapper.GestureDetector.FSM.Detector.Shift.TAP;
-import static de.volzo.tapper.GestureDetector.FSM.Detector.Shift.X;
-import static de.volzo.tapper.GestureDetector.FSM.Detector.Shift.Y;
-import static de.volzo.tapper.GestureDetector.FSM.Detector.Shift.Z;
+import static de.volzo.tapper.GestureDetector.FSM.FSMDetector.Shift.TAP;
+import static de.volzo.tapper.GestureDetector.FSM.FSMDetector.Shift.X;
+import static de.volzo.tapper.GestureDetector.FSM.FSMDetector.Shift.Y;
+import static de.volzo.tapper.GestureDetector.FSM.FSMDetector.Shift.Z;
 
 /**
  * Created by volzotan on 11.11.16.
  */
-public class Detector {
+public class FSMDetector {
 
     public enum Shift {
         TAP (13), TIMEOUT (12), X (8), Y (4), Z (0);
@@ -41,9 +41,9 @@ public class Detector {
     final FSMSideTap sideTapFSM = new FSMSideTap();
     final FSMPickUpDrop pickUpDropFSM = new FSMPickUpDrop();
 
-    public Detector() {}
+    public FSMDetector() {}
 
-    public Detector(Context context) {
+    public FSMDetector(Context context) {
         this();
         this.context = context;
     }

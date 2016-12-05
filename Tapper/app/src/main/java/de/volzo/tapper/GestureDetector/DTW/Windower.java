@@ -2,8 +2,6 @@ package de.volzo.tapper.GestureDetector.DTW;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
-import java.util.function.Consumer;
-
 /**
  * Created by tassilokarge on 04.12.16.
  */
@@ -30,7 +28,7 @@ public class Windower {
         data.add(dataPoint);
         updateCountdown--;
         if (updateCountdown == 0) {
-            windowConsumer.accept((Double[]) data.toArray());
+            windowConsumer.process((Double[]) data.toArray());
             updateCountdown = (WINDOW_SHIFT * SAMPLING_FREQUENCY)/1000;
         }
     }

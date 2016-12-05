@@ -49,13 +49,13 @@ public class FSMPickUpDrop {
             () -> {
                 pickUpTimer = Executors.newSingleThreadScheduledExecutor();
                 pickUpTimer.schedule(() -> this.stateTransition(
-                        1 << Detector.Shift.TIMEOUT.getShift()),
+                        1 << FSMDetector.Shift.TIMEOUT.getShift()),
                         pickUpTimeout, TimeUnit.MILLISECONDS);
             },
             () -> {
                 dropTimer = Executors.newSingleThreadScheduledExecutor();
                 dropTimer.schedule(() -> this.stateTransition(
-                        1 << Detector.Shift.TIMEOUT.getShift()),
+                        1 << FSMDetector.Shift.TIMEOUT.getShift()),
                         dropTimeout, TimeUnit.MILLISECONDS);
             },
             () -> {}};

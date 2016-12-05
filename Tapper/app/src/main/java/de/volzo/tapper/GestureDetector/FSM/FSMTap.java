@@ -41,7 +41,7 @@ public class FSMTap {
             () -> {
                 tapTimer = Executors.newSingleThreadScheduledExecutor();
                 tapTimer.schedule(() -> this.stateTransition(
-                        1 << Detector.Shift.TIMEOUT.getShift()),
+                        1 << FSMDetector.Shift.TIMEOUT.getShift()),
                         tapTimeout, TimeUnit.MILLISECONDS);
             },
             () -> {}};

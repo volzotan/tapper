@@ -45,7 +45,7 @@ public class FSMSideTap {
             () -> {
                 sideTapTimer = Executors.newSingleThreadScheduledExecutor();
                 sideTapTimer.schedule(() -> this.stateTransition(
-                        1 << Detector.Shift.TIMEOUT.getShift()),
+                        1 << FSMDetector.Shift.TIMEOUT.getShift()),
                         sideTapTimeout, TimeUnit.MILLISECONDS);
             },
             () -> {}};

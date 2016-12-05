@@ -3,8 +3,6 @@ package de.volzo.tapper.GestureDetector.DTW;
 import com.chan.fastdtw.dtw.FastDTW;
 import com.chan.fastdtw.timeseries.TimeSeries;
 
-import java.util.function.Consumer;
-
 import de.volzo.tapper.GestureDetector.GestureType;
 
 import static com.chan.fastdtw.util.DistanceFunctionFactory.EUCLIDEAN_DIST_FN;
@@ -40,7 +38,7 @@ public class GestureAnalyzer {
         //TODO: convert index to gesture
         switch (minDistIndex) {
             default:
-                gestureConsumer.accept(GestureType.NOTHING);
+                gestureConsumer.process(GestureType.NOTHING);
                 break;
         }
     }
