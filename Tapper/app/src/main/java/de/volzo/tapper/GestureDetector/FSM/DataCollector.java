@@ -130,6 +130,18 @@ public class DataCollector implements SensorEventListener {
         view.invalidate();
     }
 
+    public double[][] save() {
+        double[][] combined = new double[ax.length][3];
+
+        for (int i=0; i<ax.length; i++) {
+            combined[i][0] = ax[i];
+            combined[i][1] = ay[i];
+            combined[i][2] = az[i];
+        }
+
+        return combined;
+    }
+
     public void discardAllData() {
         x.clear();
         y.clear();

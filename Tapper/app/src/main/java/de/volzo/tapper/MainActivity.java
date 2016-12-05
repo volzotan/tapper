@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import de.volzo.tapper.GestureDetector.FSM.DataCollector;
@@ -32,6 +34,19 @@ public class MainActivity extends AppCompatActivity {
 
         registerUpdateReceiver();
     }
+
+    // ---------------------       DEBUG       --------------------- //
+
+    public void uploadSamplesToGithub(View v) {
+
+        Log.wtf(TAG, "upload");
+        Support support = new Support(this);
+        support.add(dataCollector.save());
+        support.send("test");
+
+    }
+
+    // --------------------- Gesture Detection --------------------- //
 
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
