@@ -6,5 +6,6 @@ package de.volzo.tapper.GestureDetector;
 public enum GestureType {
     DOUBLETAP,
     SIDETAP,
-    PICKUPDROP;
+    PICKUPDROP,
+    NOTHING
 }
