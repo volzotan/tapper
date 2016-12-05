@@ -22,7 +22,7 @@ public class Windower extends StreamElement<Double[]> {
         super(windowConsumer);
     }
 
-    public void updateData(Double dataPoint) {
+    public void addDataPoint(Double dataPoint) {
         data.add(dataPoint);
         updateCountdown--;
         final Double[] d = new Double[0];
