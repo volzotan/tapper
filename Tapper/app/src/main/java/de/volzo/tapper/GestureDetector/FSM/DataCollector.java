@@ -134,9 +134,9 @@ public class DataCollector implements SensorEventListener {
         double[][] combined = new double[ax.length][3];
 
         for (int i=0; i<ax.length; i++) {
-            combined[i][0] = ax[i];
-            combined[i][1] = ay[i];
-            combined[i][2] = az[i];
+            combined[i][0] = rawax[i];
+            combined[i][1] = raway[i];
+            combined[i][2] = rawaz[i];
         }
 
         return combined;
