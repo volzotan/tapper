@@ -17,7 +17,8 @@ import static android.content.ContentValues.TAG;
 
 public class Accellerometer extends StreamElement<double[]> implements SensorEventListener {
 
-    private static final double UPDATE_FREQUENCY = 0.1;
+    /** the update frequency of the accelerometer in seconds */
+    private static final double UPDATE_FREQUENCY = 0.01;
 
     public Accellerometer(Context context, Consumer<double[]> accellerometerConsumer) {
 
@@ -36,7 +37,7 @@ public class Accellerometer extends StreamElement<double[]> implements SensorEve
         }
 
         // register Listener and set update rate
-        mSensorManager.registerListener(this, mSensor, (int) Math.round(UPDATE_FREQUENCY * 1000 * 1000));
+        mSensorManager.registerListener(this, mSensor, (int) (UPDATE_FREQUENCY * 1000 * 1000));
     }
 
     @Override
