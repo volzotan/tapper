@@ -127,6 +127,9 @@ public class DataCollector implements SensorEventListener {
 
         // redraw the graph with new data by invalidating the View (Displayer)
         Displayer view = (Displayer) main.findViewById(R.id.displayView);
+        view.x = rawax;
+        view.y = raway;
+        view.z = rawaz;
         view.invalidate();
     }
 

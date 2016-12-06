@@ -40,6 +40,18 @@ public class Support {
         this.context = context;
     }
 
+    public double[][] convert(Double[] x, Double[] y, Double[] z) {
+        double[][] combined = new double[x.length][3];
+
+        for (int i=0; i<x.length; i++) {
+            combined[i][0] = x[i];
+            combined[i][1] = y[i];
+            combined[i][2] = z[i];
+        }
+
+        return combined;
+    }
+
     public void add(double[][] arr) {
         // append all values separated by comma, terminated by newlines
 

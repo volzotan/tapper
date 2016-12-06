@@ -1,5 +1,6 @@
 package de.volzo.tapper.GestureDetector.DTW;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -8,7 +9,11 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import java.util.Arrays;
 
+import de.volzo.tapper.GestureDetector.FSM.DataCollector;
+import de.volzo.tapper.GestureDetector.FSM.Displayer;
 import de.volzo.tapper.GestureDetector.GestureType;
+import de.volzo.tapper.MainActivity;
+import de.volzo.tapper.R;
 
 /**
  * Created by tassilokarge on 05.12.16.
@@ -17,6 +22,7 @@ import de.volzo.tapper.GestureDetector.GestureType;
 public class DTWDetector {
 
     private Accellerometer accel;
+    private DataCollector collector;
 
     //constants for filters
     private final double[] averagingKernel = {0.3, 0.3, 0.5, 0.8, 0.8, 0.5};
@@ -78,10 +84,21 @@ public class DTWDetector {
         //Windower windowerY = new Windower((Double[] values) -> this.windowY = values);
         Windower windowerXY = new Windower((Double[] values) -> {
             this.windowXY = values;
+
+            Displayer view = (Displayer) ((Activity) context).findViewById(R.id.displayView);
+            view.x = values;
+            view.y = values;
+            view.invalidate();
         });
         Windower windowerZ = new Windower((Double[] values) -> {this.windowZ = values;
             //gestureAnalyzer.analyze(windowX, windowY, windowZ);
             System.out.println("windowed Z: " + Arrays.toString(values));
+
+            // redraw the graph with new data by invalidating the View (Displayer)
+            Displayer view = (Displayer) ((Activity) context).findViewById(R.id.displayView);
+            view.z = values;
+            view.invalidate();
+
             gestureAnalyzer.analyze(windowXY, windowZ);
         });
 

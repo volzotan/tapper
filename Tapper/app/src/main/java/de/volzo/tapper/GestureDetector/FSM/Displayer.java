@@ -16,7 +16,12 @@ public class Displayer extends View {
 
     private Context context;
     private MainActivity main;
-    private DataCollector collector;
+
+    public Double[] x;
+    public Double[] y;
+    public Double[] z;
+
+    // add here additional variables for additional graphs
 
     private Paint paint = new Paint();
 
@@ -35,30 +40,29 @@ public class Displayer extends View {
 
         if (main == null) {
             try {
-                collector = ((MainActivity) context).dataCollector;
                 paint.setColor(Color.RED);
             } catch (Exception ce) {
                 return;
             }
         }
 
-        if (collector == null) {
+        if (x == null) {
             return;
         }
 
         int height = canvas.getHeight();
         int width = canvas.getWidth();
-        int elements = collector.ax.length;
+        int elements = x.length;
 
         if (elements == 0) {
             return;
         }
 
-        if (collector.ax[0] == null) {
+        if (x[0] == null) {
             return;
         }
 
-        int fractionHeight = height / 6;
+        int fractionHeight = height / 3; // Change if more graphs should be displayed
 
 //        global_min = (float) (double) Collections.min(collector.x);
 //        if (global_min > Collections.min(collector.y)) { global_min = (float) (double) Collections.min(collector.y); }
@@ -76,12 +80,10 @@ public class Displayer extends View {
 //        if (global_max < Collections.max(collector.rawy)) { global_max = (float) (double) Collections.max(collector.rawy); }
 //        if (global_max < Collections.max(collector.rawz)) { global_max = (float) (double) Collections.max(collector.rawz); }
 
-        drawLine(canvas, 0, width, fractionHeight * 0, fractionHeight * 1, collector.ax, Color.RED);
-        drawLine(canvas, 0, width, fractionHeight * 1, fractionHeight * 2, collector.rawax, Color.RED);
-        drawLine(canvas, 0, width, fractionHeight * 2, fractionHeight * 3, collector.ay, Color.BLUE);
-        drawLine(canvas, 0, width, fractionHeight * 3, fractionHeight * 4, collector.raway, Color.BLUE);
-        drawLine(canvas, 0, width, fractionHeight * 4, fractionHeight * 5, collector.az, Color.BLACK);
-        drawLine(canvas, 0, width, fractionHeight * 5, fractionHeight * 6, collector.rawaz, Color.BLACK);
+        drawLine(canvas, 0, width, fractionHeight * 0, fractionHeight * 1, x, Color.RED);
+        drawLine(canvas, 0, width, fractionHeight * 1, fractionHeight * 2, y, Color.RED);
+        drawLine(canvas, 0, width, fractionHeight * 2, fractionHeight * 3, z, Color.BLUE);
+
         //drawLine(canvas, 0, width, fractionHeight * 3, fractionHeight * 4, collector.am, Color.BLACK);
 
     }

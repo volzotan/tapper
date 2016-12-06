@@ -1,5 +1,6 @@
 package de.volzo.tapper;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import de.volzo.tapper.GestureDetector.DTW.DTWDetector;
 import de.volzo.tapper.GestureDetector.FSM.DataCollector;
+import de.volzo.tapper.GestureDetector.FSM.Displayer;
 import de.volzo.tapper.GestureDetector.FSM.FSMDetector;
 import de.volzo.tapper.GestureDetector.GestureType;
 
@@ -46,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         Log.wtf(TAG, "upload");
         Support support = new Support(this);
-        support.add(dataCollector.save());
+
+        Displayer disp = (Displayer) findViewById(R.id.displayView);
+        support.add(support.convert(disp.x, disp.y, disp.z));
         support.send("test");
 
     }
