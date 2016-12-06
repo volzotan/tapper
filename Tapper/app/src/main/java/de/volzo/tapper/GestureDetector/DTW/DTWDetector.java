@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import org.apache.commons.collections4.queue.CircularFifoQueue;
-
-import de.volzo.tapper.GestureDetector.FSM.Displayer;
+import de.volzo.tapper.GestureDetector.Displayer;
 import de.volzo.tapper.GestureDetector.GestureType;
 import de.volzo.tapper.R;
 
@@ -18,20 +16,6 @@ import de.volzo.tapper.R;
 public class DTWDetector {
 
     private Accellerometer accel;
-
-    //constants for filters
-    private final double[] averagingKernel = {0.3, 0.3, 0.5, 0.8, 0.8, 0.5};
-    private final double averagingDivider  = 3.2;
-    private final double[] quantiles       = {0, 0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0};
-
-    //intermediate x value for combining x and y
-    private Double absX;
-
-    //intermediate values for averaging filter
-    //private CircularFifoQueue<Double> previousInputsX = new CircularFifoQueue<>(averagingKernel.length + 1);
-    //private CircularFifoQueue<Double> previousInputsY = new CircularFifoQueue<>(averagingKernel.length + 1);
-    private CircularFifoQueue<Double> previousInputsXY = new CircularFifoQueue<>(averagingKernel.length + 1);
-    private CircularFifoQueue<Double> previousInputsZ = new CircularFifoQueue<>(averagingKernel.length + 1);
 
     //processed windows
     //private Double[] windowX;
@@ -85,46 +69,20 @@ public class DTWDetector {
             this.windowXY = output;
         });
         Windower windowerZ = new Windower((Double[] output) -> {this.windowZ = output;
+            //redraw view
+            //view.x = windowXY;
+            //view.y = windowXY;
+            //view.z = windowZ;
+            //view.invalidate();
+            //analyze gesture
             //gestureAnalyzer.analyze(windowX, windowY, windowZ);
             gestureAnalyzer.analyze(windowXY, windowZ);
         });
 
 
-        //QUANTIZER
+        //FILTERING
 
-        //Quantizer quantizerX = new Quantizer(windowerX::analyze);
-        //Quantizer quantizerY = new Quantizer(windowerY::analyze);
-        Quantizer quantizerXY = new Quantizer((output) -> windowerXY.addDataPoint(output));
-        Quantizer quantizerZ = new Quantizer((output) -> windowerZ.addDataPoint(output));
-
-
-        //AVERAGING
-
-        //AveragingFilter averagingFilterX = new AveragingFilter((output) -> quantizerX.quantize(output, quantiles));
-        //AveragingFilter averagingFilterY = new AveragingFilter((output) -> quantizerY.quantize(output, quantiles));
-        AveragingFilter averagingFilterXY = new AveragingFilter((output) -> quantizerXY.quantize(output, quantiles));
-        AveragingFilter averagingFilterZ = new AveragingFilter((output) -> quantizerZ.quantize(output, quantiles));
-
-
-        //ABSOLUTE
-
-        final Double[] d = new Double[0];
-        AbsoluteFilter absoluteFilterX = new AbsoluteFilter((output) -> {
-            //this.previousInputsX.add(output);
-            //averagingFilterX.averaging(output, previousInputsX.toArray(d), averagingKernel, averagingDivider);
-            absX = output;
-        });
-        AbsoluteFilter absoluteFilterY = new AbsoluteFilter((output) -> {
-            //this.previousInputsY.add(output);
-            //averagingFilterY.averaging(output, previousInputsY.toArray(d), averagingKernel, averagingDivider);
-            Double xy = Math.sqrt(Math.pow(absX, 2) + Math.pow(output, 2));
-            this.previousInputsXY.add(xy);
-            averagingFilterXY.averaging(xy, previousInputsXY.toArray(d), averagingKernel, averagingDivider);
-        });
-        AbsoluteFilter absoluteFilterZ = new AbsoluteFilter((output) -> {
-            this.previousInputsZ.add(output);
-            averagingFilterZ.averaging(output, previousInputsZ.toArray(d), averagingKernel, averagingDivider);
-        });
+        FilteringPipeline filter = new FilteringPipeline(windowerXY::addDataPoint, windowerZ::addDataPoint);
 
 
         //RAW VALUE WINDOWING
@@ -147,10 +105,8 @@ public class DTWDetector {
             rawWindowerX.addDataPoint(output[0]);
             rawWindowerY.addDataPoint(output[1]);
             rawWindowerZ.addDataPoint(output[2]);
-
-            absoluteFilterX.absolute(output[0]);
-            absoluteFilterY.absolute(output[1]);
-            absoluteFilterZ.absolute(output[2]);
+            //filter incoming values
+            filter.filter(output[0],output[1],output[2]);
         });
     }
 
@@ -160,7 +116,7 @@ public class DTWDetector {
         if (type == GestureType.NOTHING) { return; }
 
         Intent intent = new Intent("GESTURE_DETECTED");
-        intent.putExtra("GESTURE_TYPE", GestureType.DOUBLETAP.name());
+        intent.putExtra("GESTURE_TYPE", type.name());
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

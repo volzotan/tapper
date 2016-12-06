@@ -23,8 +23,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.android.volley.VolleyLog.TAG;
-
 /**
  * Created by volzotan on 05.12.16.
  */

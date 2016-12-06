@@ -11,6 +11,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import java.util.List;
 
+import de.volzo.tapper.GestureDetector.Displayer;
 import de.volzo.tapper.MainActivity;
 import de.volzo.tapper.R;
 

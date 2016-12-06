@@ -9,6 +9,7 @@ package com.chan.fastdtw.timeseries;
 
 import com.chan.fastdtw.util.Arrays;
 
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -51,7 +52,7 @@ public class TimeSeries
      */
    public TimeSeries(Double[]... dimensionArrays) {
 
-      this(null, null, new ArrayList<>());
+      this(dimensionArrays.length);
 
       int dimensions = dimensionArrays.length;
       int length = dimensionArrays[0].length;
@@ -67,22 +68,9 @@ public class TimeSeries
          for (int j = 0; j < dimensions; j++) {
             point[j] = dimensionArrays[j][i];
          }
+         timeReadings.add((double) timeReadings.size());
          tsArray.add(new TimeSeriesPoint(point));
       }
-   }
-
-   /**
-    * added constructor for programmatic timeseries (instead of file-based)
-    * @param labels the dimension labels (can be null)
-    * @param timeReadings the timestamps of the points (can be null)
-    * @param tsArray the data points (must not be null)
-     */
-   public TimeSeries(ArrayList<String> labels,
-                     ArrayList<Double> timeReadings,
-                     ArrayList<TimeSeriesPoint> tsArray) {
-      this.labels = labels != null ? labels : new ArrayList<>();
-      this.timeReadings = timeReadings != null ? timeReadings : new ArrayList<>();
-      this.tsArray = tsArray;
    }
 
    public TimeSeries(int numOfDimensions)                                               
@@ -139,7 +127,10 @@ public class TimeSeries
       try
       {
          // Record the Label names (fropm the top row.of the input file).
-         BufferedReader br = new BufferedReader (new FileReader (inputFile));  // open the input file
+         BufferedReader br = new BufferedReader (
+                 new InputStreamReader(
+                         this.getClass().getClassLoader().getResourceAsStream(inputFile)));  // open the input file
+
          String line = br.readLine();  // the top row that contains attribiute names.
          StringTokenizer st = new StringTokenizer (line, String.valueOf(delimiter));
 
@@ -192,7 +183,9 @@ public class TimeSeries
 
             // Close and re-open the file.
             br.close();
-            br = new BufferedReader (new FileReader (inputFile));  // open the input file
+            br = new BufferedReader (
+                    new InputStreamReader(
+                            this.getClass().getClassLoader().getResourceAsStream(inputFile)));  // open the input file
          }  // end if
 
 
