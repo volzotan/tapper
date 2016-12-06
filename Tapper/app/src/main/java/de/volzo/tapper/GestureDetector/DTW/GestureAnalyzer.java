@@ -15,7 +15,23 @@ import static com.chan.fastdtw.util.DistanceFunctionFactory.EUCLIDEAN_DIST_FN;
 
 public class GestureAnalyzer extends StreamElement<GestureType> {
 
-    private TimeSeries[] templates = new TimeSeries[]{}; //TODO: create templates for this array
+    private TimeSeries[] templates = new TimeSeries[]{
+            new TimeSeries("assets/templates/nothing.csv", false),      //0
+            new TimeSeries("assets/templates/doubletap1.csv", false),   //1
+            new TimeSeries("assets/templates/doubletap2.csv", false),   //2
+            new TimeSeries("assets/templates/doubletap3.csv", false),   //3
+            new TimeSeries("assets/templates/doubletap4.csv", false),   //4
+            new TimeSeries("assets/templates/pickupdrop1.csv", false),  //5
+            new TimeSeries("assets/templates/pickupdrop2.csv", false),  //6
+            new TimeSeries("assets/templates/pickupdrop3.csv", false),  //7
+            new TimeSeries("assets/templates/pickupdrop4.csv", false),  //8
+            new TimeSeries("assets/templates/pickupdrop5.csv", false),  //9
+            new TimeSeries("assets/templates/sidetapbottom.csv", false),//10
+            new TimeSeries("assets/templates/sidetapleft.csv", false),  //11
+            new TimeSeries("assets/templates/sidetapright.csv", false), //12
+            new TimeSeries("assets/templates/sidetaptop.csv", false)   //13
+            //TODO: default cases, more gestures
+    };
 
     public GestureAnalyzer(Consumer<GestureType> gestureConsumer) {
         super(gestureConsumer);
@@ -56,12 +72,39 @@ public class GestureAnalyzer extends StreamElement<GestureType> {
                 minWarpDist = dist;
                 minDistIndex = i;
             }
+            //System.out.println("Warp distance " + i + " = " + dist);
         }
 
         //TODO: convert index to gesture
         switch (minDistIndex) {
+            case 0:
+                super.passProcessedElement(GestureType.NOTHING);
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                super.passProcessedElement(GestureType.DOUBLETAP);
+                System.out.println("Doubletap");
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                super.passProcessedElement(GestureType.PICKUPDROP);
+                System.out.println("Pickupdrop");
+                break;
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+                super.passProcessedElement(GestureType.SIDETAP);
+                System.out.println("Sidetap");
+                break;
             default:
                 super.passProcessedElement(GestureType.NOTHING);
+                System.out.println("movearound");
                 break;
         }
     }

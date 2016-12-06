@@ -10,7 +10,7 @@ public class Windower extends StreamElement<Double[]> {
     /** window size in ms */
     public static final int WINDOW_SIZE_MS = 2000;
     /** the shift of the sliding window in ms */
-    public static final int WINDOW_SHIFT_MS = 200;
+    public static final int WINDOW_SHIFT_MS = 1000;
 
     /** the number of samples per second */
     public static final int SAMPLES_PER_SEC = 100;
