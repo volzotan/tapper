@@ -79,38 +79,50 @@ public class Displayer extends View {
 //        if (global_max < Collections.max(collector.rawx)) { global_max = (float) (double) Collections.max(collector.rawx); }
 //        if (global_max < Collections.max(collector.rawy)) { global_max = (float) (double) Collections.max(collector.rawy); }
 //        if (global_max < Collections.max(collector.rawz)) { global_max = (float) (double) Collections.max(collector.rawz); }
-
+        
         drawLine(canvas, 0, width, fractionHeight * 0, fractionHeight * 1, x, Color.RED);
-        drawLine(canvas, 0, width, fractionHeight * 1, fractionHeight * 2, y, Color.RED);
+        drawLine(canvas, 0, width, fractionHeight * 1, fractionHeight * 2, y, Color.GREEN);
         drawLine(canvas, 0, width, fractionHeight * 2, fractionHeight * 3, z, Color.BLUE);
 
         //drawLine(canvas, 0, width, fractionHeight * 3, fractionHeight * 4, collector.am, Color.BLACK);
 
     }
 
-    private void drawLine(Canvas canvas, int x1, int x2, int y1, int y2, Double[] v, int color) {
+    private void drawLine(Canvas canvas,
+                          int leftEdge, int rightEdge,
+                          int upperEdge, int lowerEdge, Double[] values,
+                          int color) {
+
         paint.setColor(color);
-        int offset = (y2 - y1) / 2;
 
-        float lastX = x1;
-        float lastY = y1 + offset;
+        //0 is in the middle of the drawing area
+        int offset = (lowerEdge - upperEdge) / 2;
 
-        int step = (x2 - x1) / v.length;
+        //set start to the middle of the left edge
+        float lastX = leftEdge;
+        float lastY = upperEdge + offset;
 
-        for (int i = 0; i < v.length; i++) {
-            if (v[i] == null) {continue;}
+        //divide steps equally over width
+        float step = (rightEdge - leftEdge) / (float) values.length;
 
-            float vX = i * step;
-            float vY = (float) (double) v[i];
+        //draw line from each previous point to current point
+        for (int i = 0; i < values.length; i++) {
+            //leave out null values
+            if (values[i] == null) {continue;}
+
+            //calculate x and y coordinates of line end
+            float xCoordinate = i * step;
+            float yCoordinate = values[i].floatValue();
 
             // normalize
-            vY = (vY - global_min) / (global_max - global_min);
-            vY = vY * (y2 - y1) + y1;
+            yCoordinate = (yCoordinate - global_min) / (global_max - global_min);
+            yCoordinate = yCoordinate * (lowerEdge - upperEdge) + upperEdge;
 
-            canvas.drawLine(lastX, lastY, vX, vY, paint);
+            //draw line from last to current point
+            canvas.drawLine(lastX, lastY, xCoordinate, yCoordinate, paint);
 
-            lastX = vX;
-            lastY = vY;
+            lastX = xCoordinate;
+            lastY = yCoordinate;
         }
 
     }
