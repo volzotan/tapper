@@ -16,7 +16,7 @@ public class Windower extends StreamElement<Double[]> {
 
     private CircularFifoQueue<Double> data = new CircularFifoQueue<>(WINDOW_SIZE);
 
-    private int updateCountdown = (WINDOW_SIZE*SAMPLING_FREQUENCY)/1000;
+    private int updateCountdown = (WINDOW_SHIFT*SAMPLING_FREQUENCY)/1000;
 
     public Windower(Consumer<Double[]> windowConsumer) {
         super(windowConsumer);
