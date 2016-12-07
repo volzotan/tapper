@@ -29,7 +29,10 @@ public class GestureAnalyzer extends StreamElement<GestureType> {
             new TimeSeries("assets/templates/sidetapbottom.csv", false),//10
             new TimeSeries("assets/templates/sidetapleft.csv", false),  //11
             new TimeSeries("assets/templates/sidetapright.csv", false), //12
-            new TimeSeries("assets/templates/sidetaptop.csv", false)   //13
+            new TimeSeries("assets/templates/sidetaptop.csv", false),   //13
+            new TimeSeries("assets/templates/shake1.csv", false),//14
+            new TimeSeries("assets/templates/shake2.csv", false),  //15
+            new TimeSeries("assets/templates/shake3.csv", false) //16
             //TODO: default cases, more gestures
     };
 
@@ -67,7 +70,8 @@ public class GestureAnalyzer extends StreamElement<GestureType> {
         double minWarpDist = Double.MAX_VALUE;
 
         for (int i = 0; i < templates.length; i++) {
-            double dist = FastDTW.getWarpDistBetween(timeSeries, templates[i], EUCLIDEAN_DIST_FN);
+            //search radius 5 from the DTW paper. Allows low error with timeseries of up to 1000 points
+            double dist = FastDTW.getWarpDistBetween(timeSeries, templates[i], 5, EUCLIDEAN_DIST_FN);
             if (dist < minWarpDist) {
                 minWarpDist = dist;
                 minDistIndex = i;
@@ -75,7 +79,6 @@ public class GestureAnalyzer extends StreamElement<GestureType> {
             //System.out.println("Warp distance " + i + " = " + dist);
         }
 
-        //TODO: convert index to gesture
         switch (minDistIndex) {
             case 0:
                 super.passProcessedElement(GestureType.NOTHING);
@@ -101,6 +104,12 @@ public class GestureAnalyzer extends StreamElement<GestureType> {
             case 13:
                 super.passProcessedElement(GestureType.SIDETAP);
                 System.out.println("Sidetap");
+                break;
+            case 14:
+            case 15:
+            case 16:
+                super.passProcessedElement(GestureType.SHAKE);
+                System.out.println("Shake");
                 break;
             default:
                 super.passProcessedElement(GestureType.NOTHING);
