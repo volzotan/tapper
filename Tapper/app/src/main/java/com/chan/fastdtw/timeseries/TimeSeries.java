@@ -11,6 +11,7 @@ import com.chan.fastdtw.util.Arrays;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -41,32 +42,35 @@ public class TimeSeries
    // CONSTRUCTORS                                                                   // TODO method to peek at determined delimiter, 1st col time
    TimeSeries()
    {
-      labels = new ArrayList();                                                      // TODO isLabeled constuctor options?
-      timeReadings = new ArrayList();
-      tsArray = new ArrayList();
+      labels = new ArrayList<>();                                                      // TODO isLabeled constuctor options?
+      timeReadings = new ArrayList<>();
+      tsArray = new ArrayList<>();
    }
 
    /**
     * added another constructor for programmatic use
-    * @param dimensionArrays one array for each dimension, all have to be same length
-     */
-   public TimeSeries(Double[]... dimensionArrays) {
+    * @param windowTuples An array with tuples, all have to be same length (= number of dimensions)
+    */
+   public TimeSeries(Number[][] windowTuples) {
 
-      this(dimensionArrays.length);
+      this(windowTuples[0].length);
 
-      int dimensions = dimensionArrays.length;
-      int length = dimensionArrays[0].length;
-      for (int i = 1; i < dimensions; i++) {
-         if (dimensionArrays[i].length != length) {
-            throw new IllegalArgumentException("all arrays have to be of same length");
-         }
-      }
+      int dimensions = windowTuples[0].length;
 
       //construct time series
-      for (int i = 0; i < length; i++) {
+      for (Number[] windowTuple : windowTuples) {
+         if (windowTuple == null) {
+            throw new IllegalArgumentException("Null objects in Array");
+         }
+         if (windowTuple.length != dimensions) {
+            throw new IllegalArgumentException("all tuples have to be of same length");
+         }
          double[] point = new double[dimensions];
          for (int j = 0; j < dimensions; j++) {
-            point[j] = dimensionArrays[j][i];
+            if (windowTuple[j] == null) {
+               throw new IllegalArgumentException("Null objects in Array");
+            }
+            point[j] = windowTuple[j].doubleValue();
          }
          timeReadings.add((double) timeReadings.size());
          tsArray.add(new TimeSeriesPoint(point));
@@ -84,9 +88,9 @@ public class TimeSeries
    // Copy Constructor
    public TimeSeries(TimeSeries origTS)
    {
-      labels = new ArrayList(origTS.labels);
-      timeReadings = new ArrayList(origTS.timeReadings);
-      tsArray = new ArrayList(origTS.tsArray);
+      labels = new ArrayList<>(origTS.labels);
+      timeReadings = new ArrayList<>(origTS.timeReadings);
+      tsArray = new ArrayList<>(origTS.tsArray);
    }
 
 
@@ -153,7 +157,7 @@ public class TimeSeries
                                        "information, it is empty!");
             else if (!isFirstColTime)
                labels.add(0, "Time");
-            else if (isFirstColTime && !((String)labels.get(0)).equalsIgnoreCase("Time"))
+            else if (!labels.get(0).equalsIgnoreCase("Time"))
                throw new InternalError("ERROR:  The time column (1st col) in a time series must be labeled as 'Time', '" +
                                        labels.get(0) + "' was found instead");
          }
@@ -169,7 +173,7 @@ public class TimeSeries
                while (st.hasMoreTokens())
                {
                   st.nextToken();
-                  labels.add(new String("c" + currentCol++));                                // TODO add measurement with no time
+                  labels.add("c" + currentCol++);                                // TODO add measurement with no time
                }
             }
             else
@@ -178,7 +182,7 @@ public class TimeSeries
                labels.add("Time");
                for (int c=0; c<colToInclude.length; c++)
                   if (colToInclude[c] > 0)
-                     labels.add(new String("c" + c));                      // TODO change to letterNum
+                     labels.add("c" + c);                      // TODO change to letterNum
             }  // end if
 
             // Close and re-open the file.
@@ -205,7 +209,7 @@ public class TimeSeries
     //                                      "found: " + st.countTokens());
 
                // Read all currentLineValues in the current line
-               final ArrayList currentLineValues = new ArrayList();
+               final ArrayList<Double> currentLineValues = new ArrayList<>();
                int currentCol = 0;
                while (st.hasMoreTokens())
                {
@@ -232,9 +236,9 @@ public class TimeSeries
                // Update the private data with the current Row that has been
                //    read.
                if (isFirstColTime)
-                  timeReadings.add((Double)currentLineValues.get(0));
+                  timeReadings.add(currentLineValues.get(0));
                else
-                  timeReadings.add(new Double(timeReadings.size()));
+                  timeReadings.add((double) timeReadings.size());
                final int firstMeasurement;
                if (isFirstColTime)
                   firstMeasurement = 1;
@@ -299,13 +303,13 @@ public class TimeSeries
 
    public double getTimeAtNthPoint(int n)
    {
-      return ((Double)timeReadings.get(n)).doubleValue();
+      return timeReadings.get(n);
    }
 
 
    public String getLabel(int index)
    {
-      return (String)labels.get(index);
+      return labels.get(index);
    }
 
 
@@ -313,7 +317,7 @@ public class TimeSeries
    {
       final String[] labelArr = new String[labels.size()];
       for (int x=0; x<labels.size(); x++)
-         labelArr[x] = (String)labels.get(x);
+         labelArr[x] = labels.get(x);
       return labelArr;
    }
 
@@ -327,8 +331,7 @@ public class TimeSeries
    public void setLabels(String[] newLabels)
    {
       labels.clear();
-      for (int x=0; x<newLabels.length; x++)
-         labels.add(newLabels[x]);
+      Collections.addAll(labels, newLabels);
    }
 
 
@@ -342,7 +345,7 @@ public class TimeSeries
 
    public double getMeasurement(int pointIndex, int valueIndex)
    {
-      return ((TimeSeriesPoint)tsArray.get(pointIndex)).get(valueIndex);
+      return tsArray.get(pointIndex).get(valueIndex);
    }
 
 
@@ -353,19 +356,19 @@ public class TimeSeries
          throw new InternalError("ERROR:  the label '" + valueLabel + "' was " +
                                  "not one of:  " + labels);
 
-      return ((TimeSeriesPoint)tsArray.get(pointIndex)).get(valueIndex-1);
+      return tsArray.get(pointIndex).get(valueIndex-1);
    }
 
 
    public double[] getMeasurementVector(int pointIndex)
    {
-      return ((TimeSeriesPoint)tsArray.get(pointIndex)).toArray();
+      return tsArray.get(pointIndex).toArray();
    }
 
 
    public void setMeasurement(int pointIndex, int valueIndex, double newValue)
    {
-      ((TimeSeriesPoint)tsArray.get(pointIndex)).set(valueIndex, newValue);
+      tsArray.get(pointIndex).set(valueIndex, newValue);
    }
 
 
@@ -377,12 +380,12 @@ public class TimeSeries
                                  "expected:  " + labels.size() + ", " +
                                  "found: " + values.size());
 
-      if (time >= ((Double)timeReadings.get(0)).doubleValue())
+      if (time >= timeReadings.get(0))
          throw new InternalError("ERROR:  The point being inserted into the " +
                                  "beginning of the time series does not have " +
                                  "the correct time sequence. ");
 
-      timeReadings.add(0, new Double(time));
+      timeReadings.add(0, time);
       tsArray.add(0, values);
    }  // end addFirst(..)
 
@@ -395,12 +398,12 @@ public class TimeSeries
                                  "expected:  " + labels.size() + ", " +
                                  "found: " + values.size());
 
-      if ( (this.size()>0) && (time<=((Double)timeReadings.get(timeReadings.size()-1)).doubleValue()) )
+      if ( (this.size()>0) && (time<= timeReadings.get(timeReadings.size() - 1)) )
          throw new InternalError("ERROR:  The point being inserted at the " +
                                  "end of the time series does not have " +
                                  "the correct time sequence. ");
 
-      timeReadings.add(new Double(time));
+      timeReadings.add(time);
       tsArray.add(values);
    }  // end addLast(..)
 
@@ -473,7 +476,7 @@ public class TimeSeries
 
    public String toString()
    {
-      final StringBuffer outStr = new StringBuffer();
+      final StringBuilder outStr = new StringBuilder();
 /*
       // Write labels
       for (int x=0; x<labels.size(); x++)
@@ -492,7 +495,7 @@ public class TimeSeries
 //         outStr.append(timeReadings.get(r).toString());
 
          // The rest of the value on the row.
-         final TimeSeriesPoint values = (TimeSeriesPoint)tsArray.get(r);
+         final TimeSeriesPoint values = tsArray.get(r);
          for (int c=0; c<values.size(); c++)
             outStr.append(values.get(c));
 
@@ -547,17 +550,18 @@ public class TimeSeries
 
    private static double extractFirstNumber(String str)
    {
-      StringBuffer numStr = new StringBuffer();
+      StringBuilder numStr = new StringBuilder();
 
       // Keep adding characters onto numStr until a non-number character
       //    is reached.
       for (int x = 0; x<str.length(); x++)
       {
          if ((Character.isDigit(str.charAt(x))) || (str.charAt(x) == '.') || (str.charAt(x) == '-') ||
-                  (Character.toUpperCase(str.charAt(x)) == 'E'))
+                  (Character.toUpperCase(str.charAt(x)) == 'E')) {
             numStr.append(str.charAt(x));
-         else
+         } else {
             Double.parseDouble(numStr.toString());
+         }
       }  // end for loop
 
       return -1;
@@ -585,14 +589,14 @@ public class TimeSeries
 
          final int NUM_OF_VALUES_TO_CMP = 100;   // $ of time values to look examine
 
-         final Vector possibleTimeValues = new Vector(NUM_OF_VALUES_TO_CMP);  // 'stores numOfValuesToCompare' values
+         final Vector<Double> possibleTimeValues = new Vector<>(NUM_OF_VALUES_TO_CMP);  // 'stores numOfValuesToCompare' values
 
          // Read the first 'numOfValuesToCompare' possible time values from the file
          //    and store them in 'possibleTimeValues'.
          String line = in.readLine();
 
          while ((possibleTimeValues.size()<NUM_OF_VALUES_TO_CMP) && ((line=in.readLine())!=null))
-            possibleTimeValues.add(new Double(extractFirstNumber(line)));
+            possibleTimeValues.add(extractFirstNumber(line));
 
          if (possibleTimeValues.size()<=1)
             return DEFAULT_VALUE;
@@ -604,15 +608,12 @@ public class TimeSeries
             return DEFAULT_VALUE;   // special case needed for very flat data
 
 
-         final double expectedDiff = ((Double)possibleTimeValues.get(1)).doubleValue() -
-                                     ((Double)possibleTimeValues.get(0)).doubleValue();
+         final double expectedDiff = possibleTimeValues.get(1) - possibleTimeValues.get(0);
          final double flexibility = expectedDiff * EQUALITY_FLEXIBILITY_PCT;
          for (int x=1; x<possibleTimeValues.size(); x++)
          {
-            if (Math.abs( ((Double)possibleTimeValues.get(x)).doubleValue() -
-                          ((Double)possibleTimeValues.get(x-1)).doubleValue() - expectedDiff)
-                > Math.abs(flexibility))
-            {
+            if (Math.abs(possibleTimeValues.get(x) - possibleTimeValues.get(x - 1) - expectedDiff)
+                    > Math.abs(flexibility)) {
                return false;
             }
          }   // end for loop
@@ -626,7 +627,7 @@ public class TimeSeries
    }  // end determineIsFirstColTime(.)
 
 
-   protected void setMaxCapacity(int capacity)
+   void setMaxCapacity(int capacity)
    {
       this.timeReadings.ensureCapacity(capacity);
       this.tsArray.ensureCapacity(capacity);

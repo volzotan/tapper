@@ -13,7 +13,7 @@ import static com.chan.fastdtw.util.DistanceFunctionFactory.EUCLIDEAN_DIST_FN;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class GestureAnalyzer extends StreamElement<GestureType> {
+public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]> {
 
     private TimeSeries[] templates = new TimeSeries[]{
             new TimeSeries("assets/templates/nothing.csv", false),      //0
@@ -36,33 +36,36 @@ public class GestureAnalyzer extends StreamElement<GestureType> {
             //TODO: default cases, more gestures
     };
 
-    public GestureAnalyzer(Consumer<GestureType> gestureConsumer) {
-        super(gestureConsumer);
-
+    public GestureAnalyzer(StreamReceiver<GestureType> gestureStreamReceiver) {
+        super(gestureStreamReceiver);
         //filter raw templates
         filterRawTemplates();
+    }
+    @Override
+    public void process(Integer[][] input) {
+        super.emitElement(analyze(input));
     }
 
     private void filterRawTemplates() {
         //filter all time series
         for (int i = 0; i < templates.length; i++) {
             //collect filtered values from current time series in these objects
-            ArrayList<Double> filteredXY = new ArrayList<>(templates[i].size());
-            ArrayList<Double> filteredZ = new ArrayList<>(templates[i].size());
+            ArrayList<Integer[]> filtered = new ArrayList<>(templates[i].size());
             //set up a new filtering pipeline for each time series (to have clean pipeline state)
-            FilteringPipeline filter = new FilteringPipeline(filteredXY::add, filteredZ::add);
+            FilteringPipeline filter = new FilteringPipeline(filtered::add);
             //filter each value with filtering pipeline
             for (int j = 0; j < templates[i].size(); j++) {
                 double[] vector = templates[i].getMeasurementVector(j);
-                filter.filter(vector[0], vector[1], vector[2]);
+                filter.process(new Double[]{vector[0], vector[1], vector[2]});
             }
             //replace time series with filtered time series
-            Double[] d = new Double[0];
-            templates[i] = new TimeSeries(filteredXY.toArray(d), filteredZ.toArray(d));
+            Integer[][] d = new Integer[0][];
+            templates[i] = new TimeSeries(filtered.toArray(d));
         }
     }
 
-    public void analyze(Double[]... windowArrays) {
+
+    private GestureType analyze(Integer[][] windowArrays) {
 
         TimeSeries timeSeries = new TimeSeries(windowArrays);
 
@@ -76,45 +79,39 @@ public class GestureAnalyzer extends StreamElement<GestureType> {
                 minWarpDist = dist;
                 minDistIndex = i;
             }
-            //System.out.println("Warp distance " + i + " = " + dist);
+            System.out.println("Warp distance " + i + " = " + dist);
         }
 
         switch (minDistIndex) {
             case 0:
-                super.passProcessedElement(GestureType.NOTHING);
-                break;
+                return GestureType.NOTHING;
             case 1:
             case 2:
             case 3:
             case 4:
-                super.passProcessedElement(GestureType.DOUBLETAP);
                 System.out.println("Doubletap");
-                break;
+                return GestureType.DOUBLETAP;
             case 5:
             case 6:
             case 7:
             case 8:
             case 9:
-                super.passProcessedElement(GestureType.PICKUPDROP);
                 System.out.println("Pickupdrop");
-                break;
+                return GestureType.PICKUPDROP;
             case 10:
             case 11:
             case 12:
             case 13:
-                super.passProcessedElement(GestureType.SIDETAP);
                 System.out.println("Sidetap");
-                break;
+                return GestureType.SIDETAP;
             case 14:
             case 15:
             case 16:
-                super.passProcessedElement(GestureType.SHAKE);
                 System.out.println("Shake");
-                break;
+                return GestureType.SHAKE;
             default:
-                super.passProcessedElement(GestureType.NOTHING);
-                System.out.println("movearound");
-                break;
+                System.out.println("default (this is a fault, fixme)");
+                return GestureType.NOTHING;
         }
     }
 }

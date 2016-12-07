@@ -4,10 +4,23 @@ package de.volzo.tapper.GestureDetector.DTW;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class Quantizer extends StreamElement<Double> {
+public class Quantizer extends StreamPassthrough<Integer, Double> {
 
-    Quantizer(Consumer<Double> quantileConsumer) {
-        super(quantileConsumer);
+    private final Double[] quantizationSteps;
+
+    /**
+     *
+     * @param quantizationSteps the steps for the quantiles
+     * @param quantileStreamReceiver receiver of quantized values
+     */
+    Quantizer(Double[] quantizationSteps, StreamReceiver<Integer> quantileStreamReceiver) {
+        super(quantileStreamReceiver);
+        this.quantizationSteps = quantizationSteps;
+    }
+
+    @Override
+    public void process(Double input) {
+        super.emitElement(quantize(input));
     }
 
     /**
@@ -15,10 +28,9 @@ public class Quantizer extends StreamElement<Double> {
      * according to thresholds in quantizationSteps (lower or equal quantizationStep[i] yields i)
      *
      * @param input the unquantized input
-     * @param quantizationSteps the steps for the quantiles
      * @return the numerical value of the quantization step (i.e. 0 for nothing, 1 for peak etc.)
      */
-    public void quantize(Double input, double[] quantizationSteps) {
+    private int quantize(Double input) {
         // quantization
         double sign = input > 0 ? 1 : -1;
         double i = 0;
@@ -26,6 +38,6 @@ public class Quantizer extends StreamElement<Double> {
             i++;
         }
 
-        super.passProcessedElement(i * sign);
+        return (int) (i * sign);
     }
 }

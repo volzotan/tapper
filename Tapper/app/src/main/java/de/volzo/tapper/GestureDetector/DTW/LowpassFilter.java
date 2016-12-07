@@ -4,10 +4,19 @@ package de.volzo.tapper.GestureDetector.DTW;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class LowpassFilter extends StreamElement<Double> {
+public class LowpassFilter extends StreamPassthrough<Double, Double> {
 
-    LowpassFilter(Consumer<Double> lowpassConsumer) {
-        super(lowpassConsumer);
+    private Double previousInput = 0d;
+    private final Double lowpassAlpha;
+
+    LowpassFilter(Double lowpassAlpha, StreamReceiver<Double> lowpassStreamReceiver) {
+        super(lowpassStreamReceiver);
+        this.lowpassAlpha = lowpassAlpha;
+    }
+
+    @Override
+    public void process(Double input) {
+        super.emitElement(lowpass(input));
     }
 
     /**
@@ -16,16 +25,14 @@ public class LowpassFilter extends StreamElement<Double> {
      * See: http://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization
      *
      * @param input the unsmoothed input
-     * @param previousInputs the previous smoothed output
-     * @param lowpassAlpha the alpha value for the lowpass filter
      * @return the smoothed input
      */
-    public void lowpass(Double input, Double[] previousInputs, double lowpassAlpha) {
-        if (previousInputs != null && previousInputs.length > 0) {
-            input = previousInputs[previousInputs.length-1];
-            input += lowpassAlpha * (input - previousInputs[previousInputs.length-1]);
-        }
+    public Double lowpass(Double input) {
 
-        super.passProcessedElement(input);
+        input += previousInput + lowpassAlpha * (input - previousInput);
+
+        previousInput = input;
+
+        return input;
     }
 }

@@ -15,14 +15,14 @@ import static android.content.ContentValues.TAG;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class Accellerometer extends StreamElement<double[]> implements SensorEventListener {
+public class Accellerometer extends StreamEmitter<Double[]> implements SensorEventListener {
 
     /** the update frequency of the accelerometer in seconds */
     private static final double UPDATE_FREQUENCY = 0.01;
 
-    public Accellerometer(Context context, Consumer<double[]> accellerometerConsumer) {
+    public Accellerometer(Context context, StreamReceiver<Double[]> accelerometerStreamReceiver) {
 
-        super(accellerometerConsumer);
+        super(accelerometerStreamReceiver);
 
         // list all accelerometers and use the last one
         SensorManager mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -43,7 +43,7 @@ public class Accellerometer extends StreamElement<double[]> implements SensorEve
     @Override
     public void onSensorChanged(SensorEvent event) {
         float[] data = event.values;
-        super.passProcessedElement(new double[]{data[0], data[1], data[2]});
+        super.emitElement(new Double[]{Double.valueOf(data[0]), Double.valueOf(data[1]), Double.valueOf(data[2])});
     }
 
     @Override

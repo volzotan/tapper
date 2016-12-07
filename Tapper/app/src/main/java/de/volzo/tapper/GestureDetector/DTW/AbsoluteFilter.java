@@ -4,12 +4,17 @@ package de.volzo.tapper.GestureDetector.DTW;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class AbsoluteFilter extends StreamElement<Double> {
-    AbsoluteFilter(Consumer<Double> absoluteConsumer) {
-        super(absoluteConsumer);
+public class AbsoluteFilter extends StreamPassthrough<Double, Double> {
+    AbsoluteFilter(StreamReceiver<Double> absoluteStreamReceiver) {
+        super(absoluteStreamReceiver);
     }
 
-    public void absolute(double input) {
-        super.passProcessedElement(Math.abs(input));
+    @Override
+    public void process(Double input) {
+        super.emitElement(absolute(input));
+    }
+
+    private Double absolute(Double input) {
+        return Math.abs(input);
     }
 }
