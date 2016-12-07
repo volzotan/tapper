@@ -5,6 +5,6 @@ package de.volzo.tapper.GestureDetector.DTW;
  */
 
 @FunctionalInterface
-public interface Consumer<T> {
-    void process(T object);
+public interface StreamReceiver<T> {
+    void process(T input);
 }

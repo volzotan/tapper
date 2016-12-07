@@ -2,41 +2,65 @@ package de.volzo.tapper.GestureDetector.DTW;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
+import java.lang.reflect.Array;
+
 /**
  * Created by tassilokarge on 04.12.16.
  */
 
-public class Windower extends StreamElement<Double[]> {
+public class Windower<T> extends StreamPassthrough<T[], T> {
+
     /** window size in ms */
-    public static final int WINDOW_SIZE_MS = 2000;
+    private final int windowSizeMs;
     /** the shift of the sliding window in ms */
-    public static final int WINDOW_SHIFT_MS = 1000;
+    private final int windowShiftMs;
 
     /** the number of samples per second */
-    public static final int SAMPLES_PER_SEC = 100;
+    private final int samplesPerSec;
 
     /** the window size in samples */
-    private static final int WINDOW_SIZE_SAMPLES = (WINDOW_SIZE_MS * SAMPLES_PER_SEC) / 1000;
+    private final int windowSizeSamples;
     /** the shift size in samples */
-    private static final int WINDOW_SHIFT_SAMPLES = (WINDOW_SHIFT_MS * SAMPLES_PER_SEC) / 1000;
+    private final int windowShiftSamples;
 
-    /** a fifo quque that holds the samples within WINDOW_SIZE_MS ms */
-    private CircularFifoQueue<Double> data = new CircularFifoQueue<>(WINDOW_SIZE_SAMPLES);
+    /** a fifo quque that holds the samples within windowSizeMs ms */
+    private CircularFifoQueue<T> data;
 
     /** samples until next update countdown */
-    private int updateCountdown = WINDOW_SHIFT_SAMPLES;
+    private int updateCountdown;
 
-    public Windower(Consumer<Double[]> windowConsumer) {
-        super(windowConsumer);
+    public Windower(int windowSizeMs, int windowShiftMs, int samplesPerSec, StreamReceiver<T[]> windowStreamReceiver) {
+        super(windowStreamReceiver);
+        this.windowSizeMs = windowSizeMs;
+        this.windowShiftMs = windowShiftMs;
+        this.samplesPerSec = samplesPerSec;
+        this.windowSizeSamples = (windowSizeMs * samplesPerSec) / 1000;
+        this.windowShiftSamples = (windowShiftMs * samplesPerSec) / 1000;
+        data = new CircularFifoQueue<>(windowSizeSamples);
+        resetCountdown();
     }
 
-    public void addDataPoint(Double dataPoint) {
+    @Override
+    public void process(T input) {
+        T[] window = addDataPoint(input);
+        if (window != null) {
+            super.emitElement(window);
+        }
+    }
+
+    private T[] addDataPoint(T dataPoint) {
         data.add(dataPoint);
         updateCountdown--;
-        final Double[] d = new Double[0];
+        T[] window = null;
         if (updateCountdown == 0) {
-            super.passProcessedElement(data.toArray(d));
-            updateCountdown = WINDOW_SHIFT_SAMPLES;
+            T[] d =  (T[]) Array.newInstance(dataPoint.getClass(), 0);
+            window = data.toArray(d);
+            resetCountdown();
         }
+        return window;
+    }
+
+    private void resetCountdown() {
+        updateCountdown = windowShiftSamples;
     }
 }

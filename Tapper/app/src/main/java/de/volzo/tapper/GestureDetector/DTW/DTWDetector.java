@@ -16,15 +16,9 @@ import de.volzo.tapper.R;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class DTWDetector {
+public class DTWDetector implements StreamReceiver<GestureType> {
 
     private Accellerometer accel;
-
-    //processed windows
-    //private Double[] windowX;
-    //private Double[] windowY;
-    private Double[] windowXY;
-    private Double[] windowZ;
 
     //raw windows
     private Double[] rawWindowX;
@@ -35,13 +29,18 @@ public class DTWDetector {
     private Context context;
 
     //view
-    Displayer view;
+    private Displayer view;
 
     //to execute pipeline off main thread
-    ExecutorService pipelineExecutor = Executors.newSingleThreadExecutor();
+    private ExecutorService pipelineExecutor = Executors.newSingleThreadExecutor();
 
     //to do execution of analysis off main thread
     private ExecutorService analysisExecutor = Executors.newSingleThreadExecutor();
+
+    //windowing parameters
+    private final int windowSizeMs = 2000;
+    private final int windowShiftMs = 1000;
+    private final int samplesPerSec = 100;
 
     public DTWDetector(Context context) {
         this.context = context;
@@ -66,61 +65,63 @@ public class DTWDetector {
 
         //GESTURE ANALYZER
 
-        GestureAnalyzer gestureAnalyzer = new GestureAnalyzer(this::foundGesture);
+        GestureAnalyzer gestureAnalyzer = new GestureAnalyzer(this);
 
 
         //WINDOWER
 
-        //Windower windowerX = new Windower((Double[] values) -> this.windowX = values);
-        //Windower windowerY = new Windower((Double[] values) -> this.windowY = values);
-        Windower windowerXY = new Windower((Double[] output) -> {
-            this.windowXY = output;
-        });
-        Windower windowerZ = new Windower((Double[] output) -> {this.windowZ = output;
-            //redraw view
-            //view.x = windowXY;
-            //view.y = windowXY;
-            //view.z = windowZ;
-            //view.invalidate();
-            //analyze gesture
-            //gestureAnalyzer.analyze(windowX, windowY, windowZ);
-            analysisExecutor.execute(() -> gestureAnalyzer.analyze(windowXY, windowZ));
-        });
+        Windower<Integer[]> windower = new Windower<Integer[]>(windowSizeMs, windowShiftMs, samplesPerSec,
+                (output) -> {
+                    analysisExecutor.execute(() -> gestureAnalyzer.process(output));
+                    view.x = new Double[output.length];
+                    view.y = new Double[output.length];
+                    view.z = new Double[output.length];
+                    for (int i = 0; i < output.length; i++) {
+                        view.x[i] = output[i][0].doubleValue();
+                        view.y[i] = output[i][0].doubleValue();
+                        view.z[i] = output[i][1].doubleValue();
+                    }
+                    ((Activity)context).runOnUiThread(view::invalidate);
+                }
+        );
 
 
         //FILTERING
 
-        FilteringPipeline filter = new FilteringPipeline(windowerXY::addDataPoint, windowerZ::addDataPoint);
+        FilteringPipeline filter = new FilteringPipeline(windower);
 
 
         //RAW VALUE WINDOWING
 
-        Windower rawWindowerX = new Windower((output) -> rawWindowX = output);
-        Windower rawWindowerY = new Windower((output) -> rawWindowY = output);
-        Windower rawWindowerZ = new Windower((output) -> {rawWindowZ = output;
+        Windower<Double> rawWindowerX = new Windower<>(windowSizeMs, windowShiftMs, samplesPerSec, (output) -> rawWindowX = output);
+        Windower<Double> rawWindowerY = new Windower<>(windowSizeMs, windowShiftMs, samplesPerSec, (output) -> rawWindowY = output);
+        Windower<Double> rawWindowerZ = new Windower<>(windowSizeMs, windowShiftMs, samplesPerSec, (output) -> {rawWindowZ = output;
             //redraw view
-            view.x = rawWindowX;
-            view.y = rawWindowY;
-            view.z = rawWindowZ;
-            view.invalidate();
+            //view.x = rawWindowX;
+            //view.y = rawWindowY;
+            //view.z = rawWindowZ;
+            //view.invalidate();
         });
 
 
         //ACCELLEROMETER DATA RECEIVING
 
-        this.accel = new Accellerometer(context, (double[] output) -> {
+        this.accel = new Accellerometer(context, (Double[] output) -> {
             //raw data to window for recording and displaying purposes
-            rawWindowerX.addDataPoint(output[0]);
-            rawWindowerY.addDataPoint(output[1]);
-            rawWindowerZ.addDataPoint(output[2]);
-            pipelineExecutor.execute(() -> {
-                //filter incoming values
-                filter.filter(output[0],output[1],output[2]);
-            });
+            rawWindowerX.process(output[0]);
+            rawWindowerY.process(output[1]);
+            rawWindowerZ.process(output[2]);
+            //filter incoming values
+            pipelineExecutor.execute(() -> filter.process(output));
         });
     }
 
-    void foundGesture(GestureType type) {
+    @Override
+    public void process(GestureType input) {
+        foundGesture(input);
+    }
+
+    private void foundGesture(GestureType type) {
 
         //output everything but the "NOTHING" gesture
         if (type == GestureType.NOTHING) { return; }
