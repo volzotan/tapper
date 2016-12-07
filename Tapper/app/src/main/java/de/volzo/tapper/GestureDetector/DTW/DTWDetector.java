@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import de.volzo.tapper.GestureDetector.Displayer;
 import de.volzo.tapper.GestureDetector.GestureType;
 import de.volzo.tapper.R;
@@ -34,6 +37,11 @@ public class DTWDetector {
     //view
     Displayer view;
 
+    //to execute pipeline off main thread
+    ExecutorService pipelineExecutor = Executors.newSingleThreadExecutor();
+
+    //to do execution of analysis off main thread
+    private ExecutorService analysisExecutor = Executors.newSingleThreadExecutor();
 
     public DTWDetector(Context context) {
         this.context = context;
@@ -76,7 +84,7 @@ public class DTWDetector {
             //view.invalidate();
             //analyze gesture
             //gestureAnalyzer.analyze(windowX, windowY, windowZ);
-            gestureAnalyzer.analyze(windowXY, windowZ);
+            analysisExecutor.execute(() -> gestureAnalyzer.analyze(windowXY, windowZ));
         });
 
 
@@ -105,8 +113,10 @@ public class DTWDetector {
             rawWindowerX.addDataPoint(output[0]);
             rawWindowerY.addDataPoint(output[1]);
             rawWindowerZ.addDataPoint(output[2]);
-            //filter incoming values
-            filter.filter(output[0],output[1],output[2]);
+            pipelineExecutor.execute(() -> {
+                //filter incoming values
+                filter.filter(output[0],output[1],output[2]);
+            });
         });
     }
 
