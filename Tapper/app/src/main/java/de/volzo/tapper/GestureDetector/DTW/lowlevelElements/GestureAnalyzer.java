@@ -1,10 +1,13 @@
-package de.volzo.tapper.GestureDetector.DTW;
+package de.volzo.tapper.GestureDetector.DTW.lowlevelElements;
 
 import com.chan.fastdtw.dtw.FastDTW;
 import com.chan.fastdtw.timeseries.TimeSeries;
 
 import java.util.ArrayList;
 
+import de.volzo.tapper.GestureDetector.DTW.FilteringPipeline;
+import de.volzo.tapper.GestureDetector.DTW.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.StreamReceiver;
 import de.volzo.tapper.GestureDetector.GestureType;
 
 import static com.chan.fastdtw.util.DistanceFunctionFactory.EUCLIDEAN_DIST_FN;

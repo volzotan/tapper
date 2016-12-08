@@ -1,4 +1,7 @@
-package de.volzo.tapper.GestureDetector.DTW;
+package de.volzo.tapper.GestureDetector.DTW.lowlevelElements;
+
+import de.volzo.tapper.GestureDetector.DTW.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.StreamReceiver;
 
 /**
  * Created by tassilokarge on 05.12.16.

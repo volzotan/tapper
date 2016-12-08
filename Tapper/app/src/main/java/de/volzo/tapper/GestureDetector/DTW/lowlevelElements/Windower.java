@@ -1,8 +1,11 @@
-package de.volzo.tapper.GestureDetector.DTW;
+package de.volzo.tapper.GestureDetector.DTW.lowlevelElements;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import java.lang.reflect.Array;
+
+import de.volzo.tapper.GestureDetector.DTW.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.StreamReceiver;
 
 /**
  * Created by tassilokarge on 04.12.16.

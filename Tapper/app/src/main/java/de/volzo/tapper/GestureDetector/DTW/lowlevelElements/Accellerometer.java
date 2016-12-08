@@ -1,4 +1,4 @@
-package de.volzo.tapper.GestureDetector.DTW;
+package de.volzo.tapper.GestureDetector.DTW.lowlevelElements;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -8,6 +8,9 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.util.List;
+
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamEmitter;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 
 import static android.content.ContentValues.TAG;
 
