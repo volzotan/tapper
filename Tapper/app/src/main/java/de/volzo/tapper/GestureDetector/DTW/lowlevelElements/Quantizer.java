@@ -1,7 +1,7 @@
 package de.volzo.tapper.GestureDetector.DTW.lowlevelElements;
 
-import de.volzo.tapper.GestureDetector.DTW.StreamPassthrough;
-import de.volzo.tapper.GestureDetector.DTW.StreamReceiver;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 
 /**
  * Created by tassilokarge on 05.12.16.
@@ -16,7 +16,7 @@ public class Quantizer extends StreamPassthrough<Integer, Double> {
      * @param quantizationSteps the steps for the quantiles
      * @param quantileStreamReceiver receiver of quantized values
      */
-    Quantizer(Double[] quantizationSteps, StreamReceiver<Integer> quantileStreamReceiver) {
+    public Quantizer(Double[] quantizationSteps, StreamReceiver<Integer> quantileStreamReceiver) {
         super(quantileStreamReceiver);
         this.quantizationSteps = quantizationSteps;
     }

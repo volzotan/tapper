@@ -8,6 +8,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.volzo.tapper.GestureDetector.DTW.lowlevelElements.Accellerometer;
+import de.volzo.tapper.GestureDetector.DTW.lowlevelElements.GestureAnalyzer;
+import de.volzo.tapper.GestureDetector.DTW.lowlevelElements.GestureHierarchyFilter;
+import de.volzo.tapper.GestureDetector.DTW.lowlevelElements.Windower;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 import de.volzo.tapper.GestureDetector.Displayer;
 import de.volzo.tapper.GestureDetector.GestureType;
 import de.volzo.tapper.R;

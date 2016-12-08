@@ -5,7 +5,7 @@ package de.volzo.tapper.GestureDetector.DTW.streamSystem;
  */
 
 public abstract class StreamPassthrough<T,U> extends StreamEmitter<T> implements StreamReceiver<U> {
-    StreamPassthrough(StreamReceiver<T> receiver) {
+    public StreamPassthrough(StreamReceiver<T> receiver) {
         super(receiver);
     }
 }

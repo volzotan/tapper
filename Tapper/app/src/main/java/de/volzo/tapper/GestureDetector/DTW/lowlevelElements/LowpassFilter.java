@@ -1,7 +1,7 @@
 package de.volzo.tapper.GestureDetector.DTW.lowlevelElements;
 
-import de.volzo.tapper.GestureDetector.DTW.StreamPassthrough;
-import de.volzo.tapper.GestureDetector.DTW.StreamReceiver;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 
 /**
  * Created by tassilokarge on 05.12.16.
@@ -12,7 +12,7 @@ public class LowpassFilter extends StreamPassthrough<Double, Double> {
     private Double previousInput = 0d;
     private final Double lowpassAlpha;
 
-    LowpassFilter(Double lowpassAlpha, StreamReceiver<Double> lowpassStreamReceiver) {
+    public LowpassFilter(Double lowpassAlpha, StreamReceiver<Double> lowpassStreamReceiver) {
         super(lowpassStreamReceiver);
         this.lowpassAlpha = lowpassAlpha;
     }

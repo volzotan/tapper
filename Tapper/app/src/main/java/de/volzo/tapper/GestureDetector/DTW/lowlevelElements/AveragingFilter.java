@@ -2,8 +2,8 @@ package de.volzo.tapper.GestureDetector.DTW.lowlevelElements;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
-import de.volzo.tapper.GestureDetector.DTW.StreamPassthrough;
-import de.volzo.tapper.GestureDetector.DTW.StreamReceiver;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 
 /**
  * Created by tassilokarge on 05.12.16.
@@ -21,7 +21,7 @@ public class AveragingFilter extends StreamPassthrough<Double, Double> {
      * @param averagingDivider divider for the averaged values
      * @param averageStreamReceiver the receiver of the processed values
      */
-    AveragingFilter(double[] averagingKernel, double averagingDivider, StreamReceiver<Double> averageStreamReceiver) {
+    public AveragingFilter(double[] averagingKernel, double averagingDivider, StreamReceiver<Double> averageStreamReceiver) {
         super(averageStreamReceiver);
         this.averagingKernel = averagingKernel;
         this.averagingDivider = averagingDivider;

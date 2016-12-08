@@ -1,5 +1,11 @@
 package de.volzo.tapper.GestureDetector.DTW;
 
+import de.volzo.tapper.GestureDetector.DTW.lowlevelElements.AbsoluteFilter;
+import de.volzo.tapper.GestureDetector.DTW.lowlevelElements.AveragingFilter;
+import de.volzo.tapper.GestureDetector.DTW.lowlevelElements.Quantizer;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
+
 /**
  * Created by tassilokarge on 06.12.16.
  */

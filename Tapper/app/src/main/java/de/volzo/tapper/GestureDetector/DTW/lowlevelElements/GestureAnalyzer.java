@@ -6,8 +6,8 @@ import com.chan.fastdtw.timeseries.TimeSeries;
 import java.util.ArrayList;
 
 import de.volzo.tapper.GestureDetector.DTW.FilteringPipeline;
-import de.volzo.tapper.GestureDetector.DTW.StreamPassthrough;
-import de.volzo.tapper.GestureDetector.DTW.StreamReceiver;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 import de.volzo.tapper.GestureDetector.GestureType;
 
 import static com.chan.fastdtw.util.DistanceFunctionFactory.EUCLIDEAN_DIST_FN;
@@ -82,7 +82,6 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
                 minWarpDist = dist;
                 minDistIndex = i;
             }
-            System.out.println("Warp distance " + i + " = " + dist);
         }
 
         switch (minDistIndex) {

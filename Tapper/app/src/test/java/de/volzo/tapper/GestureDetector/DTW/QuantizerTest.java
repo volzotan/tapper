@@ -5,6 +5,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import de.volzo.tapper.GestureDetector.DTW.lowlevelElements.Quantizer;
+
 /**
  * Created by tassilokarge on 07.12.16.
  */

@@ -8,11 +8,11 @@ public abstract class StreamEmitter<T> {
 
     private StreamReceiver<T> streamReceiver;
 
-    StreamEmitter(StreamReceiver<T> streamReceiver) {
+    public StreamEmitter(StreamReceiver<T> streamReceiver) {
         this.streamReceiver = streamReceiver;
     }
 
-    void emitElement(T element) {
+    public void emitElement(T element) {
         streamReceiver.process(element);
     }
 }

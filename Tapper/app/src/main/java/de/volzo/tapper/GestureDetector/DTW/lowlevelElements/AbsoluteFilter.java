@@ -1,14 +1,14 @@
 package de.volzo.tapper.GestureDetector.DTW.lowlevelElements;
 
-import de.volzo.tapper.GestureDetector.DTW.StreamPassthrough;
-import de.volzo.tapper.GestureDetector.DTW.StreamReceiver;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 
 /**
  * Created by tassilokarge on 05.12.16.
  */
 
 public class AbsoluteFilter extends StreamPassthrough<Double, Double> {
-    AbsoluteFilter(StreamReceiver<Double> absoluteStreamReceiver) {
+    public AbsoluteFilter(StreamReceiver<Double> absoluteStreamReceiver) {
         super(absoluteStreamReceiver);
     }
 

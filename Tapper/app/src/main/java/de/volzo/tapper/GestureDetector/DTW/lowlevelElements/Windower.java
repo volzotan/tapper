@@ -4,8 +4,8 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import java.lang.reflect.Array;
 
-import de.volzo.tapper.GestureDetector.DTW.StreamPassthrough;
-import de.volzo.tapper.GestureDetector.DTW.StreamReceiver;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamPassthrough;
+import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 
 /**
  * Created by tassilokarge on 04.12.16.
