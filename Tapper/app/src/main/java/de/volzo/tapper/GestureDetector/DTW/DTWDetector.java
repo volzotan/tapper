@@ -70,7 +70,7 @@ public class DTWDetector implements StreamReceiver<GestureType> {
 
         //GESTURE ANALYZER
 
-        GestureAnalyzer gestureAnalyzer = new GestureAnalyzer(this);
+        GestureAnalyzer gestureAnalyzer = new GestureAnalyzer(new GestureHierarchyFilter(this));
 
 
         //WINDOWER

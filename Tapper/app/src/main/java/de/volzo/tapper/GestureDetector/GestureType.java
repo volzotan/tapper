@@ -7,6 +7,7 @@ public enum GestureType {
     NOTHING,
     DOUBLETAP,
     SIDETAP,
+    TAP,
     PICKUPDROP,
     SHAKE
 }
