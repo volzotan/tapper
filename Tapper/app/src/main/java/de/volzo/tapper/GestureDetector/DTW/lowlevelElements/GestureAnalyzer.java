@@ -4,6 +4,7 @@ import com.chan.fastdtw.dtw.FastDTW;
 import com.chan.fastdtw.timeseries.TimeSeries;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import de.volzo.tapper.GestureDetector.DTW.FilteringPipeline;
 import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamPassthrough;
@@ -44,6 +45,10 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
             //TODO: default cases, more gestures
     };
 
+    private int[] templatesUsed = new int[]{0,1,2,3,4,5,7,10,11,13,15,16};
+
+    private int[] templateRecognizedFrequency = new int[17];
+
     public GestureAnalyzer(StreamReceiver<GestureType> gestureStreamReceiver) {
         super(gestureStreamReceiver);
         //filter raw templates
@@ -80,13 +85,18 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
         int minDistIndex = -1;
         double minWarpDist = Double.MAX_VALUE;
 
-        for (int i = 0; i < templates.length; i++) {
+        for (int i = 0; i < templatesUsed.length; i++) {
             //search radius 5 from the DTW paper. Allows low error with timeseries of up to 1000 points
-            double dist = FastDTW.getWarpDistBetween(timeSeries, templates[i], 5, EUCLIDEAN_DIST_FN);
+            double dist = FastDTW.getWarpDistBetween(timeSeries, templates[templatesUsed[i]], 5, EUCLIDEAN_DIST_FN);
             if (dist < minWarpDist) {
                 minWarpDist = dist;
-                minDistIndex = i;
+                minDistIndex = templatesUsed[i];
             }
+        }
+
+        if (minDistIndex != 0) {
+            templateRecognizedFrequency[minDistIndex]++;
+            System.out.println(Arrays.toString(templateRecognizedFrequency));
         }
 
         switch (minDistIndex) {

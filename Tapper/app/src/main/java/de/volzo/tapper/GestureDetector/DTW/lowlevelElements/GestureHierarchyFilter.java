@@ -39,9 +39,9 @@ public class GestureHierarchyFilter extends StreamPassthrough<GestureType, Gestu
     @Override
     public void process(GestureType input) {
         GestureType filteredType = filterWithHierarchy(input);
-        System.out.println(
-                "Type: " + input.name()
-                + ", filtered: " + (filteredType == null ? "null" : filteredType.name()) + ", emitted: " + emitted);
+        //System.out.println(
+        //        "Type: " + input.name()
+        //        + ", filtered: " + (filteredType == null ? "null" : filteredType.name()) + ", emitted: " + emitted);
         if (filteredType != null) {
             emitElement(filteredType);
         }
