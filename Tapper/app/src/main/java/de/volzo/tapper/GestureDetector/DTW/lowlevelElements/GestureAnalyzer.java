@@ -33,9 +33,14 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
             new TimeSeries("assets/templates/sidetapleft.csv", false),  //11
             new TimeSeries("assets/templates/sidetapright.csv", false), //12
             new TimeSeries("assets/templates/sidetaptop.csv", false),   //13
-            new TimeSeries("assets/templates/shake1.csv", false),//14
-            new TimeSeries("assets/templates/shake2.csv", false),  //15
-            new TimeSeries("assets/templates/shake3.csv", false) //16
+            new TimeSeries("assets/templates/shake1.csv", false),       //14
+            new TimeSeries("assets/templates/shake2.csv", false),       //15
+            new TimeSeries("assets/templates/shake3.csv", false),       //16
+            new TimeSeries("assets/templates/tap1.csv", false),         //17
+            new TimeSeries("assets/templates/tap2.csv", false),         //18
+            new TimeSeries("assets/templates/tap3.csv", false),         //19
+            new TimeSeries("assets/templates/tap4.csv", false),         //20
+            new TimeSeries("assets/templates/tap5.csv", false),         //21
             //TODO: default cases, more gestures
     };
 
@@ -111,6 +116,13 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
             case 16:
                 System.out.println("Shake");
                 return GestureType.SHAKE;
+            case 17:
+            case 18:
+            case 19:
+            case 20:
+            case 21:
+                System.out.println("Tap");
+                return GestureType.TAP;
             default:
                 System.out.println("default (this is a fault, fixme)");
                 return GestureType.NOTHING;
