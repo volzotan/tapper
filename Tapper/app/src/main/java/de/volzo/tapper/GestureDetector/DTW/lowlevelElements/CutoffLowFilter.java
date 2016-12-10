@@ -7,11 +7,11 @@ import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class CutoffFilter extends StreamPassthrough<Double, Double> {
+public class CutoffLowFilter extends StreamPassthrough<Double, Double> {
 
     private final Double cutoffThreshold;
 
-    public CutoffFilter(Double cutoffThreshold, StreamReceiver<Double> cutoffStreamReceiver) {
+    public CutoffLowFilter(Double cutoffThreshold, StreamReceiver<Double> cutoffStreamReceiver) {
         super(cutoffStreamReceiver);
         this.cutoffThreshold = cutoffThreshold;
     }

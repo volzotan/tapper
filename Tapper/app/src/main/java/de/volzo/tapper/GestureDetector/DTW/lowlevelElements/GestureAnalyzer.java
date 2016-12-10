@@ -17,37 +17,36 @@ import static com.chan.fastdtw.util.DistanceFunctionFactory.EUCLIDEAN_DIST_FN;
  * Created by tassilokarge on 05.12.16.
  */
 
-public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]> {
+public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> {
 
     private TimeSeries[] templates = new TimeSeries[]{
-            new TimeSeries("assets/templates/nothing.csv", false),      //0
-            new TimeSeries("assets/templates/doubletap1.csv", false),   //1
-            new TimeSeries("assets/templates/doubletap2.csv", false),   //2
-            new TimeSeries("assets/templates/doubletap3.csv", false),   //3
-            new TimeSeries("assets/templates/doubletap4.csv", false),   //4
-            new TimeSeries("assets/templates/pickupdrop1.csv", false),  //5
-            new TimeSeries("assets/templates/pickupdrop2.csv", false),  //6
-            new TimeSeries("assets/templates/pickupdrop3.csv", false),  //7
-            new TimeSeries("assets/templates/pickupdrop4.csv", false),  //8
-            new TimeSeries("assets/templates/pickupdrop5.csv", false),  //9
-            new TimeSeries("assets/templates/sidetapbottom.csv", false),//10
-            new TimeSeries("assets/templates/sidetapleft.csv", false),  //11
-            new TimeSeries("assets/templates/sidetapright.csv", false), //12
-            new TimeSeries("assets/templates/sidetaptop.csv", false),   //13
-            new TimeSeries("assets/templates/shake1.csv", false),       //14
-            new TimeSeries("assets/templates/shake2.csv", false),       //15
-            new TimeSeries("assets/templates/shake3.csv", false),       //16
-            new TimeSeries("assets/templates/tap1.csv", false),         //17
-            new TimeSeries("assets/templates/tap2.csv", false),         //18
-            new TimeSeries("assets/templates/tap3.csv", false),         //19
-            new TimeSeries("assets/templates/tap4.csv", false),         //20
-            new TimeSeries("assets/templates/tap5.csv", false),         //21
+            new TimeSeries("assets/templates1s/nothing.csv", false, true, ','),      //0
+            new TimeSeries("assets/templates1s/doubletap1.csv", false, true, ','),   //1
+            new TimeSeries("assets/templates1s/doubletap2.csv", false, true, ','),   //2
+            new TimeSeries("assets/templates1s/doubletap3.csv", false, true, ','),   //3
+            new TimeSeries("assets/templates1s/doubletap4.csv", false, true, ','),   //4
+            new TimeSeries("assets/templates1s/pickupdrop1.csv", false, true, ','),  //5
+            new TimeSeries("assets/templates1s/pickupdrop2.csv", false, true, ','),  //6
+            new TimeSeries("assets/templates1s/pickupdrop3.csv", false, true, ','),  //7
+            new TimeSeries("assets/templates1s/pickupdrop4.csv", false, true, ','),  //8
+            new TimeSeries("assets/templates1s/pickupdrop5.csv", false, true, ','),  //9
+            new TimeSeries("assets/templates1s/sidetapbottom.csv", false, true, ','),//10
+            new TimeSeries("assets/templates1s/sidetapleft.csv", false, true, ','),  //11
+            new TimeSeries("assets/templates1s/sidetapright.csv", false, true, ','), //12
+            new TimeSeries("assets/templates1s/sidetaptop.csv", false, true, ','),   //13
+            new TimeSeries("assets/templates1s/shake2.csv", false, true, ','),       //14
+            new TimeSeries("assets/templates1s/shake3.csv", false, true, ','),       //15
+            new TimeSeries("assets/templates1s/tap2.csv", false, true, ','),         //16
+            new TimeSeries("assets/templates1s/tap4.csv", false, true, ','),         //17
+            new TimeSeries("assets/templates1s/tap5.csv", false, true, ','),         //18
             //TODO: default cases, more gestures
     };
 
-    private int[] templatesUsed = new int[]{0,1,2,3,4,5,7,10,11,13,15,16};
+    private int[] templatesUsed = new int[]{0,3,4,8,9,10,13,15};
 
-    private int[] templateRecognizedFrequency = new int[17];
+    //diagnostic properties
+    private long[] distances = new long[19];
+    private int[] templateRecognizedFrequency = new int[19];
 
     public GestureAnalyzer(StreamReceiver<GestureType> gestureStreamReceiver) {
         super(gestureStreamReceiver);
@@ -55,7 +54,11 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
         filterRawTemplates();
     }
     @Override
-    public void process(Integer[][] input) {
+    public void process(Number[][] input) {
+        GestureType analyzed = analyze(input);
+        if (analyzed != GestureType.NOTHING) {
+            System.out.println(Arrays.toString(distances));
+        }
         super.emitElement(analyze(input));
     }
 
@@ -63,7 +66,7 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
         //filter all time series
         for (int i = 0; i < templates.length; i++) {
             //collect filtered values from current time series in these objects
-            ArrayList<Integer[]> filtered = new ArrayList<>(templates[i].size());
+            ArrayList<Number[]> filtered = new ArrayList<>(templates[i].size());
             //set up a new filtering pipeline for each time series (to have clean pipeline state)
             FilteringPipeline filter = new FilteringPipeline(filtered::add);
             //filter each value with filtering pipeline
@@ -72,13 +75,13 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
                 filter.process(new Double[]{vector[0], vector[1], vector[2]});
             }
             //replace time series with filtered time series
-            Integer[][] d = new Integer[0][];
+            Number[][] d = new Number[0][];
             templates[i] = new TimeSeries(filtered.toArray(d));
         }
     }
 
 
-    private GestureType analyze(Integer[][] windowArrays) {
+    private GestureType analyze(Number[][] windowArrays) {
 
         TimeSeries timeSeries = new TimeSeries(windowArrays);
 
@@ -88,16 +91,17 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
         for (int i = 0; i < templatesUsed.length; i++) {
             //search radius 5 from the DTW paper. Allows low error with timeseries of up to 1000 points
             double dist = FastDTW.getWarpDistBetween(timeSeries, templates[templatesUsed[i]], 5, EUCLIDEAN_DIST_FN);
+            distances[templatesUsed[i]] = Math.round(dist);
             if (dist < minWarpDist) {
                 minWarpDist = dist;
                 minDistIndex = templatesUsed[i];
             }
         }
 
-        if (minDistIndex != 0) {
-            templateRecognizedFrequency[minDistIndex]++;
-            System.out.println(Arrays.toString(templateRecognizedFrequency));
-        }
+        //if (minDistIndex != 0) {
+        //    templateRecognizedFrequency[minDistIndex]++;
+        //    System.out.println(Arrays.toString(templateRecognizedFrequency));
+        //}
 
         switch (minDistIndex) {
             case 0:
@@ -123,14 +127,11 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Integer[][]>
                 return GestureType.SIDETAP;
             case 14:
             case 15:
-            case 16:
                 System.out.println("Shake");
                 return GestureType.SHAKE;
+            case 16:
             case 17:
             case 18:
-            case 19:
-            case 20:
-            case 21:
                 System.out.println("Tap");
                 return GestureType.TAP;
             default:

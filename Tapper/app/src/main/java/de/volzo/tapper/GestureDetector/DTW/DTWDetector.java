@@ -43,8 +43,8 @@ public class DTWDetector implements StreamReceiver<GestureType> {
     private ExecutorService analysisExecutor = Executors.newSingleThreadExecutor();
 
     //windowing parameters
-    private final int windowSizeMs = 2000;
-    private final int windowShiftMs = 1000;
+    private final int windowSizeMs = 1000;
+    private final int windowShiftMs = 500;
     private final int samplesPerSec = 100;
 
     public DTWDetector(Context context) {
@@ -75,7 +75,7 @@ public class DTWDetector implements StreamReceiver<GestureType> {
 
         //WINDOWER
 
-        Windower<Integer[]> windower = new Windower<Integer[]>(windowSizeMs, windowShiftMs, samplesPerSec,
+        Windower<Number[]> windower = new Windower<Number[]>(windowSizeMs, windowShiftMs, samplesPerSec,
                 (output) -> {
                     analysisExecutor.execute(() -> gestureAnalyzer.process(output));
                     view.x = new Double[output.length];
