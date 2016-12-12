@@ -42,7 +42,7 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
             //TODO: default cases, more gestures
     };
 
-    private int[] templatesUsed = new int[]{0,3,4,8,9,10,13,15};
+    private int[] templatesUsed = new int[]{0,3,4,8,9,10,13,15,16,17};
 
     //diagnostic properties
     private long[] distances = new long[19];
