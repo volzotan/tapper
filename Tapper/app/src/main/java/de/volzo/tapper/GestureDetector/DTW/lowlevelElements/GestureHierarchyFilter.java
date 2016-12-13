@@ -49,7 +49,7 @@ public class GestureHierarchyFilter extends StreamPassthrough<GestureType, Gestu
 
     private GestureType filterWithHierarchy(GestureType type) {
 
-        if (rank(type) == rank(hierarchy.get(hierarchy.size() - 1))) {
+        if (!emitted && rank(type) == rank(hierarchy.get(hierarchy.size() - 1))) {
             //immediately emit highest ranked element
             previousGestureType = type;
             emitted = true;
@@ -61,9 +61,9 @@ public class GestureHierarchyFilter extends StreamPassthrough<GestureType, Gestu
             emitted = false;
             return null;
         } else if (rank(type) == rank(previousGestureType)) {
-            if (rank(type) == 0) {
+            if (rank(type) == 0 || emitted) {
                 //emit nothing
-                //previous gesture was also null
+                //previous gesture was also null or already emitted
                 //emitted must have been false
                 return null;
             } else {
