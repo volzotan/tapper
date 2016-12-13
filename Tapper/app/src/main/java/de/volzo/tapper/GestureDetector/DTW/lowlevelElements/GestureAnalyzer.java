@@ -4,14 +4,13 @@ import com.chan.fastdtw.dtw.FastDTW;
 import com.chan.fastdtw.timeseries.TimeSeries;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import de.volzo.tapper.GestureDetector.DTW.FilteringPipeline;
 import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamPassthrough;
 import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 import de.volzo.tapper.GestureDetector.GestureType;
 
-import static com.chan.fastdtw.util.DistanceFunctionFactory.EUCLIDEAN_DIST_FN;
+import static com.chan.fastdtw.util.DistanceFunctionFactory.MANHATTAN_DIST_FN;
 
 /**
  * Created by tassilokarge on 05.12.16.
@@ -20,29 +19,29 @@ import static com.chan.fastdtw.util.DistanceFunctionFactory.EUCLIDEAN_DIST_FN;
 public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> {
 
     private TimeSeries[] templates = new TimeSeries[]{
-            new TimeSeries("assets/templates1s/nothing.csv", false, true, ','),      //0
-            new TimeSeries("assets/templates1s/doubletap1.csv", false, true, ','),   //1
-            new TimeSeries("assets/templates1s/doubletap2.csv", false, true, ','),   //2
-            new TimeSeries("assets/templates1s/doubletap3.csv", false, true, ','),   //3
-            new TimeSeries("assets/templates1s/doubletap4.csv", false, true, ','),   //4
-            new TimeSeries("assets/templates1s/pickupdrop1.csv", false, true, ','),  //5
-            new TimeSeries("assets/templates1s/pickupdrop2.csv", false, true, ','),  //6
-            new TimeSeries("assets/templates1s/pickupdrop3.csv", false, true, ','),  //7
-            new TimeSeries("assets/templates1s/pickupdrop4.csv", false, true, ','),  //8
-            new TimeSeries("assets/templates1s/pickupdrop5.csv", false, true, ','),  //9
-            new TimeSeries("assets/templates1s/sidetapbottom.csv", false, true, ','),//10
-            new TimeSeries("assets/templates1s/sidetapleft.csv", false, true, ','),  //11
-            new TimeSeries("assets/templates1s/sidetapright.csv", false, true, ','), //12
-            new TimeSeries("assets/templates1s/sidetaptop.csv", false, true, ','),   //13
-            new TimeSeries("assets/templates1s/shake2.csv", false, true, ','),       //14
-            new TimeSeries("assets/templates1s/shake3.csv", false, true, ','),       //15
-            new TimeSeries("assets/templates1s/tap2.csv", false, true, ','),         //16
-            new TimeSeries("assets/templates1s/tap4.csv", false, true, ','),         //17
-            new TimeSeries("assets/templates1s/tap5.csv", false, true, ','),         //18
+            new TimeSeries("assets/templatesShort/nothing.csv", false, true, ','),      //0
+            new TimeSeries("assets/templatesShort/doubletap1.csv", false, true, ','),   //1
+            new TimeSeries("assets/templatesShort/doubletap2.csv", false, true, ','),   //2
+            new TimeSeries("assets/templatesShort/doubletap3.csv", false, true, ','),   //3
+            new TimeSeries("assets/templatesShort/doubletap4.csv", false, true, ','),   //4
+            new TimeSeries("assets/templatesShort/pickupdrop1.csv", false, true, ','),  //5
+            new TimeSeries("assets/templatesShort/pickupdrop2.csv", false, true, ','),  //6
+            new TimeSeries("assets/templatesShort/pickupdrop3.csv", false, true, ','),  //7
+            new TimeSeries("assets/templatesShort/pickupdrop4.csv", false, true, ','),  //8
+            new TimeSeries("assets/templatesShort/pickupdrop5.csv", false, true, ','),  //9
+            new TimeSeries("assets/templatesShort/sidetapbottom.csv", false, true, ','),//10
+            new TimeSeries("assets/templatesShort/sidetapleft.csv", false, true, ','),  //11
+            new TimeSeries("assets/templatesShort/sidetapright.csv", false, true, ','), //12
+            new TimeSeries("assets/templatesShort/sidetaptop.csv", false, true, ','),   //13
+            new TimeSeries("assets/templatesShort/shake2.csv", false, true, ','),       //14
+            new TimeSeries("assets/templatesShort/shake3.csv", false, true, ','),       //15
+            new TimeSeries("assets/templatesShort/tap2.csv", false, true, ','),         //16
+            new TimeSeries("assets/templatesShort/tap4.csv", false, true, ','),         //17
+            new TimeSeries("assets/templatesShort/tap5.csv", false, true, ','),         //18
             //TODO: default cases, more gestures
     };
 
-    private int[] templatesUsed = new int[]{0,3,4,8,9,10,13,15,16,17};
+    private int[] templatesUsed = new int[]{/*0,3,4,8,9,10,13,15,16*/0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
 
     //diagnostic properties
     private long[] distances = new long[19];
@@ -56,10 +55,10 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
     @Override
     public void process(Number[][] input) {
         GestureType analyzed = analyze(input);
-        if (analyzed != GestureType.NOTHING) {
-            System.out.println(Arrays.toString(distances));
-        }
-        super.emitElement(analyze(input));
+        //if (analyzed != GestureType.NOTHING) {
+        //    System.out.println(Arrays.toString(distances));
+        //}
+        super.emitElement(analyzed);
     }
 
     private void filterRawTemplates() {
@@ -90,8 +89,8 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
 
         for (int i = 0; i < templatesUsed.length; i++) {
             //search radius 5 from the DTW paper. Allows low error with timeseries of up to 1000 points
-            double dist = FastDTW.getWarpDistBetween(timeSeries, templates[templatesUsed[i]], 5, EUCLIDEAN_DIST_FN);
-            distances[templatesUsed[i]] = Math.round(dist);
+            double dist = FastDTW.getWarpDistBetween(timeSeries, templates[templatesUsed[i]], 5, MANHATTAN_DIST_FN);
+            //distances[templatesUsed[i]] = Math.round(dist);
             if (dist < minWarpDist) {
                 minWarpDist = dist;
                 minDistIndex = templatesUsed[i];
