@@ -56,7 +56,7 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
     public void process(Number[][] input) {
         GestureType analyzed = analyze(input);
         //if (analyzed != GestureType.NOTHING) {
-        //    System.out.println(Arrays.toString(distances));
+        //    System.out.println("Dist: " + Arrays.toString(distances));
         //}
         super.emitElement(analyzed);
     }
@@ -84,10 +84,17 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
 
         TimeSeries timeSeries = new TimeSeries(windowArrays);
 
-        int minDistIndex = -1;
-        double minWarpDist = Double.MAX_VALUE;
+        double nothingDist = FastDTW.getWarpDistBetween(timeSeries, templates[0], 0, MANHATTAN_DIST_FN);
+        if (nothingDist <= 5) {
+            //for sure it´s nothing - early exit
+            return GestureType.NOTHING;
+        }
 
-        for (int i = 0; i < templatesUsed.length; i++) {
+        //distances[0] = Math.round(nothingDist);
+        int minDistIndex = 0;
+        double minWarpDist = nothingDist;
+
+        for (int i = 1; i < templatesUsed.length; i++) {
             //search radius 5 from the DTW paper. Allows low error with timeseries of up to 1000 points
             double dist = FastDTW.getWarpDistBetween(timeSeries, templates[templatesUsed[i]], 5, MANHATTAN_DIST_FN);
             //distances[templatesUsed[i]] = Math.round(dist);
@@ -95,11 +102,15 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
                 minWarpDist = dist;
                 minDistIndex = templatesUsed[i];
             }
+            if (dist <= 8) {
+                //early exit
+                break;
+            }
         }
 
         //if (minDistIndex != 0) {
         //    templateRecognizedFrequency[minDistIndex]++;
-        //    System.out.println(Arrays.toString(templateRecognizedFrequency));
+        //    System.out.println("Freq: " + Arrays.toString(templateRecognizedFrequency));
         //}
 
         switch (minDistIndex) {
