@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">My Application</string>
-    <string name="Select_trigger"> Select a trigger </string>
-    <string-array name="triggers">
-        <item> Double tap on the back of the phone </item>
-        <item> Tap on the back of the phone </item>
-        <item> Tap the phone on its side </item>
-    </string-array>
-</resources>
