@@ -1,5 +1,6 @@
 package de.volzo.tapper;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = DataCollector.class.getName();
 
+    private ActionTriggers at;
+    private NotificationManager mNotificationManager;
+
     public FSMDetector fSMDetector;
     public DataCollector dataCollector;
 
@@ -39,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         //dataCollector   = new DataCollector(this, fSMDetector);
 
         dTWDetector = new DTWDetector(this);
+
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        at = new ActionTriggers(this, mNotificationManager);
 
         registerUpdateReceiver();
     }
