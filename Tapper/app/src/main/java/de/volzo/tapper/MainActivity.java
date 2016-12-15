@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 import de.volzo.tapper.GestureDetector.DTW.DTWDetector;
 import de.volzo.tapper.GestureDetector.FSM.DataCollector;
 import de.volzo.tapper.GestureDetector.Displayer;
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = DataCollector.class.getName();
 
+    private ActionTriggers actionTriggers;
     private NotificationManager mNotificationManager;
 
     public FSMDetector fSMDetector;
@@ -29,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
     public DTWDetector dTWDetector;
 
-    ActionTriggers actionTriggers;
 
     MainActivity activity = this;
 
@@ -52,14 +55,25 @@ public class MainActivity extends AppCompatActivity {
     // ---------------------       DEBUG       --------------------- //
 
     public void uploadSamplesToGithub(View v) {
+//
+//        Log.wtf(TAG, "upload");
+//        Support support = new Support(this);
+//
+//        Displayer disp = (Displayer) findViewById(R.id.displayView);
+//        support.add(support.convert(disp.x, disp.y, disp.z));
+//        support.send("test_" + System.currentTimeMillis() / (1000));
 
-        Log.wtf(TAG, "upload");
-        Support support = new Support(this);
 
         Displayer disp = (Displayer) findViewById(R.id.displayView);
-        support.add(support.convert(disp.x, disp.y, disp.z));
-        support.send("test_" + System.currentTimeMillis() / (1000));
+
+        Support support = new Support(this);
+        support.add(support.convert(disp.x, disp.y, disp.z)); // no need to use the displayer, arrays can be derived from the windowing class directly
+
+        support.saveToFile("foo");
+        support.loadFromFile("foo");
     }
+
+
 
     // --------------------- Gesture Detection --------------------- //
 
@@ -73,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
             // TODO: match the gesture to the action
 
-            actionTriggers.triggerAction("TODO");
+            //actionTriggers.triggerAction(ActionTriggers.ActionType.FLASHLIGHT);
         }
     };
 
