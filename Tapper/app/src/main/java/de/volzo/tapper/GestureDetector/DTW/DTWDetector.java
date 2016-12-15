@@ -78,15 +78,17 @@ public class DTWDetector implements StreamReceiver<GestureType> {
         Windower<Number[]> windower = new Windower<Number[]>(windowSizeMs, windowShiftMs, samplesPerSec,
                 (output) -> {
                     analysisExecutor.execute(() -> gestureAnalyzer.process(output));
-                    view.x = new Double[output.length];
-                    view.y = new Double[output.length];
-                    view.z = new Double[output.length];
-                    for (int i = 0; i < output.length; i++) {
-                        view.x[i] = output[i][0].doubleValue();
-                        view.y[i] = output[i][0].doubleValue();
-                        view.z[i] = output[i][1].doubleValue();
+                    if (view != null){
+                        view.x = new Double[output.length];
+                        view.y = new Double[output.length];
+                        view.z = new Double[output.length];
+                        for (int i = 0; i < output.length; i++) {
+                            view.x[i] = output[i][0].doubleValue();
+                            view.y[i] = output[i][0].doubleValue();
+                            view.z[i] = output[i][1].doubleValue();
+                        }
+                        ((Activity) context).runOnUiThread(view::invalidate);
                     }
-                    ((Activity)context).runOnUiThread(view::invalidate);
                 }
         );
 

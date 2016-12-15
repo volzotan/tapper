@@ -41,14 +41,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //fSMDetector = new FSMDetector(this);
-        //dataCollector   = new DataCollector(this, fSMDetector);
-
+        // initialize all the classes
         dTWDetector = new DTWDetector(this);
-
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         actionTriggers = new ActionTriggers(this, mNotificationManager);
 
+        // update receiver for gesture processing
         registerUpdateReceiver();
     }
 
@@ -64,13 +62,17 @@ public class MainActivity extends AppCompatActivity {
 //        support.send("test_" + System.currentTimeMillis() / (1000));
 
 
-        Displayer disp = (Displayer) findViewById(R.id.displayView);
+//        Displayer disp = (Displayer) findViewById(R.id.displayView);
+//
+//        Support support = new Support(this);
+//        support.add(support.convert(disp.x, disp.y, disp.z)); // no need to use the displayer, arrays can be derived from the windowing class directly
+//
+//        support.saveToFile("foo");
+//        support.loadFromFile("foo");
 
-        Support support = new Support(this);
-        support.add(support.convert(disp.x, disp.y, disp.z)); // no need to use the displayer, arrays can be derived from the windowing class directly
-
-        support.saveToFile("foo");
-        support.loadFromFile("foo");
+        Intent myIntent = new Intent(MainActivity.this, RecordActivity.class);
+        myIntent.putExtra("GESTURE", GestureType.DOUBLETAP); //TODO
+        MainActivity.this.startActivity(myIntent);
     }
 
 
