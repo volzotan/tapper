@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = DataCollector.class.getName();
 
-    private ActionTriggers at;
     private NotificationManager mNotificationManager;
 
     public FSMDetector fSMDetector;
@@ -43,10 +42,9 @@ public class MainActivity extends AppCompatActivity {
         //dataCollector   = new DataCollector(this, fSMDetector);
 
         dTWDetector = new DTWDetector(this);
-        actionTriggers = new ActionTriggers();
 
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        at = new ActionTriggers(this, mNotificationManager);
+        actionTriggers = new ActionTriggers(this, mNotificationManager);
 
         registerUpdateReceiver();
     }

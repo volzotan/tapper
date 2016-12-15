@@ -9,6 +9,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Picture;
+import android.graphics.drawable.Drawable;
 import android.os.Binder;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
@@ -97,16 +101,29 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
             put(DISMISSALARM, "Turns off incoming alarm");
         }};
 
-        public ActionType[] getAllPublicGestureTypes() {
+        static final HashMap<ActionType, Integer> pictures = new HashMap<ActionType, Integer>() {{
+            put(FLASHLIGHT, R.drawable.flashlight);
+            put(TTSTIME, R.drawable.clock);
+            put(TTSNEXTALARM, R.drawable.alarm);
+            put(PLAY, R.drawable.play);
+            put(PAUSE, R.drawable.pause);
+            put(PREVIOUS, R.drawable.previous);
+            put(NEXT, R.drawable.next);
+            put(DONOTDISTURB, R.drawable.do_not_disturb);
+            put(DISCONNECTCALL, R.drawable.hangup);
+            put(DISMISSALARM, R.drawable.alarm_off);
+        }};
+
+        static public ActionType[] getAllPublicGestureTypes() {
             return new ActionType[]{FLASHLIGHT, TTSTIME, TTSNEXTALARM, PLAY, PAUSE, PREVIOUS,
                     NEXT, DONOTDISTURB, DISCONNECTCALL, DISMISSALARM};
         }
 
-        public String getDescription(ActionType type) {
+        static public String getDescription(ActionType type) {
             return descriptions.get(type);
         }
 
-        public String getDisplayName(ActionType type) {
+        static public String getDisplayName(ActionType type) {
             return descriptions.get(type);
         }
         }
