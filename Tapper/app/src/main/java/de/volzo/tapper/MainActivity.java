@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 //        support.loadFromFile("foo");
 
         Intent myIntent = new Intent(MainActivity.this, RecordActivity.class);
-        myIntent.putExtra("GESTURE", GestureType.DOUBLETAP); //TODO
+        myIntent.putExtra("GESTURE", GestureType.DOUBLETAP.toString()); //TODO
         MainActivity.this.startActivity(myIntent);
     }
 

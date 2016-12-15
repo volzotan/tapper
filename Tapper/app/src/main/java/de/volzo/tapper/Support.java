@@ -18,6 +18,11 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -88,10 +93,47 @@ public class Support {
         stringbuilder.append("\n");
     }
 
+
+    public void saveToFile(String filenameWithoutSuffix) {
+        File dir = context.getFilesDir();
+        File csv = new File(dir, filenameWithoutSuffix+".csv");
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream(csv);
+            outputStream.write(stringbuilder.toString().getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadFromFile(String filenameWithoutSuffix) {
+        File dir = context.getFilesDir();
+        File csv = new File(dir, filenameWithoutSuffix+".csv");
+
+        try {
+
+            FileInputStream inputStream = new FileInputStream(csv);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+
+            System.out.println(sb.toString());
+            inputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void clear() {
         stringbuilder = new StringBuilder();
     }
-
 
     public void print() {
         System.out.print(stringbuilder.toString());
