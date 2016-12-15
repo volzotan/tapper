@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     public DTWDetector dTWDetector;
 
+    ActionTriggers actionTriggers;
+
     MainActivity activity = this;
 
     @Override
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         //dataCollector   = new DataCollector(this, fSMDetector);
 
         dTWDetector = new DTWDetector(this);
+        actionTriggers = new ActionTriggers();
 
         registerUpdateReceiver();
     }
@@ -59,12 +62,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             GestureType gestureType = GestureType.valueOf(intent.getStringExtra("GESTURE_TYPE"));
-
-            // TODO: do what should be done (maybe user output), trigger action, etc...
-
             String msg = "Gesture detected: " + gestureType;
-
+            Log.d(TAG, msg);
             Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+
+            // TODO: match the gesture to the action
+
+            actionTriggers.triggerAction("TODO");
         }
     };
 
