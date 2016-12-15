@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         //dataCollector   = new DataCollector(this, fSMDetector);
 
         dTWDetector = new DTWDetector(this);
-        actionTriggers = new ActionTriggers();
 
         registerUpdateReceiver();
     }
@@ -47,13 +46,20 @@ public class MainActivity extends AppCompatActivity {
     // ---------------------       DEBUG       --------------------- //
 
     public void uploadSamplesToGithub(View v) {
+//
+//        Log.wtf(TAG, "upload");
+//        Support support = new Support(this);
+//
+//        Displayer disp = (Displayer) findViewById(R.id.displayView);
+//        support.add(support.convert(disp.x, disp.y, disp.z));
+//        support.send("test_" + System.currentTimeMillis() / (1000));
 
-        Log.wtf(TAG, "upload");
+
         Support support = new Support(this);
-
         Displayer disp = (Displayer) findViewById(R.id.displayView);
         support.add(support.convert(disp.x, disp.y, disp.z));
-        support.send("test_" + System.currentTimeMillis() / (1000));
+
+        System.out.println(support.stringbuilder.toString());
     }
 
     // --------------------- Gesture Detection --------------------- //
