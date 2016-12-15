@@ -1,10 +1,12 @@
 package de.volzo.tapper;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Locale;
 
 import android.os.Binder;
@@ -58,40 +60,92 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
         tts.setLanguage(Locale.US);
     }
 
-    public void triggerAction(String action){
-        switch (action){
-            case "flashlight":
+    public enum ActionType {
+        FLASHLIGHT,
+        TTSTIME,
+        TTSNEXTALARM,
+        PLAY,
+        PAUSE,
+        PREVIOUS,
+        NEXT,
+        DONOTDISTURB,
+        DISCONNECTCALL,
+        DISMISSALARM;
+
+        static final HashMap<ActionType, String> displayNames = new HashMap<ActionType, String>() {{
+            put(FLASHLIGHT, "Flashlight");
+            put(TTSTIME, "TTS current time");
+            put(PLAY, "Play");
+            put(PAUSE, "pause");
+            put(PREVIOUS, "Previous track");
+            put(NEXT, "Next track");
+            put(DONOTDISTURB, "Turn on do not disturb mode");
+            put(DISCONNECTCALL, "Disconnect incoming call");
+            put(DISMISSALARM, "Turn off alarm");
+        }};
+
+        static final HashMap<ActionType, String> descriptions = new HashMap<ActionType, String>() {{
+            put(FLASHLIGHT, "Turn on or off flashlight");
+            put(TTSTIME, "Speak out the current time");
+            put(TTSNEXTALARM, "Tells you when the next alarm is");
+            put(PLAY, "Plays music");
+            put(PAUSE, "Pauses music");
+            put(PREVIOUS, "Goes to previous track");
+            put(NEXT, "Goes to next track");
+            put(DONOTDISTURB, "Turns on do not disturb mode");
+            put(DISCONNECTCALL, "Disconnects the incoming call");
+            put(DISMISSALARM, "Turns off incoming alarm");
+        }};
+
+        public ActionType[] getAllPublicGestureTypes() {
+            return new ActionType[]{FLASHLIGHT, TTSTIME, TTSNEXTALARM, PLAY, PAUSE, PREVIOUS,
+                    NEXT, DONOTDISTURB, DISCONNECTCALL, DISMISSALARM};
+        }
+
+        public String getDescription(ActionType type) {
+            return descriptions.get(type);
+        }
+
+        public String getDisplayName(ActionType type) {
+            return descriptions.get(type);
+        }
+        }
+
+    public void triggerAction(ActionType action){
+        switch(action){
+            case FLASHLIGHT:
                 flashlightTrigger();
                 break;
-            case "time":
+            case TTSTIME:
                 ttsTime();
                 break;
-            case "nextAlarm":
+            case TTSNEXTALARM:
                 ttsNextAlarm();
                 break;
-            case "play":
+            case PLAY:
                 play();
                 break;
-            case "pause":
+            case PAUSE:
                 pause();
                 break;
-            case "previous":
+            case PREVIOUS:
                 previous();
                 break;
-            case "next":
+            case NEXT:
                 next();
                 break;
-            case "doNotDisturb":
+            case DONOTDISTURB:
                 doNotDisturb();
                 break;
-            case "disconnectCall":
+            case DISCONNECTCALL:
                 disconnectCall();
                 break;
-            case "disableAlarm":
+            case DISMISSALARM:
                 disableAlarm();
                 break;
         }
     }
+
 
     public void flashlightTrigger(){
         if (lightOn){
