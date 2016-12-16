@@ -77,8 +77,9 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
         static final HashMap<ActionType, String> displayNames = new HashMap<ActionType, String>() {{
             put(FLASHLIGHT, "Flashlight");
             put(TTSTIME, "TTS current time");
+            put(TTSNEXTALARM, "TTS next alarm");
             put(PLAY, "Play");
-            put(PAUSE, "pause");
+            put(PAUSE, "Pause");
             put(PREVIOUS, "Previous track");
             put(NEXT, "Next track");
             put(DONOTDISTURB, "Turn on do not disturb mode");
@@ -112,7 +113,7 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
             put(DISMISSALARM, R.drawable.alarm_off);
         }};
 
-        static public ActionType[] getAllPublicGestureTypes() {
+        static public ActionType[] getAllPublicActionTypes() {
             return new ActionType[]{FLASHLIGHT, TTSTIME, TTSNEXTALARM, PLAY, PAUSE, PREVIOUS,
                     NEXT, DONOTDISTURB, DISCONNECTCALL, DISMISSALARM};
         }
@@ -122,8 +123,11 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
         }
 
         static public String getDisplayName(ActionType type) {
-            return descriptions.get(type);
+            return displayNames.get(type);
         }
+
+        static public Integer getPictures(ActionType type) {return pictures.get(type);}
+
         }
 
     public void triggerAction(ActionType action){

@@ -73,25 +73,41 @@ public class Support {
         }
     }
 
-    public void add(String msg) {
-        add(msg, null);
+    public void saveToFile(String filenameWithoutSuffix) {
+        File dir = context.getFilesDir();
+        File csv = new File(dir, filenameWithoutSuffix+".csv");
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream(csv);
+            outputStream.write(stringbuilder.toString().getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void add(String msg, Object o) {
-        Calendar cal = Calendar.getInstance();
+    public void loadFromFile(String filenameWithoutSuffix) {
+        File dir = context.getFilesDir();
+        File csv = new File(dir, filenameWithoutSuffix+".csv");
 
-        stringbuilder.append(cal.getTime());
-        stringbuilder.append(" ");
-        stringbuilder.append("[" + System.currentTimeMillis() + "]");
-        stringbuilder.append(" ");
-        stringbuilder.append("{" + msg + "}");
+        try {
 
-        if (o != null) {
-            stringbuilder.append(" ");
-            stringbuilder.append(o.toString());
+            FileInputStream inputStream = new FileInputStream(csv);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+
+            System.out.println(sb.toString());
+            inputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        stringbuilder.append("\n");
     }
 
 
