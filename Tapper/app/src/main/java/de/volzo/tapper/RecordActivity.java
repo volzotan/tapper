@@ -2,6 +2,7 @@ package de.volzo.tapper;
 
 import android.content.Intent;
 import android.gesture.Gesture;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,18 +35,27 @@ public class RecordActivity extends AppCompatActivity {
         String gesturename = intent.getStringExtra("GESTURE");
         gesture = GestureType.valueOf(gesturename);
 
-        dataCollector = new DataCollector(this, null);
+        retry(null);
     }
 
     protected void onDestroy() {
         super.onDestroy();
 
         Log.d(TAG, "record Activity destroyed");
-        dataCollector.close();
+        dataCollector.stop();
     }
 
     public void retry(View v) {
+        dataCollector = new DataCollector(this, null);
 
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "stop recording");
+                dataCollector.stop();
+            }
+        }, 3000);
     }
 
     public void save(View v) {

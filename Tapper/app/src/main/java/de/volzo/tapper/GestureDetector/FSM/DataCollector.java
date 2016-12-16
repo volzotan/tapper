@@ -160,7 +160,7 @@ public class DataCollector implements SensorEventListener {
         Log.i(TAG, "accelerometer accuracy has changed.");
     }
 
-    public void close() {
+    public void stop() {
         mSensorManager.unregisterListener(this);
     }
 

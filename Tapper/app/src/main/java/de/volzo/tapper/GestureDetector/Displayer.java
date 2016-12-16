@@ -15,7 +15,6 @@ import de.volzo.tapper.MainActivity;
 public class Displayer extends View {
 
     private Context context;
-    private MainActivity main;
 
     public Double[] x;
     public Double[] y;
@@ -37,14 +36,6 @@ public class Displayer extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
-        if (main == null) {
-            try {
-                paint.setColor(Color.RED);
-            } catch (Exception ce) {
-                return;
-            }
-        }
 
         if (x == null) {
             return;
