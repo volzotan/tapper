@@ -37,7 +37,7 @@ public class DataCollector implements SensorEventListener {
     int dataCount = 0;
 
     // Number of available samples
-    private static final int QUEUE_SIZE = 128;
+    private static final int QUEUE_SIZE = 300;
 
     public CircularFifoQueue<Double> x = new CircularFifoQueue<>(QUEUE_SIZE);
     public CircularFifoQueue<Double> y = new CircularFifoQueue<>(QUEUE_SIZE);

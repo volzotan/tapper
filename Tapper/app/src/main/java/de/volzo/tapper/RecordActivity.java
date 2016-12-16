@@ -60,7 +60,7 @@ public class RecordActivity extends AppCompatActivity {
 
     public void save(View v) {
         Support support = new Support(this);
-        support.add(support.convert(dataCollector.rawax, dataCollector.raway, dataCollector.rawaz, 110));
+        support.add(support.convert(dataCollector.rawax, dataCollector.raway, dataCollector.rawaz, 280));
 
         support.saveToFile(gesture.toString());
 
