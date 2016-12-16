@@ -10,13 +10,22 @@
     tools:context="de.volzo.tapper.MainActivity">
 
     <Button
-        android:text="UPLOAD"
+        android:text="RECORD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:onClick="uploadSamplesToGithub"
-        android:id="@+id/buttonSend" />
+        android:onClick="record"
+        android:id="@+id/buttonRecord" />
+
+    <Button
+        android:text="START"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startRecognition"
+        android:id="@+id/buttonStart"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/buttonRecord" />
 
 
 </RelativeLayout>

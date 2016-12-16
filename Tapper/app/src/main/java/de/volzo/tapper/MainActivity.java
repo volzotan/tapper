@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // initialize all the classes
-        dTWDetector = new DTWDetector(this);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         actionTriggers = new ActionTriggers(this, mNotificationManager);
 
@@ -50,9 +49,17 @@ public class MainActivity extends AppCompatActivity {
         registerUpdateReceiver();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // shut down all services and connections that the actions are using
+        actionTriggers.stop();
+    }
+
     // ---------------------       DEBUG       --------------------- //
 
-    public void uploadSamplesToGithub(View v) {
+    public void record(View v) {
 //
 //        Log.wtf(TAG, "upload");
 //        Support support = new Support(this);
@@ -97,5 +104,9 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("GESTURE_DETECTED");
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver, filter);
+    }
+
+    public void startRecognition(View v) {
+        dTWDetector = new DTWDetector(this);
     }
 }

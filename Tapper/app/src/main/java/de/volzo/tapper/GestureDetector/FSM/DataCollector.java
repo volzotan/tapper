@@ -1,5 +1,6 @@
 package de.volzo.tapper.GestureDetector.FSM;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -22,7 +23,7 @@ public class DataCollector implements SensorEventListener {
 
     private static final String TAG = DataCollector.class.getName();
 
-    private MainActivity main;
+    private Activity activity;
 
     private FSMDetector fSMDetector;
 
@@ -61,12 +62,12 @@ public class DataCollector implements SensorEventListener {
     // in seconds
     private double UPDATE_FREQUENCY = 0.01;
 
-    public DataCollector(MainActivity main, FSMDetector fSMDetector) {
-        this.main = main;
+    public DataCollector(Activity activity, FSMDetector fSMDetector) {
+        this.activity = activity;
         this.fSMDetector = fSMDetector;
 
         // list all accelerometers and use the last one
-        mSensorManager = (SensorManager) main.getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
             List<Sensor> accelSensors = mSensorManager.getSensorList(Sensor.TYPE_LINEAR_ACCELERATION);
             for (int i = 0; i < accelSensors.size(); i++) {
@@ -121,13 +122,15 @@ public class DataCollector implements SensorEventListener {
         y.toArray(ay);
         z.toArray(az);
 
-        fSMDetector.dataUpdated(
-                Quantile.values()[Math.abs(filtered_x.intValue())],
-                Quantile.values()[Math.abs(filtered_y.intValue())],
-                Quantile.values()[Math.abs(filtered_z.intValue())]);
+        if (fSMDetector != null){
+            fSMDetector.dataUpdated(
+                    Quantile.values()[Math.abs(filtered_x.intValue())],
+                    Quantile.values()[Math.abs(filtered_y.intValue())],
+                    Quantile.values()[Math.abs(filtered_z.intValue())]);
+        }
 
         // redraw the graph with new data by invalidating the View (Displayer)
-        Displayer view = (Displayer) main.findViewById(R.id.displayView);
+        Displayer view = (Displayer) activity.findViewById(R.id.displayView);
         view.x = rawax;
         view.y = raway;
         view.z = rawaz;
@@ -155,6 +158,10 @@ public class DataCollector implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         Log.i(TAG, "accelerometer accuracy has changed.");
+    }
+
+    public void close() {
+        mSensorManager.unregisterListener(this);
     }
 
 }

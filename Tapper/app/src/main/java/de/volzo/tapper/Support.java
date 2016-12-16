@@ -107,7 +107,7 @@ public class Support {
         }
     }
 
-    public void loadFromFile(String filenameWithoutSuffix) {
+    public String loadFromFile(String filenameWithoutSuffix) {
         File dir = context.getFilesDir();
         File csv = new File(dir, filenameWithoutSuffix+".csv");
 
@@ -123,12 +123,14 @@ public class Support {
             }
             reader.close();
 
-            System.out.println(sb.toString());
+            String content = sb.toString();
             inputStream.close();
+            return content;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void clear() {

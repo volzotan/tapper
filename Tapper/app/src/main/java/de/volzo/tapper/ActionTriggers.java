@@ -1,6 +1,5 @@
 package de.volzo.tapper;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 
@@ -9,10 +8,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Picture;
-import android.graphics.drawable.Drawable;
 import android.os.Binder;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
@@ -39,6 +34,9 @@ import org.json.JSONObject;
 
 
 public class ActionTriggers implements TextToSpeech.OnInitListener {
+
+    public static final String TAG = ActionTriggers.class.getName();
+
     private boolean lightOn;
     private Camera camera;
     private boolean cameraOpen;
@@ -367,7 +365,7 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
     }
 
 
-    public void onDestroy(){
+    public void stop(){
         //FLASHLIGHT
         if(cameraOpen) { camera.release(); }
 
