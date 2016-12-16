@@ -10,6 +10,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -33,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
     public DTWDetector dTWDetector;
 
-
     MainActivity activity = this;
 
     @Override
@@ -47,6 +48,32 @@ public class MainActivity extends AppCompatActivity {
 
         // update receiver for gesture processing
         registerUpdateReceiver();
+
+        // GUI
+
+        ActionTriggers.ActionType[] types = ActionTriggers.ActionType.getAllPublicActionTypes();
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
+
+        for (final ActionTriggers.ActionType type : types) {
+
+            Integer picture = ActionTriggers.ActionType.getPictures(type);
+            Button b = new Button(this);
+            b.setCompoundDrawablesWithIntrinsicBounds(picture,0,0,0);
+            b.setText(ActionTriggers.ActionType.getDisplayName(type));
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this,Main2Activity.class);
+                    intent.putExtra("Action", type.name());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                }
+            });
+
+            layout.addView(b);
+
+        }
     }
 
     @Override
