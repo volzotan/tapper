@@ -27,7 +27,7 @@ public enum GestureType {
         put(SHAKE, "Shake for three or four times, like waking someone up");
     }};
 
-    public GestureType[] getAllPublicGestureTypes() {
+    public static GestureType[] getAllPublicGestureTypes() {
         return new GestureType[]{DOUBLETAP, SIDETAP, PICKUPDROP, SHAKE};
     }
 

@@ -18,6 +18,7 @@ import static com.chan.fastdtw.util.DistanceFunctionFactory.MANHATTAN_DIST_FN;
 
 public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> {
 
+    /*
     private TimeSeries[] templates = new TimeSeries[]{
             new TimeSeries("assets/templatesShort/nothing.csv", false, true, ','),      //0
             new TimeSeries("assets/templatesShort/doubletap1.csv", false, true, ','),   //1
@@ -41,14 +42,28 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
             //TODO: default cases, more gestures
     };
 
-    private int[] templatesUsed = new int[]{/*0,3,4,8,9,10,13,15,16*/0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
+    private int[] templatesUsed = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
 
     //diagnostic properties
     private long[] distances = new long[19];
     private int[] templateRecognizedFrequency = new int[19];
 
+    */
+
+    private TimeSeries[] templates = new TimeSeries[GestureType.getAllPublicGestureTypes().length];
+
+    private int[] templatesUsed = new int[]{0,1,2,3,4};
+
     public GestureAnalyzer(StreamReceiver<GestureType> gestureStreamReceiver) {
         super(gestureStreamReceiver);
+
+        //nothing template
+        templates[0] = new TimeSeries("assets/templates/nothing.csv", false, true, ',');
+        //one template for each type
+        GestureType[] allGestureTypes = GestureType.getAllPublicGestureTypes();
+        for (int i = 1; i < allGestureTypes.length + 1; i++) {
+            templates[i] = new TimeSeries(allGestureTypes[i].name(), false, false, ',');
+        }
         //filter raw templates
         filterRawTemplates();
     }
@@ -65,14 +80,17 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
         //filter all time series
         for (int i = 0; i < templates.length; i++) {
             //collect filtered values from current time series in these objects
-            ArrayList<Number[]> filtered = new ArrayList<>(templates[i].size());
+            ArrayList<Number[]> filtered = new ArrayList<>();
             //set up a new filtering pipeline for each time series (to have clean pipeline state)
             FilteringPipeline filter = new FilteringPipeline(filtered::add);
+            //trim the time series (dynamic time warping makes endless noise irrelevant)
+            Trimmer trimmer = new Trimmer(filter, 0.5, 10);
             //filter each value with filtering pipeline
             for (int j = 0; j < templates[i].size(); j++) {
                 double[] vector = templates[i].getMeasurementVector(j);
-                filter.process(new Double[]{vector[0], vector[1], vector[2]});
+                trimmer.process(new Double[]{vector[0], vector[1], vector[2]});
             }
+            System.out.println("filtered template length: " + filtered.size());
             //replace time series with filtered time series
             Number[][] d = new Number[0][];
             templates[i] = new TimeSeries(filtered.toArray(d));
@@ -113,6 +131,9 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
         //    System.out.println("Freq: " + Arrays.toString(templateRecognizedFrequency));
         //}
 
+        return GestureType.getAllPublicGestureTypes()[minDistIndex];
+
+        /*
         switch (minDistIndex) {
             case 0:
                 return GestureType.NOTHING;
@@ -147,6 +168,6 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
             default:
                 System.out.println("default (this is a fault, fixme)");
                 return GestureType.NOTHING;
-        }
+        }*/
     }
 }
