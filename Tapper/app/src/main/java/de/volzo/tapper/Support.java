@@ -73,41 +73,25 @@ public class Support {
         }
     }
 
-    public void saveToFile(String filenameWithoutSuffix) {
-        File dir = context.getFilesDir();
-        File csv = new File(dir, filenameWithoutSuffix+".csv");
-
-        try {
-            FileOutputStream outputStream = new FileOutputStream(csv);
-            outputStream.write(stringbuilder.toString().getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void add(String msg) {
+        add(msg, null);
     }
 
-    public void loadFromFile(String filenameWithoutSuffix) {
-        File dir = context.getFilesDir();
-        File csv = new File(dir, filenameWithoutSuffix+".csv");
+    public void add(String msg, Object o) {
+        Calendar cal = Calendar.getInstance();
 
-        try {
+        stringbuilder.append(cal.getTime());
+        stringbuilder.append(" ");
+        stringbuilder.append("[" + System.currentTimeMillis() + "]");
+        stringbuilder.append(" ");
+        stringbuilder.append("{" + msg + "}");
 
-            FileInputStream inputStream = new FileInputStream(csv);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            reader.close();
-
-            System.out.println(sb.toString());
-            inputStream.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (o != null) {
+            stringbuilder.append(" ");
+            stringbuilder.append(o.toString());
         }
+
+        stringbuilder.append("\n");
     }
 
 
@@ -207,8 +191,9 @@ public class Support {
                                         // if you get an error here, add your github credentials
                                         // the file Tapper/app/src/main/res/values/credentials.xml
 
-                                        context.getResources().getString(R.string.github_username),
-                                        context.getResources().getString(R.string.github_password)
+                                        ""
+                                        //context.getResources().getString(R.string.github_username),
+                                        //context.getResources().getString(R.string.github_password)
                                 ).getBytes(), Base64.DEFAULT)
                         )
                 );
