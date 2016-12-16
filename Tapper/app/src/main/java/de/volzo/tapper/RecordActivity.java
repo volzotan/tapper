@@ -60,13 +60,13 @@ public class RecordActivity extends AppCompatActivity {
 
     public void save(View v) {
         Support support = new Support(this);
-        support.add(support.convert(dataCollector.rawax, dataCollector.raway, dataCollector.rawaz));
+        support.add(support.convert(dataCollector.rawax, dataCollector.raway, dataCollector.rawaz, 110));
 
         support.saveToFile(gesture.toString());
 
         Log.d(TAG, "samples saved for gesture " + gesture.toString());
 
-        Toast.makeText(this, "Gesture Data for " + gesture.toString() + " saved",
+        Toast.makeText(this, "Gesture Data for " + GestureType.getDisplayName(gesture) + " saved",
                 Toast.LENGTH_SHORT).show();
 
         finish();

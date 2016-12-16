@@ -31,11 +31,11 @@ public enum GestureType {
         return new GestureType[]{DOUBLETAP, SIDETAP, PICKUPDROP, SHAKE};
     }
 
-    public String getDescription(GestureType type) {
+    public static String getDescription(GestureType type) {
         return descriptions.get(type);
     }
 
-    public String getDisplayName(GestureType type) {
-        return descriptions.get(type);
+    public static String getDisplayName(GestureType type) {
+        return displayNames.get(type);
     }
 }

@@ -43,13 +43,14 @@ public class Support {
         this.context = context;
     }
 
-    public double[][] convert(Double[] x, Double[] y, Double[] z) {
+    public double[][] convert(Double[] x, Double[] y, Double[] z, int arraylength) {
         double[][] combined = new double[x.length][3];
 
-        for (int i=0; i<x.length; i++) {
-            combined[i][0] = x[i];
-            combined[i][1] = y[i];
-            combined[i][2] = z[i];
+        for (int i=0; i<arraylength; i++) {
+
+            combined[i][0] = x[i] == null ? 0 : x[i];
+            combined[i][1] = y[i] == null ? 0 : y[i];
+            combined[i][2] = z[i] == null ? 0 : z[i];
         }
 
         return combined;
