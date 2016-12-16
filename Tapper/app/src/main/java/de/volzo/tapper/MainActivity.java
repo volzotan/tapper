@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -55,6 +56,22 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
 
+        Button button = new Button(this);
+        button.setText("START");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dTWDetector = new DTWDetector(activity);
+            }
+        });
+        layout.addView(button);
+
+        TextView textView = new TextView(this);
+        textView.setText("Choose a button to configure");
+        textView.setTextSize(24);
+        layout.addView(textView);
+
+
         for (final ActionTriggers.ActionType type : types) {
 
             Integer picture = ActionTriggers.ActionType.getPictures(type);
@@ -72,7 +89,27 @@ public class MainActivity extends AppCompatActivity {
             });
 
             layout.addView(b);
+        }
 
+        textView = new TextView(this);
+        textView.setText("Record Gestures");
+        textView.setTextSize(24);
+        layout.addView(textView);
+
+        for (GestureType gesture : GestureType.getAllPublicGestureTypes()) {
+            Button b = new Button(this);
+            b.setText(GestureType.getDisplayName(gesture));
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this,RecordActivity.class);
+                    intent.putExtra("GESTURE", gesture.toString());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                }
+            });
+
+            layout.addView(b);
         }
     }
 
@@ -86,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ---------------------       DEBUG       --------------------- //
 
-    public void record(View v) {
+    public void foo(View v) {
 //
 //        Log.wtf(TAG, "upload");
 //        Support support = new Support(this);
@@ -104,9 +141,6 @@ public class MainActivity extends AppCompatActivity {
 //        support.saveToFile("foo");
 //        support.loadFromFile("foo");
 
-        Intent myIntent = new Intent(MainActivity.this, RecordActivity.class);
-        myIntent.putExtra("GESTURE", GestureType.DOUBLETAP.toString()); //TODO
-        MainActivity.this.startActivity(myIntent);
     }
 
 

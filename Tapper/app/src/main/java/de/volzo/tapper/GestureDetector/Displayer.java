@@ -33,6 +33,12 @@ public class Displayer extends View {
         this.context = context;
     }
 
+    public void clear() {
+        this.x = null;
+        this.y = null;
+        this.z = null;
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {

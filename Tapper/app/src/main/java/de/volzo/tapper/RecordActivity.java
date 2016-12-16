@@ -48,6 +48,10 @@ public class RecordActivity extends AppCompatActivity {
     public void retry(View v) {
         dataCollector = new DataCollector(this, null);
 
+        Displayer displayer = (Displayer) findViewById(R.id.displayView);
+        displayer.clear();
+        displayer.invalidate();
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
