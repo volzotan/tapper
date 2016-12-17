@@ -89,6 +89,7 @@ public class Displayer extends View {
                           int color) {
 
         paint.setColor(color);
+        paint.setStrokeWidth(2.0f);
 
         //0 is in the middle of the drawing area
         float offset = (lowerEdge - upperEdge) / 2f;

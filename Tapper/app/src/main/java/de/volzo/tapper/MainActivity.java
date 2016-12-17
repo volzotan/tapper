@@ -31,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     public FSMDetector fSMDetector;
     public DataCollector dataCollector;
 
-    public DTWDetector dTWDetector;
-
     MainActivity activity = this;
 
     @Override
@@ -56,14 +54,8 @@ public class MainActivity extends AppCompatActivity {
         Button button = new Button(this);
         button.setText("START");
         button.setOnClickListener(view -> {
-            try {
                 Intent intent = new Intent(MainActivity.this,EmptyActivity.class);
                 startActivity(intent);
-                dTWDetector = new DTWDetector(activity);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
         });
         layout.addView(button);
 
