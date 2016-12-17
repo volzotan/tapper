@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.MissingResourceException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -92,9 +89,8 @@ public class DTWDetector implements StreamReceiver<GestureType> {
         view = (Displayer) ((Activity) context).findViewById(R.id.displayView);
     }
 
-    public void stop() {
-        // TODO
-        throw new NotImplementedException("implement me!");
+    public void stopDetection() {
+            accel.stop();
     }
 
     /**

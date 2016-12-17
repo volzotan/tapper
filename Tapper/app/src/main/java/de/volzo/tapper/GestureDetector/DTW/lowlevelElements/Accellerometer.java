@@ -22,16 +22,17 @@ public class Accellerometer extends StreamEmitter<Double[]> implements SensorEve
 
     /** the update frequency of the accelerometer in seconds */
     private static final double UPDATE_FREQUENCY = 0.01;
+    private final SensorManager sensorManager;
 
     public Accellerometer(Context context, StreamReceiver<Double[]> accelerometerStreamReceiver) {
 
         super(accelerometerStreamReceiver);
 
         // list all accelerometers and use the last one
-        SensorManager mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         Sensor mSensor;
-        if (mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
-            List<Sensor> accelSensors = mSensorManager.getSensorList(Sensor.TYPE_LINEAR_ACCELERATION);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
+            List<Sensor> accelSensors = sensorManager.getSensorList(Sensor.TYPE_LINEAR_ACCELERATION);
             mSensor = accelSensors.get(accelSensors.size() - 1);
             Log.i(TAG, "Found sensor " + mSensor.getName());
         } else {
@@ -40,7 +41,11 @@ public class Accellerometer extends StreamEmitter<Double[]> implements SensorEve
         }
 
         // register Listener and set update rate
-        mSensorManager.registerListener(this, mSensor, (int) (UPDATE_FREQUENCY * 1000 * 1000));
+        sensorManager.registerListener(this, mSensor, (int) (UPDATE_FREQUENCY * 1000 * 1000));
+    }
+
+    public void stop() {
+        sensorManager.unregisterListener(this);
     }
 
     @Override

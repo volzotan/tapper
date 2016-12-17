@@ -6,8 +6,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.chan.fastdtw.dtw.DTW;
-
 import de.volzo.tapper.GestureDetector.DTW.DTWDetector;
 
 public class EmptyActivity extends AppCompatActivity {
@@ -31,6 +29,7 @@ public class EmptyActivity extends AppCompatActivity {
     }
 
     protected void onDestroy() {
-        dTWDetector.stop();
+        super.onDestroy();
+        dTWDetector.stopDetection();
     }
 }
