@@ -58,13 +58,15 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
         this.mNotificationManager = mNotificationManager;
         notificationAccess = mNotificationManager.isNotificationPolicyAccessGranted();
 
-        //FLASHLIGHT
-        lightOn = false;
-        camera = Camera.open();
-        cameraOpen = true;
-        hasFlash = hasFlash();
-        camera.release();
-        cameraOpen = false;
+        if (hasFlash) {
+            //FLASHLIGHT
+            lightOn = false;
+            camera = Camera.open();
+            cameraOpen = true;
+            hasFlash = hasFlash();
+            camera.release();
+            cameraOpen = false;
+        }
 
         //TTS
         tts = new TextToSpeech(context, this);
