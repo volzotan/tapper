@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import de.volzo.tapper.GestureDetector.Displayer;
@@ -52,12 +53,21 @@ public class RecordActivity extends AppCompatActivity {
         displayer.clear();
         displayer.invalidate();
 
+        Button retry = (Button) findViewById(R.id.buttonRetry);
+        Button save = (Button) findViewById(R.id.buttonSave);
+        retry.setEnabled(false);
+        save.setEnabled(false);
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Log.d(TAG, "stop recording");
                 dataCollector.stop();
+                Button retry = (Button) findViewById(R.id.buttonRetry);
+                Button save = (Button) findViewById(R.id.buttonSave);
+                retry.setEnabled(true);
+                save.setEnabled(true);
             }
         }, 3000);
     }
