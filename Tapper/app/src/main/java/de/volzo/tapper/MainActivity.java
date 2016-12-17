@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         button.setText("START");
         button.setOnClickListener(view -> {
             try {
+                Intent intent = new Intent(MainActivity.this,EmptyActivity.class);
+                startActivity(intent);
                 dTWDetector = new DTWDetector(activity);
             } catch (Exception e) {
                 e.printStackTrace();
