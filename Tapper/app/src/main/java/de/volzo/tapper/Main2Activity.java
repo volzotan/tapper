@@ -1,23 +1,16 @@
 package de.volzo.tapper;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.volzo.tapper.GestureDetector.GestureType;
 
@@ -98,11 +91,7 @@ public class Main2Activity extends Activity {
 
     private void saveActionPreference(int pos, Spinner sp) {
 
-        System.out.println("Save preferences");
-
         prefs = getSharedPreferences(prefName, MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = prefs.edit();
 
         int previousGestureType = prefs.getInt(action, -1);
 
@@ -110,32 +99,49 @@ public class Main2Activity extends Activity {
             String gestureType = gestureTypes[pos].name();
             String previousAction = prefs.getString(gestureType, null);
 
-            //--remove previously saved connected gesture---
-            editor.remove(previousAction);
+            //only do saving if gesture has changed
+            if (!action.equals(previousAction)) {
+                SharedPreferences.Editor editor = prefs.edit();
 
+                //---save new connected gesture---
+                editor.putInt(action, pos);
+                editor.putString(gestureType,action);
 
-            //-- Add a Toast to say which action was connected to this gesture--
-            Toast toast = Toast.makeText(getApplicationContext(),previousAction + " was connected to this gesture",Toast.LENGTH_SHORT);
-            toast.show();
+                //--remove action previously connected to gesture---
+                editor.remove(previousAction);
 
+                //---remove gesture previously connected to this action---
+                if (previousGestureType != -1) {
+                    editor.remove(gestureTypes[previousGestureType].name());
+                }
 
-            //---save the values in the EditText view to preferences---
-            editor.putInt(action, pos);
-            editor.putString(gestureType,action);
+                editor.commit();
 
+                if (previousAction != null) {
+                    showReplacementMessage(previousAction);
+                }
+            }
         } else {
-            //--remove previously saved connected gesture---
-            editor.remove(action);
+            SharedPreferences.Editor editor = prefs.edit();
 
-            //---save the values in the EditText view to preferences---
-            editor.putInt(action, pos);
+            //--remove gesture previously connected to this action---
+            editor.remove(action);
             if (previousGestureType != -1) {
                 editor.remove(gestureTypes[previousGestureType].name());
             }
-        }
 
-        //---saves the values---
-        editor.commit();
+            editor.commit();
+        }
+    }
+
+    private void showReplacementMessage(String previousAction) {
+        //-- Add a Toast to say which action was connected to this gesture--
+        Toast toast = Toast.makeText(getApplicationContext(),
+                "before, "
+                + ActionTriggers.ActionType.getDisplayName(ActionTriggers.ActionType.valueOf(previousAction))
+                + " was connected to this gesture",
+                Toast.LENGTH_LONG);
+        toast.show();
     }
 
 }

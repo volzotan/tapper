@@ -131,7 +131,11 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
         //    System.out.println("Freq: " + Arrays.toString(templateRecognizedFrequency));
         //}
 
-        return GestureType.getAllPublicGestureTypes()[minDistIndex];
+        if (minDistIndex > 0) {
+            return GestureType.getAllPublicGestureTypes()[minDistIndex - 1];
+        } else {
+            return GestureType.NOTHING;
+        }
 
         /*
         switch (minDistIndex) {
