@@ -1,5 +1,6 @@
 package de.volzo.tapper;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
 
@@ -10,10 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
@@ -47,8 +50,12 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
     private NotificationManager mNotificationManager;
     //private AlarmManager mAlarmManager;
     private Context context;
+    private PackageManager pm;
+    static private boolean hasCamera;
     static private boolean hasFlash;
     static private boolean notificationAccess;
+    static private boolean cameraAccess;
+    static private boolean phoneAccess;
 
     //!! Grant Camera access (via Apps) & internet access (via Apps) & Phone Access (via Apps)
     // & Do not disturb access (via Sounds and Notifications)
@@ -56,15 +63,45 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
     public ActionTriggers(Context context, NotificationManager mNotificationManager){
         this.context = context;
         this.mNotificationManager = mNotificationManager;
+        pm = context.getPackageManager();
+
+        //check permission notification access:
         notificationAccess = mNotificationManager.isNotificationPolicyAccessGranted();
 
-        if (hasFlash) {
+        //check permission camera:
+        if((ContextCompat.checkSelfPermission(context,
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) &&
+                pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+            cameraAccess = true;
+            hasCamera = true;
+        }
+        else{
+            cameraAccess = false;
+            hasCamera = false;
+        }
+
+        //check permission phone:
+        if((ContextCompat.checkSelfPermission(context,
+                Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+            && (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)){
+            phoneAccess = true;
+        }
+        else {
+            phoneAccess = false;
+        }
+
+        if (cameraAccess && hasCamera) {
             //FLASHLIGHT
             lightOn = false;
             camera = Camera.open();
             cameraOpen = true;
             hasFlash = hasFlash();
             camera.release();
+            cameraOpen = false;
+        }
+        else {
+            hasFlash = false;
             cameraOpen = false;
         }
 
@@ -85,8 +122,6 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
         FLASHLIGHT,
         TTSTIME,
         TTSNEXTALARM,
-        PLAY,
-        PAUSE,
         PLAYPAUSE,
         PREVIOUS,
         NEXT,
@@ -98,8 +133,6 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
             put(FLASHLIGHT, "Flashlight");
             put(TTSTIME, "TTS current time");
             put(TTSNEXTALARM, "TTS next alarm");
-            put(PLAY, "Play");
-            put(PAUSE, "Pause");
             put(PLAYPAUSE, "Play/pause");
             put(PREVIOUS, "Previous track");
             put(NEXT, "Next track");
@@ -112,8 +145,6 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
             put(FLASHLIGHT, "Turn on or off flashlight");
             put(TTSTIME, "Speak out the current time");
             put(TTSNEXTALARM, "Tells you when the next alarm is");
-            put(PLAY, "Plays music");
-            put(PAUSE, "Pauses music");
             put(PLAYPAUSE, "Plays music if music is paused, pauses music if music is paused");
             put(PREVIOUS, "Goes to previous track");
             put(NEXT, "Goes to next track");
@@ -126,8 +157,6 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
             put(FLASHLIGHT, R.drawable.flashlight);
             put(TTSTIME, R.drawable.clock);
             put(TTSNEXTALARM, R.drawable.alarm);
-            put(PLAY, R.drawable.play);
-            put(PAUSE, R.drawable.pause);
             put(PLAYPAUSE, R.drawable.play_pause);
             put(PREVIOUS, R.drawable.previous);
             put(NEXT, R.drawable.next);
@@ -138,21 +167,21 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
 
         static public ActionType[] getAllPublicActionTypes() {
             List<ActionType> actionList = new ArrayList<ActionType>();
-            if(hasFlash) {
+            if(cameraAccess && hasCamera && hasFlash) {
                 actionList.add(FLASHLIGHT);
             }
             actionList.add(TTSTIME);
             actionList.add(TTSNEXTALARM);
             actionList.add(PLAYPAUSE);
-            actionList.add(PLAY);
-            actionList.add(PAUSE);
             actionList.add(PLAYPAUSE);
             actionList.add(PREVIOUS);
             actionList.add(NEXT);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M  && notificationAccess) {
                 actionList.add(DONOTDISTURB);
             }
-            actionList.add(DISCONNECTCALL);
+            if(phoneAccess) {
+                actionList.add(DISCONNECTCALL);
+            }
             actionList.add(DISMISSALARM);
             actionList.add(TTSTIME);
             ActionType[] actionArray = new ActionType[actionList.size()];
@@ -182,12 +211,6 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
                 break;
             case TTSNEXTALARM:
                 ttsNextAlarm();
-                break;
-            case PLAY:
-                play();
-                break;
-            case PAUSE:
-                pause();
                 break;
             case PLAYPAUSE:
                 playpause();
