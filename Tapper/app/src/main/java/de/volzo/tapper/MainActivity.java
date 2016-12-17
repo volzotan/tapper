@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 import de.volzo.tapper.GestureDetector.DTW.DTWDetector;
 import de.volzo.tapper.GestureDetector.FSM.DataCollector;
-import de.volzo.tapper.GestureDetector.Displayer;
 import de.volzo.tapper.GestureDetector.FSM.FSMDetector;
 import de.volzo.tapper.GestureDetector.GestureType;
 
@@ -58,15 +55,12 @@ public class MainActivity extends AppCompatActivity {
 
         Button button = new Button(this);
         button.setText("START");
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    dTWDetector = new DTWDetector(activity);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+        button.setOnClickListener(view -> {
+            try {
+                dTWDetector = new DTWDetector(activity);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         layout.addView(button);
@@ -160,9 +154,10 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, msg);
             Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
 
-            // TODO: match the gesture to the action
-
-            //actionTriggers.triggerAction(ActionTriggers.ActionType.FLASHLIGHT);
+            SharedPreferences prefs = getSharedPreferences("spinner", MODE_PRIVATE);
+            String actionName = prefs.getString(gestureType.name(), null);
+            ActionTriggers.ActionType actionType = ActionTriggers.ActionType.valueOf(actionName);
+            actionTriggers.triggerAction(actionType);
         }
     };
 
