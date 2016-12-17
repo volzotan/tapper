@@ -5,10 +5,13 @@ import android.content.Context;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -33,7 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class ActionTriggers implements TextToSpeech.OnInitListener {
+public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeech.OnUtteranceCompletedListener {
 
     public static final String TAG = ActionTriggers.class.getName();
 
@@ -44,6 +47,8 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
     private NotificationManager mNotificationManager;
     //private AlarmManager mAlarmManager;
     private Context context;
+    static private boolean hasFlash;
+    static private boolean notificationAccess;
 
     //!! Grant Camera access (via Apps) & internet access (via Apps) & Phone Access (via Apps)
     // & Do not disturb access (via Sounds and Notifications)
@@ -51,15 +56,29 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
     public ActionTriggers(Context context, NotificationManager mNotificationManager){
         this.context = context;
         this.mNotificationManager = mNotificationManager;
-        //this.mAlarmManager = mAlarmManager;
+        notificationAccess = mNotificationManager.isNotificationPolicyAccessGranted();
 
-        //FLASHLIGHT
-        lightOn = false;
-        cameraOpen = false;
+        if (hasFlash) {
+            //FLASHLIGHT
+            lightOn = false;
+            camera = Camera.open();
+            cameraOpen = true;
+            hasFlash = hasFlash();
+            camera.release();
+            cameraOpen = false;
+        }
 
         //TTS
         tts = new TextToSpeech(context, this);
         tts.setLanguage(Locale.US);
+        tts.setOnUtteranceCompletedListener(this);
+    }
+
+    @Override
+    public void onUtteranceCompleted(String s) {
+        if(s.equals("DoNotDisturbModeOn")){
+            mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+        }
     }
 
     public enum ActionType {
@@ -68,6 +87,7 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
         TTSNEXTALARM,
         PLAY,
         PAUSE,
+        PLAYPAUSE,
         PREVIOUS,
         NEXT,
         DONOTDISTURB,
@@ -80,9 +100,10 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
             put(TTSNEXTALARM, "TTS next alarm");
             put(PLAY, "Play");
             put(PAUSE, "Pause");
+            put(PLAYPAUSE, "Play/pause");
             put(PREVIOUS, "Previous track");
             put(NEXT, "Next track");
-            put(DONOTDISTURB, "Turn on do not disturb mode");
+            put(DONOTDISTURB, "Turn on/off do not disturb mode");
             put(DISCONNECTCALL, "Disconnect incoming call");
             put(DISMISSALARM, "Turn off alarm");
         }};
@@ -93,9 +114,10 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
             put(TTSNEXTALARM, "Tells you when the next alarm is");
             put(PLAY, "Plays music");
             put(PAUSE, "Pauses music");
+            put(PLAYPAUSE, "Plays music if music is paused, pauses music if music is paused");
             put(PREVIOUS, "Goes to previous track");
             put(NEXT, "Goes to next track");
-            put(DONOTDISTURB, "Turns on do not disturb mode");
+            put(DONOTDISTURB, "Toggles do not disturb mode on or off");
             put(DISCONNECTCALL, "Disconnects the incoming call");
             put(DISMISSALARM, "Turns off incoming alarm");
         }};
@@ -106,6 +128,7 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
             put(TTSNEXTALARM, R.drawable.alarm);
             put(PLAY, R.drawable.play);
             put(PAUSE, R.drawable.pause);
+            put(PLAYPAUSE, R.drawable.play_pause);
             put(PREVIOUS, R.drawable.previous);
             put(NEXT, R.drawable.next);
             put(DONOTDISTURB, R.drawable.do_not_disturb);
@@ -114,8 +137,27 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
         }};
 
         static public ActionType[] getAllPublicActionTypes() {
-            return new ActionType[]{FLASHLIGHT, TTSTIME, TTSNEXTALARM, PLAY, PAUSE, PREVIOUS,
-                    NEXT, DONOTDISTURB, DISCONNECTCALL, DISMISSALARM};
+            List<ActionType> actionList = new ArrayList<ActionType>();
+            if(hasFlash) {
+                actionList.add(FLASHLIGHT);
+            }
+            actionList.add(TTSTIME);
+            actionList.add(TTSNEXTALARM);
+            actionList.add(PLAYPAUSE);
+            actionList.add(PLAY);
+            actionList.add(PAUSE);
+            actionList.add(PLAYPAUSE);
+            actionList.add(PREVIOUS);
+            actionList.add(NEXT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M  && notificationAccess) {
+                actionList.add(DONOTDISTURB);
+            }
+            actionList.add(DISCONNECTCALL);
+            actionList.add(DISMISSALARM);
+            actionList.add(TTSTIME);
+            ActionType[] actionArray = new ActionType[actionList.size()];
+            actionArray = actionList.toArray(actionArray);
+            return actionArray;
         }
 
         static public String getDescription(ActionType type) {
@@ -147,6 +189,9 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
             case PAUSE:
                 pause();
                 break;
+            case PLAYPAUSE:
+                playpause();
+                break;
             case PREVIOUS:
                 previous();
                 break;
@@ -163,6 +208,18 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
                 disableAlarm();
                 break;
         }
+    }
+
+    //based on: stackoverflow.com/questions/13413938/h…
+    private boolean hasFlash() {
+        if (camera == null) {return false;}
+        Camera.Parameters parameters = camera.getParameters();
+        if (parameters.getFlashMode() == null) {return false;}
+        List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+        if (supportedFlashModes == null || supportedFlashModes.isEmpty() || supportedFlashModes.size() == 1 && supportedFlashModes.get(0).equals(Camera.Parameters.FLASH_MODE_OFF)) {
+            return false;
+        }
+        return true;
     }
 
 
@@ -225,6 +282,12 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
         context.sendBroadcast(i);
     }
 
+    public void playpause(){
+        Intent i = new Intent("com.android.music.musicservicecommand");
+        i.putExtra("command", "togglepause");
+        context.sendBroadcast(i);
+    }
+
     public void next(){
         Intent i = new Intent("com.android.music.musicservicecommand");
         i.putExtra("command", "next");
@@ -238,7 +301,15 @@ public class ActionTriggers implements TextToSpeech.OnInitListener {
     }
 
     public void doNotDisturb(){
-        mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+        if(mNotificationManager.getCurrentInterruptionFilter() == NotificationManager.INTERRUPTION_FILTER_NONE){
+            //TURN OFF DO NOT DISTURB MODE
+            mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
+            tts.speak("Turning off do not disturb mode.", TextToSpeech.QUEUE_ADD, null);
+        }
+        else {
+            //TURN ON DO NOT DITURB MODE
+            tts.speak("Turning on do not disturb mode.", TextToSpeech.QUEUE_ADD, null, "DoNotDisturbModeOn");
+        }
     }
 
     //for RESTRequest: need internet permission (turn on via apps -> this app -> permissions)
