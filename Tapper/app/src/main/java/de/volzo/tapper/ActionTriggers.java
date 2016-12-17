@@ -136,24 +136,22 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
 
         static public ActionType[] getAllPublicActionTypes() {
             List<ActionType> actionList = new ArrayList<ActionType>();
-            if(hasFlash){
-                if(hasFlash){
-                    actionList.add(FLASHLIGHT);
-                }
-                actionList.add(TTSTIME);
-                actionList.add(TTSNEXTALARM);
-                actionList.add(PLAYPAUSE);
-                actionList.add(PLAY);
-                actionList.add(PAUSE);
-                actionList.add(PLAYPAUSE);
-                actionList.add(PREVIOUS);
-                actionList.add(NEXT);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M  && notificationAccess) {
-                    actionList.add(DONOTDISTURB);
-                }
-                actionList.add(DISCONNECTCALL);
-                actionList.add(DISMISSALARM);
+            if(hasFlash) {
+                actionList.add(FLASHLIGHT);
             }
+            actionList.add(TTSTIME);
+            actionList.add(TTSNEXTALARM);
+            actionList.add(PLAYPAUSE);
+            actionList.add(PLAY);
+            actionList.add(PAUSE);
+            actionList.add(PLAYPAUSE);
+            actionList.add(PREVIOUS);
+            actionList.add(NEXT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M  && notificationAccess) {
+                actionList.add(DONOTDISTURB);
+            }
+            actionList.add(DISCONNECTCALL);
+            actionList.add(DISMISSALARM);
             actionList.add(TTSTIME);
             ActionType[] actionArray = new ActionType[actionList.size()];
             actionArray = actionList.toArray(actionArray);
