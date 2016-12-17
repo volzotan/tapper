@@ -173,7 +173,6 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
             actionList.add(TTSTIME);
             actionList.add(TTSNEXTALARM);
             actionList.add(PLAYPAUSE);
-            actionList.add(PLAYPAUSE);
             actionList.add(PREVIOUS);
             actionList.add(NEXT);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M  && notificationAccess) {
