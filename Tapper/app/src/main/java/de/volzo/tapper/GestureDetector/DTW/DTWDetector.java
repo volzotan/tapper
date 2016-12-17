@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.MissingResourceException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,12 +20,16 @@ import de.volzo.tapper.GestureDetector.DTW.streamSystem.StreamReceiver;
 import de.volzo.tapper.GestureDetector.Displayer;
 import de.volzo.tapper.GestureDetector.GestureType;
 import de.volzo.tapper.R;
+import de.volzo.tapper.Support;
 
 /**
  * Created by tassilokarge on 05.12.16.
  */
 
 public class DTWDetector implements StreamReceiver<GestureType> {
+
+
+    private static final String TAG = DTWDetector.class.getName();
 
     private Accellerometer accel;
 
@@ -47,8 +55,37 @@ public class DTWDetector implements StreamReceiver<GestureType> {
     private final int windowShiftMs = 500;
     private final int samplesPerSec = 100;
 
-    public DTWDetector(Context context) {
+    public DTWDetector(Context context) throws Exception {
         this.context = context;
+
+        // check if gesture templates are present
+        Support support = new Support(context);
+        String emptytemplate = support.loadFromFile("NOTHING");
+        if (emptytemplate == null) {
+            // empty template is missing
+            support.add(new double[100][3]);
+            support.saveToFile("NOTHING");
+            Log.d(TAG, "empty template was missing. created it.");
+        }
+
+        List<GestureType> missingGestureTemplates = new ArrayList<GestureType>();
+        for (GestureType gesture : GestureType.getAllPublicGestureTypes()) {
+            String csv = support.loadFromFile(gesture.name());
+            if (csv == null) {
+                missingGestureTemplates.add(gesture);
+            }
+        }
+
+        if (missingGestureTemplates.size() > 0) {
+            String errmsg = "The following gestures have not been recorded yet: ";
+            for (GestureType gesture : missingGestureTemplates) {
+                errmsg += GestureType.getDisplayName(gesture);
+                errmsg += " ";
+            }
+
+            throw new Exception(errmsg);
+        }
+
         setupPipeline(context);
         view = (Displayer) ((Activity) context).findViewById(R.id.displayView);
     }

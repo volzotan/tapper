@@ -50,7 +50,7 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
 
     */
 
-    private TimeSeries[] templates = new TimeSeries[GestureType.getAllPublicGestureTypes().length];
+    private TimeSeries[] templates = new TimeSeries[GestureType.getAllPublicGestureTypes().length+1];
 
     private int[] templatesUsed = new int[]{0,1,2,3,4};
 
@@ -58,11 +58,11 @@ public class GestureAnalyzer extends StreamPassthrough<GestureType, Number[][]> 
         super(gestureStreamReceiver);
 
         //nothing template
-        templates[0] = new TimeSeries("assets/templates/nothing.csv", false, true, ',');
+        templates[0] = new TimeSeries("NOTHING", false, false, ',');
         //one template for each type
         GestureType[] allGestureTypes = GestureType.getAllPublicGestureTypes();
-        for (int i = 1; i < allGestureTypes.length + 1; i++) {
-            templates[i] = new TimeSeries(allGestureTypes[i].name(), false, false, ',');
+        for (int i = 0; i < allGestureTypes.length; i++) {
+            templates[i+1] = new TimeSeries(allGestureTypes[i].name(), false, false, ',');
         }
         //filter raw templates
         filterRawTemplates();

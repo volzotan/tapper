@@ -9,6 +9,7 @@ package com.chan.fastdtw.timeseries;
 
 import com.chan.fastdtw.util.Arrays;
 
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileOutputStream;
 import java.io.File;
+
+import de.volzo.tapper.App;
+import de.volzo.tapper.Support;
 
 
 public class TimeSeries
@@ -130,10 +134,13 @@ public class TimeSeries
 
       try
       {
+
+         File dir = App.context.getFilesDir();
+         File csv = new File(dir, inputFile+".csv");
+
          // Record the Label names (fropm the top row.of the input file).
          BufferedReader br = new BufferedReader (
-                 new InputStreamReader(
-                         this.getClass().getClassLoader().getResourceAsStream(inputFile)));  // open the input file
+                 new InputStreamReader(new FileInputStream(csv)));  // open the input file
 
          String line = br.readLine();  // the top row that contains attribiute names.
          StringTokenizer st = new StringTokenizer (line, String.valueOf(delimiter));
@@ -188,8 +195,7 @@ public class TimeSeries
             // Close and re-open the file.
             br.close();
             br = new BufferedReader (
-                    new InputStreamReader(
-                            this.getClass().getClassLoader().getResourceAsStream(inputFile)));  // open the input file
+                    new InputStreamReader(new FileInputStream(csv)));  // open the input file
          }  // end if
 
 

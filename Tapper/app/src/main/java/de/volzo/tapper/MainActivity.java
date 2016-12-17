@@ -61,7 +61,12 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dTWDetector = new DTWDetector(activity);
+                try {
+                    dTWDetector = new DTWDetector(activity);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
         layout.addView(button);
@@ -165,9 +170,5 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("GESTURE_DETECTED");
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver, filter);
-    }
-
-    public void startRecognition(View v) {
-        dTWDetector = new DTWDetector(this);
     }
 }
