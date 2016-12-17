@@ -182,7 +182,6 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
                 actionList.add(DISCONNECTCALL);
             }
             actionList.add(DISMISSALARM);
-            actionList.add(TTSTIME);
             ActionType[] actionArray = new ActionType[actionList.size()];
             actionArray = actionList.toArray(actionArray);
             return actionArray;
