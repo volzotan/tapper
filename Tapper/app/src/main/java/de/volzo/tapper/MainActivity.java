@@ -156,8 +156,10 @@ public class MainActivity extends AppCompatActivity {
 
             SharedPreferences prefs = getSharedPreferences("spinner", MODE_PRIVATE);
             String actionName = prefs.getString(gestureType.name(), null);
-            ActionTriggers.ActionType actionType = ActionTriggers.ActionType.valueOf(actionName);
-            actionTriggers.triggerAction(actionType);
+            if (actionName != null) {
+                ActionTriggers.ActionType actionType = ActionTriggers.ActionType.valueOf(actionName);
+                actionTriggers.triggerAction(actionType);
+            }
         }
     };
 

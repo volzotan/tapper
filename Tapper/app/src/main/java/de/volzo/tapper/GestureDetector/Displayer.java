@@ -7,8 +7,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import de.volzo.tapper.MainActivity;
-
 /**
  * Created by volzotan on 14.11.16.
  */
@@ -93,14 +91,11 @@ public class Displayer extends View {
         paint.setColor(color);
 
         //0 is in the middle of the drawing area
-        int offset = (lowerEdge - upperEdge) / 2;
+        float offset = (lowerEdge - upperEdge) / 2f;
 
         //set start to the middle of the left edge
         float lastX = leftEdge;
         float lastY = upperEdge + offset;
-
-        //divide steps equally over width
-        float step = (rightEdge - leftEdge) / (float) values.length;
 
         //draw line from each previous point to current point
         for (int i = 0; i < values.length; i++) {
@@ -108,12 +103,13 @@ public class Displayer extends View {
             if (values[i] == null) {continue;}
 
             //calculate x and y coordinates of line end
-            float xCoordinate = i * step;
+            //divide steps equally over width
+            float xCoordinate = ((rightEdge - leftEdge) * i) / ((float) values.length);
             float yCoordinate = values[i].floatValue();
 
             // normalize
             yCoordinate = (yCoordinate - global_min) / (global_max - global_min);
-            yCoordinate = yCoordinate * (lowerEdge - upperEdge) + upperEdge;
+            yCoordinate = yCoordinate * (lowerEdge - upperEdge) + upperEdge + offset;
 
             //draw line from last to current point
             canvas.drawLine(lastX, lastY, xCoordinate, yCoordinate, paint);
