@@ -127,7 +127,8 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
         NEXT,
         DONOTDISTURB,
         DISCONNECTCALL,
-        DISMISSALARM;
+        DISMISSALARM,
+        STOPTTS;
 
         static final HashMap<ActionType, String> displayNames = new HashMap<ActionType, String>() {{
             put(FLASHLIGHT, "Flashlight");
@@ -139,6 +140,7 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
             put(DONOTDISTURB, "Turn on/off do not disturb mode");
             put(DISCONNECTCALL, "Disconnect incoming call");
             put(DISMISSALARM, "Turn off alarm");
+            put(STOPTTS, "Stop TTS");
         }};
 
         static final HashMap<ActionType, String> descriptions = new HashMap<ActionType, String>() {{
@@ -151,6 +153,7 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
             put(DONOTDISTURB, "Toggles do not disturb mode on or off");
             put(DISCONNECTCALL, "Disconnects the incoming call");
             put(DISMISSALARM, "Turns off incoming alarm");
+            put(STOPTTS, "Turns off text-to-speech.");
         }};
 
         static final HashMap<ActionType, Integer> pictures = new HashMap<ActionType, Integer>() {{
@@ -163,6 +166,7 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
             put(DONOTDISTURB, R.drawable.do_not_disturb);
             put(DISCONNECTCALL, R.drawable.hangup);
             put(DISMISSALARM, R.drawable.alarm_off);
+            put(STOPTTS, R.drawable.stoptts);
         }};
 
         static public ActionType[] getAllPublicActionTypes() {
@@ -182,6 +186,7 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
                 actionList.add(DISCONNECTCALL);
             }
             actionList.add(DISMISSALARM);
+            actionList.add(STOPTTS);
             ActionType[] actionArray = new ActionType[actionList.size()];
             actionArray = actionList.toArray(actionArray);
             return actionArray;
@@ -228,6 +233,9 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
             case DISMISSALARM:
                 disableAlarm();
                 break;
+            case STOPTTS:
+                stopTTS();
+                break;
         }
     }
 
@@ -263,6 +271,10 @@ public class ActionTriggers implements TextToSpeech.OnInitListener , TextToSpeec
             camera.startPreview();
             lightOn = true;
         }
+    }
+
+    public void stopTTS(){
+        if(tts != null){tts.stop();}
     }
 
     public void ttsTime(){
