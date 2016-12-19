@@ -12,25 +12,24 @@
         android:text="Action Description:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2"
+        android:id="@+id/actionDescTitle"
         android:textSize="24sp"
+        android:layout_marginTop="15dp"
         android:textColor="#000000"
         android:textStyle="normal|bold"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/spinner2"
-        android:lineSpacingExtra="8sp" />
+        android:lineSpacingExtra="8sp"
+        android:layout_marginStart="15dp" />
 
     <TextView
         android:text="Action Description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
         android:id="@+id/actionDescription"
         android:textColor="#000"
         android:textSize="18sp"
-        android:layout_below="@+id/textView2"
-        android:layout_alignStart="@+id/textView2"
-        android:textAllCaps="true" />
+        android:layout_below="@+id/actionDescTitle"
+        android:layout_alignStart="@+id/actionDescTitle"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -39,34 +38,11 @@
         android:textSize="24sp"
         android:textColor="#000"
         android:gravity="center"
-        android:id="@+id/text"
-        android:layout_marginTop="0dp"
+        android:id="@+id/selectTriggerTitle"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/actionDescription"
         android:layout_alignStart="@+id/actionDescription" />
 
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="22dp"
-        android:background="#f0f0f0"
-        android:popupBackground="#f0f0f0"
-        android:layout_marginLeft="5dp"
-        android:spinnerMode="dropdown"
-        android:layout_below="@+id/text"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp" />
-
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="#f0f0f0"
-        android:layout_gravity="center"
-        android:src="@drawable/back_arrow"
-        android:layout_below="@+id/text"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/imageView" />
 
     <TextView
         android:text="Gesture Description"
@@ -75,23 +51,38 @@
         android:id="@+id/gestureDescription"
         android:textSize="18sp"
         android:textColor="#000000"
-        android:textAllCaps="true"
         android:paddingTop="0dp"
-        android:layout_below="@+id/textView4"
-        android:layout_alignEnd="@+id/actionDescription" />
+        android:layout_below="@+id/gestureDescTitle"
+        android:layout_alignStart="@+id/spinnerBox" />
 
     <TextView
         android:text="Gesture Description:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView4"
+        android:id="@+id/gestureDescTitle"
         android:textSize="24sp"
         android:textColor="#000000"
         android:textStyle="normal|bold"
         android:lineSpacingExtra="8sp"
-        android:paddingBottom="5dp"
         android:layout_marginTop="15dp"
-        android:layout_below="@+id/imageView"
-        android:layout_alignStart="@+id/spinner2" />
+        android:layout_below="@+id/spinnerBox"
+        android:layout_alignStart="@+id/spinnerBox" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerBox"
+        android:background="#f0f0f0"
+        android:layout_below="@+id/selectTriggerTitle"
+        android:layout_alignStart="@+id/selectTriggerTitle">
+
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_gravity="center" />
+    </RelativeLayout>
 
 </RelativeLayout>

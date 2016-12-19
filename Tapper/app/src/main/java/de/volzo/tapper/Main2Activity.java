@@ -34,6 +34,9 @@ public class Main2Activity extends Activity {
         action = getIntent().getStringExtra("Action");
         ActionTriggers.ActionType type = ActionTriggers.ActionType.valueOf(action);
 
+        TextView actionTitle = (TextView) findViewById(R.id.actionDescTitle);
+        actionTitle.setText(ActionTriggers.ActionType.getDisplayName(type));
+
         prefs = getSharedPreferences(prefName, MODE_PRIVATE);
         id = prefs.getInt(action, -1);
 
@@ -44,10 +47,10 @@ public class Main2Activity extends Activity {
     }
 
     private void configureSpinner() {
-        final Spinner sp = (Spinner) findViewById(R.id.spinner2);
+        final Spinner sp = (Spinner) findViewById(R.id.spinner);
 
         final String[] gestureNames = new String[gestureTypes.length+1];
-        gestureNames[0] = "";
+        gestureNames[0] = "No trigger";
         for (int i = 0; i < gestureTypes.length; i++) {
             gestureNames[i+1] = GestureType.getDisplayName(gestureTypes[i]);
         }
