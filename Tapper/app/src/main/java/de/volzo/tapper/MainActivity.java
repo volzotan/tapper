@@ -16,7 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.volzo.tapper.GestureDetector.DTW.DTWDetector;
+import java.util.ArrayList;
+
 import de.volzo.tapper.GestureDetector.FSM.DataCollector;
 import de.volzo.tapper.GestureDetector.FSM.FSMDetector;
 import de.volzo.tapper.GestureDetector.GestureType;
@@ -54,8 +55,22 @@ public class MainActivity extends AppCompatActivity {
         Button button = new Button(this);
         button.setText("START");
         button.setOnClickListener(view -> {
-                Intent intent = new Intent(MainActivity.this,EmptyActivity.class);
+            Support support = new Support(this);
+            ArrayList<String> missingTemplates = new ArrayList<String>();
+            for (GestureType type :
+                    GestureType.getAllPublicGestureTypes()) {
+                if (support.loadFromFile(type.name()) == null) {
+                    missingTemplates.add(GestureType.getDisplayName(type));
+                }
+            }
+            if (missingTemplates.size() == 0) {
+                Intent intent = new Intent(MainActivity.this, EmptyActivity.class);
                 startActivity(intent);
+            } else {
+                Toast.makeText(this,
+                        "Missing recordings of templates: " + missingTemplates.toString(),
+                        Toast.LENGTH_LONG).show();
+            }
         });
         layout.addView(button);
 

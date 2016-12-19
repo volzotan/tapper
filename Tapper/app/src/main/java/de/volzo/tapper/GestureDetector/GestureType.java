@@ -16,7 +16,7 @@ public enum GestureType {
     static final HashMap<GestureType, String> displayNames = new HashMap<GestureType, String>() {{
         put(DOUBLETAP, "Double Tap");
         put(SIDETAP, "Side Tap");
-        put(PICKUPDROP, "Pick up, Drop");
+        put(PICKUPDROP, "Pick up & Drop");
         put(SHAKE, "Shake");
     }};
 
