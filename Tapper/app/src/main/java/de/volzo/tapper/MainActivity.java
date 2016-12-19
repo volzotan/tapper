@@ -86,14 +86,11 @@ public class MainActivity extends AppCompatActivity {
             Button b = new Button(this);
             b.setCompoundDrawablesWithIntrinsicBounds(picture,0,0,0);
             b.setText(ActionTriggers.ActionType.getDisplayName(type));
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this,Main2Activity.class);
-                    intent.putExtra("Action", type.name());
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }
+            b.setOnClickListener(view -> {
+                Intent intent = new Intent(MainActivity.this,Main2Activity.class);
+                intent.putExtra("Action", type.name());
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             });
 
             layout.addView(b);
@@ -107,14 +104,11 @@ public class MainActivity extends AppCompatActivity {
         for (GestureType gesture : GestureType.getAllPublicGestureTypes()) {
             Button b = new Button(this);
             b.setText(GestureType.getDisplayName(gesture));
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this,RecordActivity.class);
-                    intent.putExtra("GESTURE", gesture.toString());
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }
+            b.setOnClickListener(view -> {
+                Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+                intent.putExtra("GESTURE", gesture.toString());
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             });
 
             layout.addView(b);

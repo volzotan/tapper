@@ -13,7 +13,7 @@ public class FilteringPipelineTest {
     @Test
     public void process() throws Exception {
 
-        ArrayList<Integer[]> processed = new ArrayList<>();
+        ArrayList<Number[]> processed = new ArrayList<>();
         FilteringPipeline fp = new FilteringPipeline(processed::add);
 
         fp.process(new Double[]{0.0,0.0,0.0});
