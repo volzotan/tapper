@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 import de.volzo.tapper.GestureDetector.FSM.DataCollector;
 import de.volzo.tapper.GestureDetector.FSM.FSMDetector;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActionTriggers actionTriggers;
     private NotificationManager mNotificationManager;
+
+    private ArrayList<Button> actionButtons = new ArrayList<>();
 
     public FSMDetector fSMDetector;
     public DataCollector dataCollector;
@@ -84,8 +88,19 @@ public class MainActivity extends AppCompatActivity {
 
             Integer picture = ActionTriggers.ActionType.getPictures(type);
             Button b = new Button(this);
+            actionButtons.add(b);
             b.setCompoundDrawablesWithIntrinsicBounds(picture,0,0,0);
-            b.setText(ActionTriggers.ActionType.getDisplayName(type));
+            SharedPreferences prefs = getSharedPreferences("spinner", MODE_PRIVATE);
+            String actionName = ActionTriggers.ActionType.getDisplayName(type);
+            int gesture = prefs.getInt(type.name(), -1);
+            if (gesture != -1) {
+                GestureType gestureType = GestureType.getAllPublicGestureTypes()[gesture];
+                String gestureName = GestureType.getDisplayName(gestureType);
+                b.setText(Html.fromHtml("<b><big>" + actionName + "</big></b>" + "<br />" +
+                        "<small>Gesture: " + gestureName + "</small>"), TextView.BufferType.SPANNABLE);
+            } else {
+                b.setText(Html.fromHtml("<b><big>" + actionName + "</big></b>"));
+            }
             b.setOnClickListener(view -> {
                 Intent intent = new Intent(MainActivity.this,Main2Activity.class);
                 intent.putExtra("Action", type.name());
@@ -112,6 +127,27 @@ public class MainActivity extends AppCompatActivity {
             });
 
             layout.addView(b);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        ActionTriggers.ActionType[] types = ActionTriggers.ActionType.getAllPublicActionTypes();
+        for (int i = 0; i < types.length; i++) {
+            SharedPreferences prefs = getSharedPreferences("spinner", MODE_PRIVATE);
+            ActionTriggers.ActionType type = types[i];
+            Button b = actionButtons.get(i);
+            String actionName = ActionTriggers.ActionType.getDisplayName(type);
+            int gesture = prefs.getInt(type.name(), -1);
+            if (gesture != -1) {
+                GestureType gestureType = GestureType.getAllPublicGestureTypes()[gesture];
+                String gestureName = GestureType.getDisplayName(gestureType);
+                b.setText(Html.fromHtml("<b><big>" + actionName + "</big></b>" + "<br />" +
+                        "<small>Gesture: " + gestureName + "</small>"));
+            } else {
+                b.setText(Html.fromHtml("<b><big>" + actionName + "</big></b>"));
+            }
         }
     }
 
